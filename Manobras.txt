@@ -1,0 +1,71 @@
+Tipo da Manobra:
+
+	Slide
+	Aéreo
+	Grab
+	Giro
+	Wallride
+	Handplant
+	Shuffle
+	Stall
+	Transfer
+	Fade Huricane
+	
+Manobras:
+	
+	Acid							Back Flip
+	Backslide						Corck Screw
+	Fastslide						Flatspin
+	Fishbrain						Misty Flip
+	Kindgrind						Monkey Flip
+	Makio
+	Mistral							Abstract
+	Mizou							Cross
+	Nuggen							Cross rocket
+	Poststar						Japan
+	Pudslide						LiuKang
+	Royale							Mute
+	Savanah							Parallel
+	Sweetstance						Rocket
+	Torque							Safety
+	Unity							Shifty
+	Ufo								Stale
+	Xgrind							Stale Japan
+	Soul
+	
+Manobras do tipo Slide:
+
+	Entradas do Slide:
+		
+		alleyoop
+		halfcab
+		fullcab
+		truespin
+		270
+		360
+		540
+		fake
+	
+	Saídas do Slide: 
+	
+		180
+		360
+		540
+	
+	Variação do slide:
+	
+		Stepover
+		
+	Lado do Slide:
+	
+		backside
+		frontside
+		farside
+		negative
+		zerospin
+		top
+		negative top
+	
+	Base do Slide:
+	
+		Switch

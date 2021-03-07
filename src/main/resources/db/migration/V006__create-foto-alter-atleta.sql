@@ -1,0 +1,8 @@
+CREATE TABLE foto(
+	id SERIAL PRIMARY KEY,
+	arquivo BYTEA NOT NULL,
+	extensao VARCHAR(4) NOT NULL
+);
+
+ALTER TABLE atleta	DROP COLUMN foto;
+ALTER TABLE atleta	ADD COLUMN foto_id INTEGER REFERENCES foto(id);

@@ -1,0 +1,386 @@
+@font-face {
+	font-family: titulos;
+	src: url('../font/Flamenco-Regular.ttf');
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+header {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	text-align: center;
+}
+
+header div {
+	min-width: 250px;
+	margin: 3px 3px 0;
+	display: flex;
+	align-items: flex-start;
+	flex-direction: column;
+	justify-content: space-between;
+	display: flex;
+}
+
+header div div {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-end;
+}
+
+header img+div {
+	align-items: flex-start;
+	justify-content: flex-end;
+}
+
+button {
+	background-color: #330033;
+	width: 133px;
+	color: #FFFFFF;
+	border-radius: 4px;
+	cursor: pointer;
+	font-family: titulos;
+	font-size: 18px;
+	opacity: 95%;
+	margin: 0.1em 0.1em;
+}
+
+.botao-cancelar {
+	background-color: #ccc;
+	color: #000000;
+}
+
+button:hover {
+	opacity: 100%;
+}
+
+main {
+	display: flex;
+	width: 100%;
+	max-width: 766px;
+	justify-content: center;
+	margin: 26px auto auto auto;
+	position: relative;
+	font-family: titulos;
+}
+
+footer {
+	align-content: center;
+	width: 100%;
+	text-align: center;
+	position: fixed;
+	height: 33px;
+	bottom: 0px;
+	font-family: titulos;
+	font-size: 33px;
+	margin-bottom: 5px;
+}
+
+input[type=checkbox]:checked {
+	color: #660066
+}
+
+
+
+h1 {
+	color: #330033;
+}
+
+form {
+	display: block;
+	padding-top: 20px;
+	width: 366px;
+}
+
+
+form input[type="text"], form input[type="password"], form input[type="email"]{
+	width: 100%;
+	min-width: 233px;
+	margin: 5px 5px 5px 0;
+	height: 33px;
+	color: #660066;
+	font-size: 15px;
+}
+
+input[type="radio"]{
+	margin-left: 12px;	
+}
+
+form progress {
+	width: 100%;
+}
+
+#select-localidades{
+	width: 65%;
+}
+
+.conta {
+	position: absolute;
+	top: 56px;
+}
+
+.conta small+small {
+	color: #0000FF;
+	cursor: pointer;
+}
+
+form font {
+	font-size: 16px;
+	margin-left: 1px;
+}
+
+form div {
+	margin: 0 0 10px 0;
+	padding: 0 7px 0 3px;
+}
+
+form button {
+	width: 100%;
+	height: 36px;
+	border-radius: 4px;
+}
+
+.form-group {
+	display: block;
+}
+
+::placeholder {
+	color: #d0d5d7;
+	padding-left: 5px;
+	font-size: 19px;
+	font-family: titulos;
+}
+
+.border-container {
+	position: relative;
+	border: solid;
+	border-width: 2px;
+	padding: 4px 4px 0 4px;
+	border-color: #660066;
+	border-radius: 3px;
+}
+
+.sobre {
+	text-align: center;
+	max-width: 433px;
+	font-family: titulos;
+	line-height: 1.5;
+}
+
+.border-container img {
+	width: 100%;
+	height: 100%;
+}
+
+footer a {
+	cursor: pointer;
+}
+
+.padding-top {
+	padding-top: 100px;
+}
+
+.margin-top {
+	margin-top: 50px;
+}
+
+.loading {
+	position: absolute;
+	right: 48%;
+	padding-top: 5px;
+	height: 33px;
+	width: 33px;
+	display: block;
+}
+
+.display-block {
+	display: inline-block;
+}
+
+.display-inline {
+	display: inline;
+}
+
+.display-none {
+	display: none;
+}
+
+.nome-usuario {
+	max-width: 266px;
+	font-family: titulos;
+	font-size: 12ox;
+}
+
+.checkbox-inline input[type="checkbox"] {
+	height: 24px;
+	position: absolute;
+	top: -7px;
+	margin-left: -24px;
+}
+
+.checkbox-inline {
+	position: relative;
+	top: 2px;
+	vertical-align: middle;
+	display: inline-block;
+	font-weight: normal;
+	padding-left: 30px;
+	margin-bottom: 10px;
+	cursor: pointer;
+}
+
+.mensagem-erro {
+	color: #FF0000;
+}
+
+.flex-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.flex-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.space-beetween {
+	justify-content: space-between;
+}
+
+.jc-flex-end {
+	justify-content: flex-end;
+}
+
+.jc-flex-start {
+	justify-content: flex-start;
+}
+
+
+.items-right {
+	align-items: flex-end;
+}
+
+/*	
+ATLETA.HTML			
+*/
+#img-atleta {
+	max-height: 200px;
+	max-width: 200px;
+}
+
+.atleta {
+	border: solid;
+	border-width: 2;
+	width: 40%;
+}
+
+.manobras {
+	border: solid;
+	border-width: 2;
+	width: 60%;
+}
+
+.grupos {
+	display: none;
+	width: 33%;
+}
+
+.container-atleta {
+	width: 800px;
+	display: flex;
+	flex-direction: row;
+}
+
+.botao-foto {
+	opacity: 75%;
+	width: 24px;
+	height: 24px;
+}
+
+.botao-editar {
+	opacity: 75%;
+	width: 16px;
+	height: 16px;
+}
+
+.botao-foto:hover, .botao-editar:hover {
+	opacity: 100%;
+	cursor: pointer;
+}
+
+/* MODAL PANEL */
+.modal {
+	z-index: 3;
+	display: none;
+	padding-top: 100px;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: rgb(0, 0, 0);
+	background-color: rgba(0, 0, 0, 0.4)
+}
+
+.modal-content {
+	margin: auto;
+	background-color: #fff;
+	position: relative;
+	padding: 0;
+	outline: 0;
+	width: 400px
+}
+
+.modal-container:after, .modal-container:before {
+	display: table;
+	clear: both
+}
+
+.modal-container {
+	padding: 0.5em 16px
+}
+
+.close-button {
+	border: none;
+	display: inline-block;
+	padding: 8px 16px;
+	vertical-align: middle;
+	overflow: hidden;
+	text-decoration: none;
+	color: inherit;
+	background-color: inherit;
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap
+}
+
+.close-button:disabled {
+	cursor: not-allowed;
+	opacity: 0.3
+}
+
+.close-button:hover {
+	color: #000 !important;
+	background-color: #ccc !important
+}
+
+.display-top-right {
+	position: absolute;
+	right: 0;
+	top: 0
+}
+
+.titulo-modal {
+	position: absolute;
+	right: 50%;
+	top: 10
+}
+
+.modal-header {
+	color: #fff !important;
+	background-color: #660066 !important;
+}

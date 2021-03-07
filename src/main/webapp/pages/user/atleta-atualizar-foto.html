@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+<link href="../../assets/css/style.css" rel="stylesheet">
+</head>
+<main>
+	<form enctype="multipart/form-data" name="form-upload">
+
+		<label id="label-erro-foto" for="foto" class="mensagem-erro"></label> 
+		<p>
+		<input id="input-foto" type="file" name="foto" required size="10"
+			accept="image/jpg, image/jpeg, image/png, image/bmp, image/gif">
+			
+		<progress id="progress" value="0" max="100" class="display-none"></progress>
+		
+		<button id="botao-remover-foto" type="button"
+			class="display-none botao-cancelar">Remover foto atual</button>
+		
+		<button id="botao-cancelar" type="button"
+			class="display-none botao-cancelar">Cancelar</button>
+			
+		<button id="botao-enviar" class="display-none" type="submit">Enviar</button>
+	</form>
+</main>

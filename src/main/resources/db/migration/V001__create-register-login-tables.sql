@@ -1,0 +1,10 @@
+CREATE TABLE usuario (
+	email VARCHAR(100) PRIMARY KEY,
+	senha VARCHAR(25) NOT NULL
+);
+
+CREATE TABLE atleta(
+	id SERIAL PRIMARY KEY,
+	nome VARCHAR(100) NOT NULL,
+	usuario_email VARCHAR NOT NULL UNIQUE REFERENCES usuario(email)
+);

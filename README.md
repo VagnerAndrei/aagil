@@ -8,21 +8,30 @@ Associação Paraense de Aggressive Inline
 ## This project was created from the archetype "wildfly-jakartaee-webapp-archetype".
 #### JAX-RS
 #### SPA
-
-### Steps to installation:
-#### Project:
-<strong>Run</strong>: "mvn install"
 <br/><br/>
-#### Database:
-Download and install PostgreSQL.<p>
-<strong>Create</strong> a database 'aagil' with user and password 'postgres'<p>
-<strong>Run</strong>: "mvn flyway:migrate"
+## Steps to installation:
+### Project:
+<ul>
+	<li><strong Run</strong>: "mvn install"</li>
+</ul>
+<br/><br/>
+
+### Database:
+<ul>
+	<li>Download and install PostgreSQL.</li>
+	<li><strong>Create</strong> a database 'aagil' with user and password 'postgres'</li>
+	<li><strong>Run</strong>: "mvn flyway:migrate"</li>
+</ul>
 <br/><br/>
 	
-#### Application Server:
-Download and start a Wildfly 19 Application Server <p>
-<strong>Run</strong>: "mvn wildfly:execute-commands"<p>
-<strong>Run</strong>: "mvn wildfly:deploy"<p>
-<br/>
+### Application Server:
+<ul>
+	<li>Download and start a Wildfly 19 Application Server</li>
+	<li><strong>Run</strong>: "mvn wildfly:execute-commands"</li>
+	<li><strong>Run</strong>: "mvn wildfly:deploy"</li>
+</ul>
+
 To undeploy:<p>
-<strong>Run</strong>: "mvn wildfly:undepoy"
+<ul>
+	<li><strong>Run</strong>: "mvn wildfly:undepoy"</li>
+</ul>

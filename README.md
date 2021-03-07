@@ -12,7 +12,7 @@ Associação Paraense de Aggressive Inline
 ## Steps to installation:
 ### Project:
 <ul>
-	<li><strong Run</strong>: "mvn install"</li>
+	<li><strong>Run</strong>: "mvn install"</li>
 </ul>
 <br/><br/>
 

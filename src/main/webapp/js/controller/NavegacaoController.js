@@ -1,5 +1,6 @@
 import { usuarioLogado, acesso, registro } from './ContaController.js';
 import { initAtleta } from './Atleta.js';
+import { initManobras } from './Manobras.js';
 
 const titulo = 'AAGIL'
 
@@ -42,6 +43,11 @@ export const urls = {
 		path: "pages/public/home.html",
 		name: "home_replace",
 		title: "Página Inicial"
+	},
+	manobras: {
+		path: "pages/public/manobras.html",
+		name: "manobras",
+		title: "Manobras"
 	},
 	atleta: {
 		path: "pages/public/atleta.html",
@@ -168,6 +174,9 @@ function redirect(e) {
 		case urls.acesso.name:
 			acessar()
 			break;
+		case urls.manobras.name:
+			manobras()
+			break;
 
 		default:
 			pagina_nao_encontrada();
@@ -189,6 +198,14 @@ export function home(e) {
 	mainNavigate(urls.home, () => {
 		if (e)
 			changeState(urls.home)
+	});
+}
+
+export function manobras(e) {
+	mainNavigate(urls.manobras, () => {
+		if (e)
+			changeState(urls.manobras)
+		initManobras()
 	});
 }
 

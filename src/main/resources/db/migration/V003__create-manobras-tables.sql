@@ -28,7 +28,8 @@ CREATE TABLE manobra_complemento(
 
 CREATE TABLE manobras_complementos(
 	manobra_id INTEGER NOT NULL REFERENCES manobra(id),
-	complemento_id INTEGER NOT NULL REFERENCES manobra_complemento(id)
+	complemento_id INTEGER NOT NULL REFERENCES manobra_complemento(id),
+	UNIQUE (manobra_id,complemento_id)
 );
 
 
@@ -46,7 +47,7 @@ INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Backslide', '', 1);
 INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Fastslide', '', 1);
 INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Fishbrain', '', 1);
 INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Kindgrind', '', 1);
-INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Makir', '', 1);
+INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Makio', '', 1);
 INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Mistral', '', 1);
 INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Mizou', 'Slide com os dois pés inclinados para trás', 1);
 INSERT INTO manobra(nome, descricao, tipo_id) VALUES('Nuggen', 'Slide de base com pé atrás', 1);
@@ -141,4 +142,51 @@ INSERT INTO manobra_complemento(nome, descricao, abreviacao, grupo_id) VALUES('S
 INSERT INTO manobra_complemento(nome, descricao, abreviacao, grupo_id) VALUES('180', '.', '', 5); 	
 INSERT INTO manobra_complemento(nome, descricao, abreviacao, grupo_id) VALUES('360', '.', '', 5); 	
 INSERT INTO manobra_complemento(nome, descricao, abreviacao, grupo_id) VALUES('540', '.', '', 5); 	
-INSERT INTO manobra_complemento(nome, descricao, abreviacao, grupo_id) VALUES('720', '.', '', 5); 	
+INSERT INTO manobra_complemento(nome, descricao, abreviacao, grupo_id) VALUES('720', '.', '', 5);
+
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(1,1); 	/* Acid */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(1,7); 	/* Acid */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(1,8); 	/* Acid */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(1,9); 	/* Acid */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(2,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(2,7); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(2,8); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(2,9); 	/*  */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(3,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(3,7); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(3,8); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(3,9); 	/*  */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(4,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(4,7); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(4,8); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(4,9); 	/*  */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(5,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(5,7); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(5,8); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(5,9); 	/*  */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(20,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(20,7); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(20,8); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(20,9); 	/*  */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,2); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,3); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,4); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,5); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,6); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(30,7); 	/*  */
+
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,1); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,2); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,3); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,4); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,5); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,6); 	/*  */
+INSERT INTO manobras_complementos(manobra_id, complemento_id) VALUES(38,7); 	/*  */

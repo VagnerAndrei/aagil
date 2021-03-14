@@ -1,44 +1,30 @@
 package net.circle.domain.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import net.circle.domain.entity.core.AbstractEntity;
 
 @Entity
-public class Manobra extends AbstractEntity {
+@Table(name = "manobra_complemento_grupo")
+public class ManobraComplementoGrupo extends AbstractEntity{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Size(max = 25)
+	@Size(max = 20)
 	@NotNull
 	private String nome;
 
-	@Size(max = 255)
+	@Size(max = 150)
 	@NotNull
 	private String descricao;
-
-	@NotNull
-	@ManyToOne
-	private ManobraTipo tipo;
-
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "manobras_complementos", joinColumns = @JoinColumn(name = "manobra_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "complemento_id", referencedColumnName = "id"))
-	private List<ManobraComplemento> complementos = new ArrayList<ManobraComplemento>();
 
 	public Integer getId() {
 		return id;
@@ -64,22 +50,6 @@ public class Manobra extends AbstractEntity {
 		this.descricao = descricao;
 	}
 
-	public ManobraTipo getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(ManobraTipo tipo) {
-		this.tipo = tipo;
-	}
-
-	public List<ManobraComplemento> getComplementos() {
-		return complementos;
-	}
-
-	public void setComplementos(List<ManobraComplemento> complementos) {
-		this.complementos = complementos;
-	}
-
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -96,7 +66,7 @@ public class Manobra extends AbstractEntity {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Manobra other = (Manobra) obj;
+		ManobraComplementoGrupo other = (ManobraComplementoGrupo) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

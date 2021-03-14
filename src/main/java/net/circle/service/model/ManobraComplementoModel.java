@@ -1,22 +1,20 @@
 package net.circle.service.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-public class ManobraModel {
+@JsonInclude(value = Include.NON_NULL)
+public class ManobraComplementoModel {
 
-	@JsonInclude(value = Include.NON_NULL)
 	private Integer id;
 	private String nome;
 	@JsonInclude(value = Include.NON_EMPTY)
 	private String descricao;
-	@JsonInclude(value = Include.NON_NULL)
-	private IDModel tipo;
 	@JsonInclude(value = Include.NON_EMPTY)
-	private List<IDModel> complementos = new ArrayList<IDModel>();
+	private String abreviacao;
+	private String grupo;
+	@JsonInclude(value = Include.NON_EMPTY)
+	private String grupoDescricao;
 
 	public Integer getId() {
 		return id;
@@ -42,20 +40,28 @@ public class ManobraModel {
 		this.descricao = descricao;
 	}
 
-	public IDModel getTipo() {
-		return tipo;
+	public String getAbreviacao() {
+		return abreviacao;
 	}
 
-	public void setTipo(IDModel tipo) {
-		this.tipo = tipo;
+	public void setAbreviacao(String abreviacao) {
+		this.abreviacao = abreviacao;
 	}
 
-	public List<IDModel> getComplementos() {
-		return complementos;
+	public String getGrupo() {
+		return grupo;
 	}
 
-	public void setComplementos(List<IDModel> complementos) {
-		this.complementos = complementos;
+	public void setGrupo(String grupo) {
+		this.grupo = grupo;
 	}
 
+	public String getGrupoDescricao() {
+		return grupoDescricao;
+	}
+
+	public void setGrupoDescricao(String grupoDescricao) {
+		this.grupoDescricao = grupoDescricao;
+	}
+	
 }

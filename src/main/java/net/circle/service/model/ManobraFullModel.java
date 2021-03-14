@@ -1,22 +1,20 @@
 package net.circle.service.model;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-public class ManobraModel {
+public class ManobraFullModel {
 
 	@JsonInclude(value = Include.NON_NULL)
 	private Integer id;
 	private String nome;
 	@JsonInclude(value = Include.NON_EMPTY)
 	private String descricao;
-	@JsonInclude(value = Include.NON_NULL)
-	private IDModel tipo;
+	private ManobraTipoModel tipo;
 	@JsonInclude(value = Include.NON_EMPTY)
-	private List<IDModel> complementos = new ArrayList<IDModel>();
+	private List<ManobraComplementoModel> complementos;
 
 	public Integer getId() {
 		return id;
@@ -42,19 +40,19 @@ public class ManobraModel {
 		this.descricao = descricao;
 	}
 
-	public IDModel getTipo() {
+	public ManobraTipoModel getTipo() {
 		return tipo;
 	}
 
-	public void setTipo(IDModel tipo) {
+	public void setTipo(ManobraTipoModel tipo) {
 		this.tipo = tipo;
 	}
 
-	public List<IDModel> getComplementos() {
+	public List<ManobraComplementoModel> getComplementos() {
 		return complementos;
 	}
 
-	public void setComplementos(List<IDModel> complementos) {
+	public void setComplementos(List<ManobraComplementoModel> complementos) {
 		this.complementos = complementos;
 	}
 

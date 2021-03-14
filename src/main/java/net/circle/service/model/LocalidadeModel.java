@@ -3,7 +3,7 @@ package net.circle.service.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-@JsonInclude(Include.NON_NULL)
+@JsonInclude(value = Include.NON_NULL)
 public class LocalidadeModel {
 
 	private Integer id;

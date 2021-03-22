@@ -74,13 +74,14 @@ public class AtletaRest {
 
 	@GET
 	@Path("/{idAtleta}/foto")
-	@Produces({ "image/jpg" })
+	@Produces({ "image/jpg", "image/gif" })
 	public Response getFoto(@PathParam("idAtleta") Integer idAtleta) {
 		var atleta = servicoAtleta.consultar(idAtleta).get();
 
 		if (atleta.getFoto() == null)
 			return Response.status(Status.NO_CONTENT).build();
-
+		if (atleta.getFoto().getExtensao().toLowerCase().equals("gif"))
+			return getFotoOriginal(idAtleta);
 		ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo()).type("image/jpg"); // +
 																									// atleta.getFoto().getExtensao()
 		response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + ".jpg");// +
@@ -98,7 +99,7 @@ public class AtletaRest {
 		if (atleta.getFoto() == null)
 			return Response.status(Status.NO_CONTENT).build();
 
-		ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo())
+		ResponseBuilder response = Response.ok(atleta.getFoto().getOriginal())
 				.type("image/" + atleta.getFoto().getExtensao().toLowerCase());
 		response.header("Content-Disposition",
 				"inline; filename=" + atleta.getNome().trim() + "." + atleta.getFoto().getExtensao().toLowerCase());
@@ -108,13 +109,14 @@ public class AtletaRest {
 
 	@GET
 	@Path("/{idAtleta}/foto/thumb")
-	@Produces({ "image/jpg" })
+	@Produces({ "image/jpg", "image/gif" })
 	public Response getThumb(@PathParam("idAtleta") Integer idAtleta) {
 		var atleta = servicoAtleta.consultar(idAtleta).get();
 
 		if (atleta.getFoto() == null)
 			return Response.status(Status.NO_CONTENT).build();
-
+		if (atleta.getFoto().getExtensao().toLowerCase().equals("gif"))
+			return getFotoOriginal(idAtleta);
 		ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail()).type("image/jpg");
 		response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + "-thumbnail.jpg");
 

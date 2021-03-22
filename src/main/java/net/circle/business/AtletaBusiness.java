@@ -10,6 +10,7 @@ import net.circle.business.exception.BusinessException;
 import net.circle.business.exception.BusinessException.Excecao;
 import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.business.util.Encriptador;
+import net.circle.business.util.ImagemUtil;
 import net.circle.domain.dao.AtletaDAO;
 import net.circle.domain.dao.LocalidadeDAO;
 import net.circle.domain.dao.UsuarioDAO;
@@ -77,8 +78,10 @@ public class AtletaBusiness implements IAtletaBusiness {
 		var atleta = dao.findById(id).get();
 		if (atleta.getFoto() == null)
 			atleta.setFoto(new Foto());
-		atleta.getFoto().setArquivo(foto);
-		atleta.getFoto().setExtensao(extensao.toLowerCase());
+		atleta.getFoto().setOriginal(foto);
+		atleta.getFoto().setArquivo(ImagemUtil.redimensionarImagem(foto));
+		atleta.getFoto().setThumbnail(ImagemUtil.gerarThumbnails(foto));
+		atleta.getFoto().setExtensao(extensao);
 		dao.merge(atleta);
 	}
 

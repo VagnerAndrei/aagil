@@ -1,6 +1,8 @@
 CREATE TABLE foto(
 	id SERIAL PRIMARY KEY,
+	original BYTEA NOT NULL,
 	arquivo BYTEA NOT NULL,
+	thumbnail BYTEA NOT NULL,
 	extensao VARCHAR(4) NOT NULL
 );
 

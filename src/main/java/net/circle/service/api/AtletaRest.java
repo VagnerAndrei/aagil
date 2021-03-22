@@ -74,17 +74,49 @@ public class AtletaRest {
 
 	@GET
 	@Path("/{idAtleta}/foto")
-	@Produces({ "image/jpg", "image/png", "image/jpeg", "image/gif", "image/bmp" })
+	@Produces({ "image/jpg" })
 	public Response getFoto(@PathParam("idAtleta") Integer idAtleta) {
 		var atleta = servicoAtleta.consultar(idAtleta).get();
 
 		if (atleta.getFoto() == null)
 			return Response.status(Status.NO_CONTENT).build();
 
+		ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo()).type("image/jpg"); // +
+																									// atleta.getFoto().getExtensao()
+		response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + ".jpg");// +
+																										// atleta.getFoto().getExtensao()
+
+		return response.build();
+	}
+
+	@GET
+	@Path("/{idAtleta}/foto/original")
+	@Produces({ "image/jpg", "image/png", "image/jpeg", "image/gif", "image/bmp" })
+	public Response getFotoOriginal(@PathParam("idAtleta") Integer idAtleta) {
+		var atleta = servicoAtleta.consultar(idAtleta).get();
+
+		if (atleta.getFoto() == null)
+			return Response.status(Status.NO_CONTENT).build();
+
 		ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo())
-				.type("image/" + atleta.getFoto().getExtensao());
+				.type("image/" + atleta.getFoto().getExtensao().toLowerCase());
 		response.header("Content-Disposition",
-				"inline; filename=" + atleta.getNome().trim() + "." + atleta.getFoto().getExtensao());
+				"inline; filename=" + atleta.getNome().trim() + "." + atleta.getFoto().getExtensao().toLowerCase());
+
+		return response.build();
+	}
+
+	@GET
+	@Path("/{idAtleta}/foto/thumb")
+	@Produces({ "image/jpg" })
+	public Response getThumb(@PathParam("idAtleta") Integer idAtleta) {
+		var atleta = servicoAtleta.consultar(idAtleta).get();
+
+		if (atleta.getFoto() == null)
+			return Response.status(Status.NO_CONTENT).build();
+
+		ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail()).type("image/jpg");
+		response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + "-thumbnail.jpg");
 
 		return response.build();
 	}
@@ -177,12 +209,13 @@ public class AtletaRest {
 				pessoa.getNome(),
 
 				pessoa.getBiografia(),
-				
+
 				pessoa.getNascimento(),
 
 				pessoa.getLocalidade() != null
 						? new LocalidadeModel(pessoa.getLocalidade().getId(), pessoa.getLocalidade().getNome(),
-								pessoa.getLocalidade().getEstado().getId(), pessoa.getLocalidade().getEstado().getSigla())
+								pessoa.getLocalidade().getEstado().getId(),
+								pessoa.getLocalidade().getEstado().getSigla())
 						: null,
 
 				pessoa.getCategoria() != null ? pessoa.getCategoria().toString() : null);

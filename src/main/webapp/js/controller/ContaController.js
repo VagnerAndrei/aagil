@@ -87,7 +87,7 @@ export function verificaLogin() {
 	get('api/usuarios/autenticacao').then((response) => {
 		if (response.status == 302)
 			response.json().then(value => loginHandler(value))
-		else if (response.status == 404)
+		else if (response.status == 404 || response.status == 500)
 			loginHandler()
 	})
 }

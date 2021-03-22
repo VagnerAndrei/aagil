@@ -176,6 +176,8 @@ public class AtletaRest {
 
 				pessoa.getNome(),
 
+				pessoa.getBiografia(),
+				
 				pessoa.getNascimento(),
 
 				pessoa.getLocalidade() != null

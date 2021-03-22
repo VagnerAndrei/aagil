@@ -6,6 +6,8 @@ public class ManobrasModel {
 
 	private List<ManobraTipoModel> tipos;
 
+	private List<ManobraComplementoGrupoModel> grupos_complementos;
+
 	private List<ManobraComplementoModel> complementos;
 
 	private List<ManobraModel> manobras;
@@ -32,6 +34,14 @@ public class ManobrasModel {
 
 	public void setComplementos(List<ManobraComplementoModel> complementos) {
 		this.complementos = complementos;
+	}
+
+	public List<ManobraComplementoGrupoModel> getGrupos_complementos() {
+		return grupos_complementos;
+	}
+
+	public void setGrupos_complementos(List<ManobraComplementoGrupoModel> grupos_complementos) {
+		this.grupos_complementos = grupos_complementos;
 	}
 
 }

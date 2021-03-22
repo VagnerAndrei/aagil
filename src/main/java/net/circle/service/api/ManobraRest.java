@@ -1,6 +1,5 @@
 package net.circle.service.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,8 +13,10 @@ import javax.ws.rs.core.MediaType;
 import net.circle.business.ManobraBusiness;
 import net.circle.domain.entity.Manobra;
 import net.circle.domain.entity.ManobraComplemento;
+import net.circle.domain.entity.ManobraComplementoGrupo;
 import net.circle.domain.entity.ManobraTipo;
 import net.circle.service.model.IDModel;
+import net.circle.service.model.ManobraComplementoGrupoModel;
 import net.circle.service.model.ManobraComplementoModel;
 import net.circle.service.model.ManobraFullModel;
 import net.circle.service.model.ManobraModel;
@@ -33,7 +34,7 @@ public class ManobraRest {
 	@GET
 	public ManobrasModel consultarManobras() {
 		return parseModel(manobraBusiness.consultarTipos(), manobraBusiness.consultarComplementos(),
-				manobraBusiness.consultarLista());
+				manobraBusiness.consultarGruposComplementos(), manobraBusiness.consultarLista());
 	}
 
 	@GET
@@ -59,7 +60,7 @@ public class ManobraRest {
 		manobraFullModel.setNome(manobra.getNome());
 		manobraFullModel.setDescricao(manobra.getDescricao());
 		manobraFullModel.setTipo(parseModel(manobra.getTipo()));
-		manobraFullModel.setComplementos(manobra.getComplementos().stream().map(complemento -> parseModel(complemento))
+		manobraFullModel.setComplementos(manobra.getComplementos().stream().map(complemento -> parseModel(complemento, false))
 				.collect(Collectors.toList()));
 		return manobraFullModel;
 	}
@@ -73,14 +74,25 @@ public class ManobraRest {
 		return manobraTipoModel;
 	}
 
-	private ManobraComplementoModel parseModel(ManobraComplemento manobraComplemento) {
+	private ManobraComplementoGrupoModel parseModel(ManobraComplementoGrupo manobraComplementoGrupo) {
+		var manobraComplementoGrupoModel = new ManobraComplementoGrupoModel();
+		manobraComplementoGrupoModel.setId(manobraComplementoGrupo.getId());
+		manobraComplementoGrupoModel.setNome(manobraComplementoGrupo.getNome());
+		manobraComplementoGrupoModel.setDescricao(manobraComplementoGrupo.getDescricao());
+
+		return manobraComplementoGrupoModel;
+	}
+
+	private ManobraComplementoModel parseModel(ManobraComplemento manobraComplemento, Boolean idModelGrupo) {
 		var manobraComplementoModel = new ManobraComplementoModel();
 		manobraComplementoModel.setId(manobraComplemento.getId());
 		manobraComplementoModel.setNome(manobraComplemento.getNome());
 		manobraComplementoModel.setDescricao(manobraComplemento.getDescricao());
 		manobraComplementoModel.setAbreviacao(manobraComplemento.getAbreviacao());
-		manobraComplementoModel.setGrupo(manobraComplemento.getGrupo().getNome());
-		manobraComplementoModel.setGrupoDescricao(manobraComplemento.getGrupo().getDescricao());
+		if (idModelGrupo)
+			manobraComplementoModel.setGrupo(new IDModel(manobraComplemento.getGrupo().getId()));
+		else
+			manobraComplementoModel.setGrupoDescricao(manobraComplemento.getGrupo().getDescricao());
 		return manobraComplementoModel;
 	}
 
@@ -89,12 +101,14 @@ public class ManobraRest {
 	}
 
 	private ManobrasModel parseModel(List<ManobraTipo> tipos, List<ManobraComplemento> complementos,
-			List<Manobra> manobras) {
+			List<ManobraComplementoGrupo> gruposComplementos, List<Manobra> manobras) {
 		var manobrasModel = new ManobrasModel();
 		manobrasModel.setTipos(tipos.stream().map(manobraTipo -> parseModel(manobraTipo)).collect(Collectors.toList()));
 		manobrasModel.setComplementos(
-				complementos.stream().map(complemento -> parseModel(complemento)).collect(Collectors.toList()));
+				complementos.stream().map(complemento -> parseModel(complemento, true)).collect(Collectors.toList()));
 		manobrasModel.setManobras(manobras.stream().map(manobra -> parseModel(manobra)).collect(Collectors.toList()));
+		manobrasModel.setGrupos_complementos(gruposComplementos.stream()
+				.map(grupoComplemento -> parseModel(grupoComplemento)).collect(Collectors.toList()));
 		return manobrasModel;
 	}
 

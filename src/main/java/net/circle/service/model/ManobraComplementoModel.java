@@ -12,8 +12,11 @@ public class ManobraComplementoModel {
 	private String descricao;
 	@JsonInclude(value = Include.NON_EMPTY)
 	private String abreviacao;
-	private String grupo;
-	@JsonInclude(value = Include.NON_EMPTY)
+	
+	@JsonInclude(value = Include.NON_NULL)
+	private IDModel grupo;
+	
+	@JsonInclude(value = Include.NON_NULL)
 	private String grupoDescricao;
 
 	public Integer getId() {
@@ -48,11 +51,11 @@ public class ManobraComplementoModel {
 		this.abreviacao = abreviacao;
 	}
 
-	public String getGrupo() {
+	public IDModel getGrupo() {
 		return grupo;
 	}
 
-	public void setGrupo(String grupo) {
+	public void setGrupo(IDModel grupo) {
 		this.grupo = grupo;
 	}
 
@@ -63,5 +66,5 @@ public class ManobraComplementoModel {
 	public void setGrupoDescricao(String grupoDescricao) {
 		this.grupoDescricao = grupoDescricao;
 	}
-	
+
 }

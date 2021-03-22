@@ -3,6 +3,7 @@ package net.circle.domain.entity;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -32,6 +33,9 @@ public class Atleta extends AbstractEntity {
 	@NotBlank
 	@Size(max = 100)
 	private String nome;
+	
+	@Column(length = 5000)
+	private String biografia;
 
 	@OneToOne(cascade = CascadeType.MERGE)
 	@NotNull
@@ -65,6 +69,14 @@ public class Atleta extends AbstractEntity {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getBiografia() {
+		return biografia;
+	}
+
+	public void setBiografia(String biografia) {
+		this.biografia = biografia;
 	}
 
 	public Usuario getUsuario() {

@@ -3,7 +3,7 @@ import { usuarioLogado } from './ContaController.js';
 
 let atleta;
 const elements = {
-	labelNome: null, imgAtleta: null, imgEstado: null, labelIdade: null, labelCategoria: null, labelCidade: null, labelCategoria: null,
+	labelNome: null, textoBiografia: null, imgAtleta: null, imgEstado: null, labelIdade: null, labelCategoria: null, labelCidade: null, labelCategoria: null,
 	labelLocalidadeUf: null, container: null, imgAtualizarAtleta: null, imgAtualizarFoto: null, botaoFecharModal: null, title: null
 }
 
@@ -15,6 +15,7 @@ export async function initAtleta() {
 	elements.imgAtleta = document.getElementById('img-atleta');
 	elements.imgEstado = document.getElementById('img-estado');
 	elements.labelNome = document.getElementById('label-nome');
+	elements.textoBiografia = document.getElementById('p-biografia');
 	elements.labelIdade = document.getElementById('label-idade');
 	elements.labelCategoria = document.getElementById('label-categoria');
 	elements.labelCategoria = document.getElementById('label-categoria');
@@ -57,6 +58,7 @@ export async function initAtleta() {
 function setAtleta(a) {
 	atleta = a;
 	elements.labelNome.textContent = atleta.nome
+	elements.textoBiografia.textContent = atleta.biografia
 
 	if (atleta.localidade) {
 		elements.labelLocalidadeUf.textContent = `${atleta.localidade.nome} - ${atleta.localidade.uf}`
@@ -148,7 +150,7 @@ async function atualizarFoto() {
 }
 
 const elementsAtualizarAtleta = {
-	inputNome: null, inputNascimento: null, radioCategoria: null, selectUfs: null, selectLocalidades: null, botaoEnviar: null, form: null
+	inputNome: null, textareaBiografia:null, inputNascimento: null, radioCategoria: null, selectUfs: null, selectLocalidades: null, botaoEnviar: null, form: null
 }
 
 async function atualizarAtleta() {
@@ -183,6 +185,7 @@ async function atualizarAtleta() {
 		*/
 		elementsAtualizarAtleta.form = document.forms.namedItem('form-atualizar-atleta');
 		elementsAtualizarAtleta.inputNome = document.getElementById('input-nome');
+		elementsAtualizarAtleta.textareaBiografia = document.getElementById('textarea-biografia');
 		elementsAtualizarAtleta.inputNascimento = document.getElementById('input-nascimento');
 		elementsAtualizarAtleta.radioCategoria = document.getElementsByName('radio-categoria');
 		elementsAtualizarAtleta.form.addEventListener('submit', enviarAtualizacao);
@@ -199,6 +202,8 @@ async function atualizarAtleta() {
 		*/
 		if (atleta.nome)
 			elementsAtualizarAtleta.inputNome.value = atleta.nome;
+		if (atleta.biografia)
+		elementsAtualizarAtleta.textareaBiografia.value = atleta.biografia;
 		if (atleta.nascimento)
 			elementsAtualizarAtleta.inputNascimento.value = atleta.nascimento;
 		if (atleta.categoria)
@@ -275,6 +280,7 @@ async function enviarAtualizacao(event) {
 	const response = await put('api/atletas', {
 		id: atleta.id,
 		nome: elementsAtualizarAtleta.inputNome.value,
+		biografia: elementsAtualizarAtleta.textareaBiografia.value,
 		nascimento: elementsAtualizarAtleta.inputNascimento.value,
 		categoria: Array.from(elementsAtualizarAtleta.radioCategoria).find(radio => radio.checked).value,
 		localidade: {

@@ -8,10 +8,12 @@ import javax.inject.Named;
 
 import net.circle.business.interfaces.IManobraBusiness;
 import net.circle.domain.dao.ManobraComplementoDAO;
+import net.circle.domain.dao.ManobraComplementoGrupoDAO;
 import net.circle.domain.dao.ManobraDAO;
 import net.circle.domain.dao.ManobraTipoDAO;
 import net.circle.domain.entity.Manobra;
 import net.circle.domain.entity.ManobraComplemento;
+import net.circle.domain.entity.ManobraComplementoGrupo;
 import net.circle.domain.entity.ManobraTipo;
 
 @Named
@@ -26,6 +28,9 @@ public class ManobraBusiness implements IManobraBusiness {
 	@Inject
 	private ManobraComplementoDAO daoManobraComplemento;
 
+	@Inject
+	private ManobraComplementoGrupoDAO daoManobraComplementoGrupo;
+
 	@Override
 	public List<Manobra> consultarLista() {
 		return dao.findAll();
@@ -39,6 +44,11 @@ public class ManobraBusiness implements IManobraBusiness {
 	@Override
 	public List<ManobraComplemento> consultarComplementos() {
 		return daoManobraComplemento.findAll();
+	}
+	
+	@Override
+	public List<ManobraComplementoGrupo> consultarGruposComplementos() {
+		return daoManobraComplementoGrupo.findAll();
 	}
 
 	@Override

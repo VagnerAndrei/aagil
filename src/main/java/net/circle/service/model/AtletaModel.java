@@ -14,6 +14,7 @@ public class AtletaModel {
 
 	private Integer id;
 	private String nome;
+	private String biografia;
 
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
 	@JsonSerialize(using = LocalDateSerializer.class)
@@ -28,10 +29,11 @@ public class AtletaModel {
 		this.nome = nome;
 	}
 
-	public AtletaModel(Integer id, String nome, LocalDate nascimento, LocalidadeModel localidade, String categoria) {
+	public AtletaModel(Integer id, String nome, String biografia,LocalDate nascimento, LocalidadeModel localidade, String categoria) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.biografia = biografia;
 		this.nascimento = nascimento;
 		this.localidade = localidade;
 		this.categoria = categoria;
@@ -51,6 +53,14 @@ public class AtletaModel {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getBiografia() {
+		return biografia;
+	}
+
+	public void setBiografia(String biografia) {
+		this.biografia = biografia;
 	}
 
 	public LocalDate getNascimento() {

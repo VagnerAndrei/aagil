@@ -1,49 +1,51 @@
 <!DOCTYPE html>
 
 <head>
-	<link href="../../assets/css/style.css" rel="stylesheet">
+<link href="../../assets/css/style.css" rel="stylesheet">
 </head>
 <main>
 	<form name="form-atualizar-atleta" id="form-atualizar-atleta">
+
 		<div>
-			<label for="nome">Nome:</label>
-			<input id="input-nome" type="text" required="required"> 
+			<label for="nome">Nome:</label> <input id="input-nome" type="text"
+				required="required">
 		</div>
-		
+
 		<div>
-		<label for="nascimento">Data de	nascimento:</label> 
-		<input id="input-nascimento" type="date" required min="1920-01-01" max="2010-12-31">
+			<label for="nascimento">Data de nascimento:</label> <input
+				id="input-nascimento" type="date" required min="1920-01-01"
+				max="2010-12-31">
 		</div>
-		
+
 		<div class="flex-row space-beetween">
-			<label for="categoria">Localidade:</label> 
-			<select id="select-ufs" required>
+			<label for="categoria">Localidade:</label> <select id="select-ufs"
+				required>
 				<option value="">UF:</option>
-			</select> 
-			<select id="select-localidades" required>
+			</select> <select id="select-localidades" required>
 				<option value="">Localidade:</option>
 			</select>
 		</div>
-		
-		
+
+
 		<div class="flex-row">
-			<label for="categoria">Categoria:</label>
-					<input id="input-categoria-iniciante" type="radio" name="radio-categoria" value="Iniciante" required> <label
-						for="input-categoria-iniciante">Iniciante</label>
+			<label for="categoria">Categoria:</label> <input
+				id="input-categoria-iniciante" type="radio" name="radio-categoria"
+				value="Iniciante" required> <label
+				for="input-categoria-iniciante">Iniciante</label> <input
+				id="input-categoria-amador" type="radio" name="radio-categoria"
+				value="Amador" required> <label for="input-categoria-amador">Amador</label>
 
-					<input id="input-categoria-amador" type="radio" name="radio-categoria" value="Amador" required> <label
-						for="input-categoria-amador">Amador</label>
-
-					<input id="input-categoria-profissional" type="radio" name="radio-categoria" value="Profissional" required>
-					<label for="input-categoria-profissional">Profissional</label>
+			<input id="input-categoria-profissional" type="radio"
+				name="radio-categoria" value="Profissional" required> <label
+				for="input-categoria-profissional">Profissional</label>
 		</div>
-		
+
 		<div>
 			<label for="nome">Biografia:</label>
-			<textarea id="textarea-biografia" rows="20" cols="50" style="resize:none" maxlength="5000"></textarea>
+			<textarea id="textarea-biografia" rows="20" cols="48"
+				style="resize: none" maxlength="5000"></textarea>
 		</div>
-
-		
-			<button id="botao-enviar" type="submit">Enviar</button>
+		<label id="label-erro" for="Email" class="mensagem-erro"></label>
+		<button id="botao-enviar" type="submit">Enviar</button>
 	</form>
 </main>

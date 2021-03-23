@@ -74,12 +74,8 @@ export function registro() {
 }
 
 export function logout() {
-	get('api/usuarios/sair').then((response) => {
-		if (response.status != 403) {
-			loginHandler()
-		}
-		else
-			console.log('Inacessível')
+	get('api/usuarios/sair').then(() => {
+		loginHandler()
 	}).catch(() => { })
 }
 

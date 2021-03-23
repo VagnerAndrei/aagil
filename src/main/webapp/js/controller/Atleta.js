@@ -32,27 +32,27 @@ export async function initAtleta() {
 	*/
 	let response = await get(`api/atletas/${urls.atleta.id}`);
 
-	if (response.status == 404)
-		pagina_nao_encontrada();
-	else
-		if (response.status == 302) {
-			const atleta = await response.json();
+	if (response.status == 302) {
+		const atleta = await response.json();
 
-			setAtleta(atleta);
+		setAtleta(atleta);
 
-			if (usuarioLogado && usuarioLogado.id == urls.atleta.id) {
-				elements.imgAtualizarFoto.classList.remove('display-none');
-				elements.imgAtualizarAtleta.classList.remove('display-none');
-				elements.imgAtualizarFoto.addEventListener('click', atualizarFoto)
-				elements.imgAtualizarAtleta.addEventListener('click', atualizarAtleta)
-				elements.botaoFecharModal.addEventListener('click', fecharModal)
-			}
-
-			elements.container.classList.add('container-atleta');
-			elements.container.classList.remove('display-none');
-
-			confereFoto();
+		if (usuarioLogado && usuarioLogado.id == urls.atleta.id) {
+			elements.imgAtualizarFoto.classList.remove('display-none');
+			elements.imgAtualizarAtleta.classList.remove('display-none');
+			elements.imgAtualizarFoto.addEventListener('click', atualizarFoto)
+			elements.imgAtualizarAtleta.addEventListener('click', atualizarAtleta)
+			elements.botaoFecharModal.addEventListener('click', fecharModal)
 		}
+
+		elements.container.classList.add('container-atleta');
+		elements.container.classList.remove('display-none');
+
+		confereFoto();
+	}
+	else
+		if (response.status == 404 || response.status == 500)
+			pagina_nao_encontrada();
 }
 
 function setAtleta(a) {
@@ -90,7 +90,7 @@ function confereFoto() {
 }
 
 const elementsModal = { bgModal: null, conteudoModal: null, labelTitulo: null };
-const elementsAtualizarFoto = { botaoCancelar: null, botaoRemoverFoto: null, botaoEnviar: null, progressBar: null, inputFoto: null, labelErroFoto: null, form: null };
+const elementsAtualizarFoto = { botaoCancelar: null, botaoRemoverFoto: null, botaoEnviar: null, progressBar: null, labelProgress: null, inputFoto: null, labelErroFoto: null, form: null };
 
 async function atualizarFoto() {
 
@@ -117,7 +117,7 @@ async function atualizarFoto() {
 		case (403): {
 
 		}
-		case (429,547): {
+		case (429, 547): {
 
 		}
 	}
@@ -138,6 +138,7 @@ async function atualizarFoto() {
 		elementsAtualizarFoto.botaoCancelar = document.getElementById('botao-cancelar');
 		elementsAtualizarFoto.botaoEnviar = document.getElementById('botao-enviar');
 		elementsAtualizarFoto.progressBar = document.getElementById('progress');
+		elementsAtualizarFoto.labelProgress = document.getElementById('label-progress');
 		elementsAtualizarFoto.inputFoto = document.getElementById('input-foto');
 
 		/*
@@ -163,7 +164,7 @@ async function atualizarFoto() {
 }
 
 const elementsAtualizarAtleta = {
-	inputNome: null, textareaBiografia: null, inputNascimento: null, radioCategoria: null, selectUfs: null, selectLocalidades: null, botaoEnviar: null, form: null
+	labelErro: null, inputNome: null, textareaBiografia: null, inputNascimento: null, radioCategoria: null, selectUfs: null, selectLocalidades: null, botaoEnviar: null, form: null
 }
 
 async function atualizarAtleta() {
@@ -197,6 +198,7 @@ async function atualizarAtleta() {
 		ATRIBUINDO DOCUMENT HTML ELEMENT
 		*/
 		elementsAtualizarAtleta.form = document.forms.namedItem('form-atualizar-atleta');
+		elementsAtualizarAtleta.labelErro = document.getElementById('label-erro');
 		elementsAtualizarAtleta.inputNome = document.getElementById('input-nome');
 		elementsAtualizarAtleta.textareaBiografia = document.getElementById('textarea-biografia');
 		elementsAtualizarAtleta.inputNascimento = document.getElementById('input-nascimento');
@@ -300,11 +302,18 @@ async function enviarAtualizacao(event) {
 			id: elementsAtualizarAtleta.selectLocalidades.value,
 		}
 	})
-
-	if (response.status == 202) {
-		const atleta = await response.json();
-		setAtleta(atleta);
-		fecharModal();
+	switch (response.status) {
+		case 202:
+			const atleta = await response.json()
+			setAtleta(atleta)
+			fecharModal()
+			break
+		case 403:
+			elementsAtualizarAtleta.labelErro.textContent = "Acesso negado"
+			break
+		case 500:
+			response.json().then(value => elementsAtualizarAtleta.labelErro.textContent = value.mensagem)
+			break
 	}
 
 }
@@ -372,20 +381,26 @@ function enviarFoto(event) {
 		xhr.upload.addEventListener('progress', e => {
 			const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
 			elementsAtualizarFoto.progressBar.value = percent;
+			elementsAtualizarFoto.labelProgress.textContent = percent != 100 ? `Enviando... (${percent})` : "Processando imagem..."
 		})
 
 		xhr.onreadystatechange = () => {
 			if (xhr.readyState === 4) {
-				if (xhr.status === 400) {
-					console.log('erro')
-					xhr = null;
-					elementsAtualizarFoto.labelErroFoto.textContent = xhr.responseText
-				}
-				if (xhr.status === 202) {
-					console.log('fim')
-					xhr = null;
-					confereFoto();
-					fecharModal();
+				switch (xhr.status) {
+					case 500:
+					case 429:
+					case 400:
+						elementsAtualizarFoto.labelErroFoto.textContent = JSON.parse(xhr.response).mensagem
+						xhr = null
+						break
+					case 202:
+						xhr = null
+						confereFoto()
+						fecharModal()
+						break
+					case 403:
+						elementsAtualizarFoto.labelErroFoto.textContent = "Acesso negado"
+						break
 				}
 			}
 
@@ -393,6 +408,7 @@ function enviarFoto(event) {
 
 		xhr.onerror = (e) => {
 			console.log(e)
+			elementsAtualizarFoto.labelErroFoto.textContent = "Ocorreu um erro no envio da imagem"
 		}
 
 		xhr.send(new FormData(event.target))

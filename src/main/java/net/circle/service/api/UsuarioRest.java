@@ -137,7 +137,6 @@ public class UsuarioRest {
 	@RolesAllowed({ "USER", "ADMIN" })
 	public void logout(@Context HttpServletRequest servletRequest) {
 		try {
-			System.out.println(servletRequest.getUserPrincipal().getName());
 			servletRequest.logout();
 		} catch (Exception e) {
 			e.printStackTrace();

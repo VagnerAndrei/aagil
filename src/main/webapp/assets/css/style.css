@@ -236,6 +236,11 @@ footer a {
 	color: #FF0000;
 }
 
+.mensagem-progress {
+	color: #0000FF;
+	font-weight: bold;
+}
+
 .flex-row {
 	display: flex;
 	flex-direction: row;

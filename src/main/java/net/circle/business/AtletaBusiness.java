@@ -6,8 +6,11 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import net.circle.business.exception.AtletaBusinessException;
 import net.circle.business.exception.BusinessException;
-import net.circle.business.exception.BusinessException.Excecao;
+import net.circle.business.exception.UsuarioBusinessException;
+import net.circle.business.exception.enums.AtletaExcecao;
+import net.circle.business.exception.enums.UsuarioExcecao;
 import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.business.util.Encriptador;
 import net.circle.business.util.ImagemUtil;
@@ -33,7 +36,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	@Override
 	public Atleta salvar(Atleta atleta) throws BusinessException, Exception {
 		if (usuarioDAO.exist(atleta.getUsuario().getEmail()))
-			throw new BusinessException(Excecao.EMAIL_JA_CADASTRADO);
+			throw new UsuarioBusinessException(UsuarioExcecao.EMAIL_JA_CADASTRADO);
 		atleta.getUsuario().setPerfil(Perfil.USER);
 		atleta.getUsuario().setSenha(Encriptador.MD5(atleta.getUsuario().getSenha()));
 		return dao.merge(atleta);
@@ -59,7 +62,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	}
 
 	@Override
-	public Optional<Atleta> consultar(Integer id) {
+	public Optional<Atleta> consultar(Integer id) throws Exception{
 		return dao.findById(id);
 	}
 
@@ -79,8 +82,8 @@ public class AtletaBusiness implements IAtletaBusiness {
 		if (atleta.getFoto() == null)
 			atleta.setFoto(new Foto());
 		atleta.getFoto().setOriginal(foto);
-		atleta.getFoto().setArquivo(ImagemUtil.redimensionarImagem(foto));
-		atleta.getFoto().setThumbnail(ImagemUtil.gerarThumbnails(foto));
+		atleta.getFoto().setArquivo(ImagemUtil.getTratamentoJPG(foto));
+		atleta.getFoto().setThumbnail(ImagemUtil.getThumbnail(foto));
 		atleta.getFoto().setExtensao(extensao);
 		dao.merge(atleta);
 	}
@@ -88,7 +91,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	public void apagarFoto(Integer idAtleta) throws Exception {
 		var atleta = dao.findById(idAtleta).get();
 		if (atleta.getFoto() == null)
-			throw new BusinessException(Excecao.FOTO_NAO_EXISTE);
+			throw new AtletaBusinessException(AtletaExcecao.FOTO_NAO_EXISTE);
 		atleta.setFoto(null);
 		dao.merge(atleta);
 	}

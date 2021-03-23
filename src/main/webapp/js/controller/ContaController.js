@@ -144,12 +144,13 @@ export function acesso() {
 				senha: inputs[1].value
 			})
 				.then((response) => {
+					console.log(response)
 					response.json().then(value => {
-						if (response.ok) {
+						if (response.status == 202) {
 							loginHandler(value, true)
 						}
 						else
-							messages.find(message => message.htmlFor == value.campo).textContent = value.mensagem
+							messages.find(message => message.htmlFor == value.campo ? value.campo : "Email").textContent = value.mensagem
 					})
 					disabled(false);
 					if (inputs[2].checked) {

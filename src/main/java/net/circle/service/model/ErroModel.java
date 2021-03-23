@@ -1,7 +1,13 @@
 package net.circle.service.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import net.circle.business.exception.interfaces.INegocioExcecao;
+
 public class ErroModel {
 
+	@JsonInclude(value = Include.NON_NULL)
 	private String campo;
 	private String mensagem;
 
@@ -9,6 +15,12 @@ public class ErroModel {
 		super();
 		this.campo = campo;
 		this.mensagem = mensagem;
+	}
+	
+	public ErroModel(INegocioExcecao excecao) {
+		super();
+		this.campo = excecao.getCampo();
+		this.mensagem = excecao.getMensagem();
 	}
 
 	public String getCampo() {

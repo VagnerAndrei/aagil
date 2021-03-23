@@ -59,6 +59,7 @@ function setAtleta(a) {
 	atleta = a;
 	elements.labelNome.textContent = atleta.nome
 	elements.textoBiografia.textContent = atleta.biografia
+	elements.textoBiografia.innerHTML = elements.textoBiografia.innerHTML.replace(/\n/g, '<br>\n')
 
 	if (atleta.localidade) {
 		elements.labelLocalidadeUf.textContent = `${atleta.localidade.nome} - ${atleta.localidade.uf}`
@@ -109,6 +110,18 @@ async function atualizarFoto() {
 	*/
 	const response = await get(urls.atleta_atualizar_foto.path)
 
+	switch (response.status) {
+		case (202): {
+
+		}
+		case (403): {
+
+		}
+		case (429,547): {
+
+		}
+	}
+
 	if (response.status == 403)
 		elementsModal.conteudoModal.innerHTML = '<h2>Acesso negado</h2>';
 	else {
@@ -150,7 +163,7 @@ async function atualizarFoto() {
 }
 
 const elementsAtualizarAtleta = {
-	inputNome: null, textareaBiografia:null, inputNascimento: null, radioCategoria: null, selectUfs: null, selectLocalidades: null, botaoEnviar: null, form: null
+	inputNome: null, textareaBiografia: null, inputNascimento: null, radioCategoria: null, selectUfs: null, selectLocalidades: null, botaoEnviar: null, form: null
 }
 
 async function atualizarAtleta() {
@@ -203,7 +216,7 @@ async function atualizarAtleta() {
 		if (atleta.nome)
 			elementsAtualizarAtleta.inputNome.value = atleta.nome;
 		if (atleta.biografia)
-		elementsAtualizarAtleta.textareaBiografia.value = atleta.biografia;
+			elementsAtualizarAtleta.textareaBiografia.value = atleta.biografia;
 		if (atleta.nascimento)
 			elementsAtualizarAtleta.inputNascimento.value = atleta.nascimento;
 		if (atleta.categoria)

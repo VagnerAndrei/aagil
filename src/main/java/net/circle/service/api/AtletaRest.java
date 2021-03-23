@@ -25,104 +25,186 @@ import javax.ws.rs.core.Response.Status;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
-import net.circle.business.AtletaBusiness;
-import net.circle.business.exception.BusinessException;
+import net.circle.business.exception.AtletaBusinessException;
+import net.circle.business.exception.enums.AtletaExcecao;
+import net.circle.business.exception.enums.NegocioExcecao;
+import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.domain.entity.Atleta;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.ErroModel;
 import net.circle.service.model.LocalidadeModel;
 
 @Path("/atletas")
+@Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AtletaRest {
 
 	@Inject
-	private AtletaBusiness servicoAtleta;
+	private IAtletaBusiness servicoAtleta;
 
+	public final static String[] fotoFormatos = { "PNG", "JPG", "JPEG", "BMP" };
+
+	/**
+	 * Realiza a obtenção de um atleta
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FOUND(302, "Found"),<br/>
+	 *          Status.NOT_FOUND(404, "Not Found"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@GET
 	@Path("/{idAtleta}")
 	public Response consultar(@PathParam("idAtleta") Integer idAtleta) {
+		try {
+			var atleta = servicoAtleta.consultar(idAtleta);
 
-		var atleta = servicoAtleta.consultar(idAtleta);
+			if (atleta.isPresent())
+				return Response.status(Status.FOUND).entity(parseModel(atleta.get())).build();
 
-		if (atleta.isPresent())
-			return Response.status(Status.FOUND).entity(parseModel(atleta.get())).build();
-
-		return Response.status(Status.NOT_FOUND).build();
-
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
 	}
 
+	/**
+	 * Realiza a exclusão da foto do atleta, incluindo thumbnail e original
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FORBIDDEN(403, "Forbidden"),<br/>
+	 *          Status.NOT_ACCEPTABLE(406, "Not Acceptable"),<br/>
+	 *          Status. INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@DELETE
 	@RolesAllowed("USER")
 	@Path("/{idAtleta}/foto")
 	public Response apagarFoto(@Context HttpServletRequest request, @PathParam("idAtleta") Integer idAtleta) {
-		var atleta = servicoAtleta.consultar(idAtleta).get();
-
-		if (!request.getUserPrincipal().getName().equals(atleta.getUsuario().getEmail()))
-			return Response.status(Status.FORBIDDEN).entity("Acesso negado").build();
-
 		try {
+			var atleta = servicoAtleta.consultar(idAtleta).get();
+
+			if (!request.getUserPrincipal().getName().equals(atleta.getUsuario().getEmail()))
+				return Response.status(Status.FORBIDDEN).entity("Acesso negado").build();
+
 			servicoAtleta.apagarFoto(idAtleta);
-		} catch (BusinessException e) {
-			return Response.status(Status.NOT_ACCEPTABLE).entity(new ErroModel(e.getCampo(), e.getMensagem())).build();
+
+			return Response.noContent().build();
+		} catch (AtletaBusinessException e) {
+			return Response.status(Status.NOT_ACCEPTABLE).entity(new ErroModel(e.getExcecao())).build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
-
-		return Response.noContent().build();
 	}
 
+	/**
+	 * Realiza a obtenção da foto do atleta em formato JPG
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.NO_CONTENT(204, "No Content"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@GET
 	@Path("/{idAtleta}/foto")
-	@Produces({ "image/jpg", "image/gif" })
+	@Produces("image/jpg")
 	public Response getFoto(@PathParam("idAtleta") Integer idAtleta) {
-		var atleta = servicoAtleta.consultar(idAtleta).get();
+		try {
+			var atleta = servicoAtleta.consultar(idAtleta).get();
 
-		if (atleta.getFoto() == null)
-			return Response.status(Status.NO_CONTENT).build();
-		if (atleta.getFoto().getExtensao().toLowerCase().equals("gif"))
-			return getFotoOriginal(idAtleta);
-		ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo()).type("image/jpg"); // +
-																									// atleta.getFoto().getExtensao()
-		response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + ".jpg");// +
-																										// atleta.getFoto().getExtensao()
+			if (atleta.getFoto() == null)
+				return Response.status(Status.NO_CONTENT).build();
 
-		return response.build();
+			ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo()).type("image/jpg"); // +
+			// atleta.getFoto().getExtensao()
+			response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + ".jpg");// +
+			// atleta.getFoto().getExtensao()
+
+			return response.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
 	}
 
+	/**
+	 * Realiza a obtenção da foto do atleta em formato original (a mesma que foi
+	 * enviada no upload)
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.NO_CONTENT(204, "No Content"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@GET
 	@Path("/{idAtleta}/foto/original")
-	@Produces({ "image/jpg", "image/png", "image/jpeg", "image/gif", "image/bmp" })
+	@Produces({ "image/jpg", "image/png", "image/jpeg", "image/bmp" })
 	public Response getFotoOriginal(@PathParam("idAtleta") Integer idAtleta) {
-		var atleta = servicoAtleta.consultar(idAtleta).get();
+		try {
+			var atleta = servicoAtleta.consultar(idAtleta).get();
 
-		if (atleta.getFoto() == null)
-			return Response.status(Status.NO_CONTENT).build();
+			if (atleta.getFoto() == null)
+				return Response.noContent().build();
 
-		ResponseBuilder response = Response.ok(atleta.getFoto().getOriginal())
-				.type("image/" + atleta.getFoto().getExtensao().toLowerCase());
-		response.header("Content-Disposition",
-				"inline; filename=" + atleta.getNome().trim() + "." + atleta.getFoto().getExtensao().toLowerCase());
+			ResponseBuilder response = Response.ok(atleta.getFoto().getOriginal())
+					.type("image/" + atleta.getFoto().getExtensao().toLowerCase());
+			response.header("Content-Disposition",
+					"inline; filename=" + atleta.getNome().trim() + "." + atleta.getFoto().getExtensao().toLowerCase());
 
-		return response.build();
+			return response.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
 	}
 
+	/**
+	 * Realiza a obtenção da foto do atleta em formato Thumbnail
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.NO_CONTENT(204, "No Content"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@GET
 	@Path("/{idAtleta}/foto/thumb")
 	@Produces({ "image/jpg", "image/gif" })
 	public Response getThumb(@PathParam("idAtleta") Integer idAtleta) {
-		var atleta = servicoAtleta.consultar(idAtleta).get();
+		try {
+			var atleta = servicoAtleta.consultar(idAtleta).get();
 
-		if (atleta.getFoto() == null)
-			return Response.status(Status.NO_CONTENT).build();
-		if (atleta.getFoto().getExtensao().toLowerCase().equals("gif"))
-			return getFotoOriginal(idAtleta);
-		ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail()).type("image/jpg");
-		response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + "-thumbnail.jpg");
+			if (atleta.getFoto() == null)
+				return Response.status(Status.NO_CONTENT).build();
+			ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail()).type("image/jpg");
+			response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + "-thumbnail.jpg");
 
-		return response.build();
+			return response.build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
 	}
 
+	/**
+	 * Realiza atualização do atleta
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FORBIDDEN(403, "Forbidden"),<br/>
+	 *          Status.ACCEPTED(202, "Accepted"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@PUT
 	@RolesAllowed("USER")
 	@Path("/")
@@ -135,10 +217,27 @@ public class AtletaRest {
 			return Response.accepted().entity(parseModel(servicoAtleta.atualizar(atleta))).build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.serverError().entity(e.getMessage()).build();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
 
+	/**
+	 * Realiza upload da foto do perfil do atleta
+	 *
+	 * @param idAtleta
+	 * @param input    inputStream com uma imagem
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.ACCEPTED(202, "Accepted"),<br/>
+	 *          Status.FORBIDDEN(403, "Acesso Negado"),<br/>
+	 *          Status.TOO_MANY_REQUESTS(429, "Este serviço aceita upload de uma
+	 *          imagem apenas"), <br/>
+	 *          Status.BAD_REQUEST(400, "Não foi encontrado uma foto no formulário")
+	 *          ,<br/>
+	 *          Status.BAD_REQUEST(400, "Formatos aceitos: PNG, JPG, JPEG, BMP")
+	 *          ,<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@PUT
 	@RolesAllowed("USER")
 	@Path("/{idAtleta}/foto")
@@ -147,34 +246,31 @@ public class AtletaRest {
 			MultipartFormDataInput input) {
 		try {
 			var usuario = servicoAtleta.consultarUsuario(idAtleta);
-
 			if (!request.getUserPrincipal().getName().equals(usuario))
-				return Response.status(Status.FORBIDDEN).entity("Acesso negado").build();
+				return Response.status(Status.FORBIDDEN).build();
 
 			Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 			List<InputPart> inputParts = uploadForm.get("foto");
 
 			if (inputParts.size() > 1)
 				return Response.status(Status.TOO_MANY_REQUESTS)
-						.entity("Este serviço aceita upload de uma imagem apenas").build();
+						.entity(new ErroModel(AtletaExcecao.VARIOS_ARQUIVOS_ENVIADOS)).build();
 			if (inputParts.size() == 0)
-				return Response.status(Status.BAD_REQUEST).entity("Não foi encontrado uma foto no formulário").build();
+				return Response.status(Status.BAD_REQUEST)
+						.entity(new ErroModel(AtletaExcecao.FOTO_NAO_ENCONTRADA_NO_FORMULARIO)).build();
 
 			for (InputPart inputPart : inputParts) {
 
 				String fileName = getFileName(inputPart.getHeaders());
 
-				String[] tipos = { "PNG", "JPG", "JPEG", "GIF", "BMP" };
 				var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
 
-				if (!Arrays.asList(tipos).contains(extensao))
-					return Response.status(Status.BAD_REQUEST).entity("Formatos aceitos:" + Arrays.asList(tipos))
+				if (!Arrays.asList(fotoFormatos).contains(extensao))
+					return Response.status(Status.BAD_REQUEST).entity(new ErroModel(AtletaExcecao.FORMATO_INVALIDO))
 							.build();
 
 				// convert the uploaded file to inputstream
-				InputStream inputStream;
-
-				inputStream = inputPart.getBody(InputStream.class, null);
+				InputStream inputStream = inputPart.getBody(InputStream.class, null);
 				servicoAtleta.foto(idAtleta, inputStream.readAllBytes(), extensao);
 			}
 
@@ -182,7 +278,7 @@ public class AtletaRest {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.serverError().entity(e.getMessage()).build();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 
 	}

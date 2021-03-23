@@ -5,21 +5,21 @@ import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import net.circle.business.LocalizacaoBusiness;
-import net.circle.domain.entity.Estado;
+import net.circle.business.exception.enums.NegocioExcecao;
 import net.circle.domain.entity.Localidade;
+import net.circle.service.model.ErroModel;
 import net.circle.service.model.LocalidadeModel;
 
 @Path("/localizacao")
 @Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
 public class LocalizacaoRest {
 
 	@Inject
@@ -28,15 +28,25 @@ public class LocalizacaoRest {
 	@GET
 	@Path("/estados")
 	@RolesAllowed("USER")
-	public List<Estado> listarEstados() {
-		return servicoLocalizacao.listarEstados();
+	public Response listarEstados() {
+		try {
+			return Response.ok(servicoLocalizacao.listarEstados()).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
 	}
 
 	@GET
 	@Path("/localidades/{idEstado}")
 	@RolesAllowed("USER")
-	public List<LocalidadeModel> listarEstados(@PathParam("idEstado") Integer idEstado) {
-		return parseModel(servicoLocalizacao.listarLocalidadesPorEstado(idEstado));
+	public Response listarEstados(@PathParam("idEstado") Integer idEstado) {
+		try {
+			return Response.ok(parseModel(servicoLocalizacao.listarLocalidadesPorEstado(idEstado))).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
 	}
 
 	private LocalidadeModel parseModel(Localidade localidade) {

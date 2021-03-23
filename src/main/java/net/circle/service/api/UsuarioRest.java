@@ -20,8 +20,9 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import net.circle.business.exception.BusinessException;
-import net.circle.business.exception.BusinessException.Excecao;
+import net.circle.business.exception.UsuarioBusinessException;
+import net.circle.business.exception.enums.NegocioExcecao;
+import net.circle.business.exception.enums.UsuarioExcecao;
 import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.domain.entity.Atleta;
 import net.circle.service.model.AtletaModel;
@@ -40,23 +41,43 @@ public class UsuarioRest {
 	@Inject
 	private IAtletaBusiness servico;
 
+	/**
+	 * Realiza o registro do usuário
+	 *
+	 * @param pessoa - Atleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.CONFLICT(409, "EXISTE_UM_EMAIL_AUTENTICADO"),<br/>
+	 *          Status.CONFLICT(409, "EMAIL_JA_CADASTRADO"),<br/>
+	 *          Status.CREATED(201, "Created"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@POST
 	public Response register(@Context HttpServletRequest servletRequest, @Valid Atleta pessoa) {
 		try {
 			if (servletRequest.getUserPrincipal() != null)
-				return Response.status(Status.CONFLICT).entity(new ErroModel(Excecao.EMAIL_JA_AUTENTICADO.getCampo(),
-						Excecao.EMAIL_JA_AUTENTICADO.getMensagem())).build();
+				return Response.status(Status.CONFLICT)
+						.entity(new ErroModel(UsuarioExcecao.EXISTE_UM_EMAIL_AUTENTICADO)).build();
 			var senha = pessoa.getUsuario().getSenha();
 			var registro = servico.salvar(pessoa);
 			servletRequest.login(registro.getUsuario().getEmail(), senha);
 			return Response.status(Status.CREATED).entity(parseModel(registro)).build();
-		} catch (BusinessException e) {
-			return Response.status(Status.CONFLICT).entity(new ErroModel(e.getCampo(), e.getMensagem())).build();
+		} catch (UsuarioBusinessException e) {
+			return Response.status(Status.CONFLICT).entity(new ErroModel(e.getExcecao())).build();
 		} catch (Exception e) {
-			return Response.serverError().entity(e.getMessage()).build();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
 
+	/**
+	 * Informa se o usuário está logado
+	 *
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.NOT_FOUND(404, "Not Found"),<br/>
+	 *          Status.FOUND(302, "Found"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@GET
 	@Path("/autenticacao")
 	public Response isUsuarioLogado(@Context HttpServletRequest servletRequest) {
@@ -69,10 +90,22 @@ public class UsuarioRest {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.serverError().entity(e.getMessage()).build();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
 
+	/**
+	 * Realiza a autenticação do usuário no sistema
+	 *
+	 * @param usuario - usuario e senha
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.ACCEPTED(202, "Accepted"),<br/>
+	 *          Status.NOT_FOUND(404, "EMAIL_NAO_ENCONTRADO"),<br/>
+	 *          Status.CONFLICT(409, "EXISTE_UM_EMAIL_AUTENTICADO"),<br/>
+	 *          Status.BAD_REQUEST(400, "SENHA_INVALIDA")
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@POST
 	@Path("/autenticacao")
 	public Response autenticar(@Context HttpServletRequest servletRequest, @Valid AuthModel usuario) {
@@ -84,23 +117,18 @@ public class UsuarioRest {
 				if (pessoa != null) {
 
 					servletRequest.login(usuario.getEmail(), usuario.getSenha());
-					return Response.ok(parseModel(pessoa)).build();
+					return Response.accepted(parseModel(pessoa)).build();
 
 				} else
-					return Response.status(Status.NOT_FOUND)
-							.entity(new ErroModel(Excecao.EMAIL_NAO_ENCONTRADO.getCampo(),
-									Excecao.EMAIL_NAO_ENCONTRADO.getMensagem()))
+					return Response.status(Status.NOT_FOUND).entity(new ErroModel(UsuarioExcecao.EMAIL_NAO_ENCONTRADO))
 							.build();
 			} else
-				return Response.status(Status.CONFLICT).entity(new ErroModel(Excecao.EMAIL_JA_AUTENTICADO.getCampo(),
-						Excecao.EMAIL_JA_AUTENTICADO.getMensagem())).build();
-
+				return Response.status(Status.CONFLICT)
+						.entity(new ErroModel(UsuarioExcecao.EXISTE_UM_EMAIL_AUTENTICADO)).build();
 		} catch (Exception e) {
 			if (e.getMessage().contains("Login failed"))
-				return Response.status(Status.BAD_REQUEST)
-						.entity(new ErroModel(Excecao.SENHA_INVALIDA.getCampo(), Excecao.SENHA_INVALIDA.getMensagem()))
-						.build();
-			return Response.serverError().build();
+				return Response.status(Status.BAD_REQUEST).entity(new ErroModel(UsuarioExcecao.SENHA_INVALIDA)).build();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
 

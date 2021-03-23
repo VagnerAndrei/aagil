@@ -10,12 +10,11 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import net.circle.business.LocalizacaoBusiness;
-import net.circle.business.exception.enums.NegocioExcecao;
+import net.circle.business.interfaces.ILocalizacaoBusiness;
+import net.circle.domain.entity.Estado;
 import net.circle.domain.entity.Localidade;
-import net.circle.service.model.ErroModel;
+import net.circle.service.model.EstadoModel;
 import net.circle.service.model.LocalidadeModel;
 
 @Path("/localizacao")
@@ -23,37 +22,35 @@ import net.circle.service.model.LocalidadeModel;
 public class LocalizacaoRest {
 
 	@Inject
-	private LocalizacaoBusiness servicoLocalizacao;
+	private ILocalizacaoBusiness servicoLocalizacao;
 
 	@GET
 	@Path("/estados")
 	@RolesAllowed("USER")
-	public Response listarEstados() {
-		try {
-			return Response.ok(servicoLocalizacao.listarEstados()).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
-		}
+	public List<EstadoModel> listarEstados() {
+		return parseModelEstados(servicoLocalizacao.listarEstados());
 	}
 
 	@GET
 	@Path("/localidades/{idEstado}")
 	@RolesAllowed("USER")
-	public Response listarEstados(@PathParam("idEstado") Integer idEstado) {
-		try {
-			return Response.ok(parseModel(servicoLocalizacao.listarLocalidadesPorEstado(idEstado))).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
-		}
+	public List<LocalidadeModel> listarEstados(@PathParam("idEstado") Integer idEstado) {
+		return parseModelLocalidades(servicoLocalizacao.listarLocalidadesPorEstado(idEstado));
 	}
 
 	private LocalidadeModel parseModel(Localidade localidade) {
 		return new LocalidadeModel(localidade.getId(), localidade.getNome());
 	}
 
-	private List<LocalidadeModel> parseModel(List<Localidade> localidades) {
+	private EstadoModel parseModel(Estado estado) {
+		return new EstadoModel(estado.getId(), estado.getSigla());
+	}
+
+	private List<EstadoModel> parseModelEstados(List<Estado> estados) {
+		return estados.stream().map(estado -> parseModel(estado)).collect(Collectors.toList());
+	}
+
+	private List<LocalidadeModel> parseModelLocalidades(List<Localidade> localidades) {
 		return localidades.stream().map(localidade -> parseModel(localidade)).collect(Collectors.toList());
 	}
 

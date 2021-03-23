@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import net.circle.business.exception.AtletaBusinessException;
-import net.circle.business.exception.BusinessException;
 import net.circle.business.exception.UsuarioBusinessException;
 import net.circle.business.exception.enums.AtletaExcecao;
 import net.circle.business.exception.enums.UsuarioExcecao;
@@ -34,7 +33,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	private UsuarioDAO usuarioDAO;
 
 	@Override
-	public Atleta salvar(Atleta atleta) throws BusinessException, Exception {
+	public Atleta salvar(Atleta atleta) throws Exception {
 		if (usuarioDAO.exist(atleta.getUsuario().getEmail()))
 			throw new UsuarioBusinessException(UsuarioExcecao.EMAIL_JA_CADASTRADO);
 		atleta.getUsuario().setPerfil(Perfil.USER);
@@ -57,12 +56,12 @@ public class AtletaBusiness implements IAtletaBusiness {
 	}
 
 	@Override
-	public List<Atleta> consultarLista() throws Exception {
+	public List<Atleta> consultarLista() {
 		return dao.findAll();
 	}
 
 	@Override
-	public Optional<Atleta> consultar(Integer id) throws Exception{
+	public Optional<Atleta> consultar(Integer id) throws Exception {
 		return dao.findById(id);
 	}
 

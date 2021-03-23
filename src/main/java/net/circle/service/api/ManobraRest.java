@@ -8,15 +8,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 
-import net.circle.business.exception.enums.NegocioExcecao;
 import net.circle.business.interfaces.IManobraBusiness;
 import net.circle.domain.entity.Manobra;
 import net.circle.domain.entity.ManobraComplemento;
 import net.circle.domain.entity.ManobraComplementoGrupo;
 import net.circle.domain.entity.ManobraTipo;
-import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.ManobraComplementoGrupoModel;
 import net.circle.service.model.ManobraComplementoModel;
@@ -33,25 +30,15 @@ public class ManobraRest {
 	private IManobraBusiness manobraBusiness;
 
 	@GET
-	public Response consultarManobras() {
-		try {
-			return Response.ok(parseModel(manobraBusiness.consultarTipos(), manobraBusiness.consultarComplementos(),
-					manobraBusiness.consultarGruposComplementos(), manobraBusiness.consultarLista())).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
-		}
+	public ManobrasModel consultarManobras() {
+		return parseModel(manobraBusiness.consultarTipos(), manobraBusiness.consultarComplementos(),
+				manobraBusiness.consultarGruposComplementos(), manobraBusiness.consultarLista());
 	}
 
 	@GET
 	@Path("/full")
-	public Response consultarManobrasFull() {
-		try {
-			return Response.ok(parseModel(manobraBusiness.consultarLista())).build();
-		} catch (Exception e) {
-			e.printStackTrace();
-			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
-		}
+	public List<ManobraFullModel> consultarManobrasFull() {
+		return parseModel(manobraBusiness.consultarLista());
 	}
 
 	private ManobraModel parseModel(Manobra manobra) {

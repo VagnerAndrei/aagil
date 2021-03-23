@@ -5,7 +5,7 @@ import java.util.Optional;
 
 public interface IRead<T> {
 
-	List<T> consultarLista() throws Exception;
+	List<T> consultarLista();
 
 	Optional<T> consultar(Integer id) throws Exception;
 	

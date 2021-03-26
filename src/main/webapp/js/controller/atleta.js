@@ -1,5 +1,5 @@
-import { get, put, deletar, pagina_nao_encontrada, urls } from './NavegacaoController.js';
-import { usuarioLogado } from './ContaController.js';
+import { get, put, deletar, pagina_nao_encontrada, urls } from './navegacao-controller.js';
+import { usuarioLogado } from './conta-controller.js';
 
 let atleta;
 const elements = {
@@ -126,7 +126,7 @@ async function atualizarFoto() {
 		elementsModal.conteudoModal.innerHTML = '<h2>Acesso negado</h2>';
 	else {
 		const html = await response.text();
-		elementsModal.conteudoModal.innerHTML = new DOMParser().parseFromString(html, "text/html").getElementsByTagName('main')[0].innerHTML;
+		elementsModal.conteudoModal.innerHTML = new DOMParser().parseFromString(html, "text/html").getElementsByTagName('main')[0];
 
 
 		/*

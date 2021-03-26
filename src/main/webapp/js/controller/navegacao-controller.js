@@ -1,6 +1,7 @@
-import { usuarioLogado, acesso, registro } from './ContaController.js';
-import { initAtleta } from './Atleta.js';
-import { initManobras } from './Manobras.js';
+import { usuarioLogado, acesso, registro } from './conta-controller.js';
+import { initAtleta } from './atleta.js';
+import { Atletas } from './atletas.js';
+import { initManobras } from './manobras.js';
 
 const titulo = 'AAGIL'
 
@@ -54,6 +55,12 @@ export const urls = {
 		name: "atleta",
 		id: NaN,
 		title: "Atleta"
+	},
+	
+	atletas: {
+		path: "pages/public/atletas.html",
+		name: "atletas",
+		title: "Lista de atletas"
 	},
 	
 	atleta_atualizar: {
@@ -177,6 +184,9 @@ function redirect(e) {
 		case urls.manobras.name:
 			manobras()
 			break;
+		case urls.atletas.name:
+			atletas()
+			break;
 
 		default:
 			pagina_nao_encontrada();
@@ -216,6 +226,17 @@ export function perfil(e) {
 			changeState(urls.atleta)
 		}
 		initAtleta();
+	});
+
+}
+
+export function atletas(e) {
+	mainNavigate(urls.atletas, () => {
+		if (e) {
+			changeState(urls.atletas)
+		}
+		const atletas = new Atletas()
+		atletas.init()
 	});
 
 }

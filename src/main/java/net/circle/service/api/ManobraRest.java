@@ -105,7 +105,7 @@ public class ManobraRest {
 		manobrasModel.setComplementos(
 				complementos.stream().map(complemento -> parseModel(complemento, true)).collect(Collectors.toList()));
 		manobrasModel.setManobras(manobras.stream().map(manobra -> parseModel(manobra)).collect(Collectors.toList()));
-		manobrasModel.setGrupos_complementos(gruposComplementos.stream()
+		manobrasModel.setGruposComplementos(gruposComplementos.stream()
 				.map(grupoComplemento -> parseModel(grupoComplemento)).collect(Collectors.toList()));
 		return manobrasModel;
 	}

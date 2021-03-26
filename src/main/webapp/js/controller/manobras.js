@@ -1,4 +1,4 @@
-import { get, pagina_nao_encontrada } from './NavegacaoController.js';
+import { get, pagina_nao_encontrada } from './navegacao-controller.js';
 
 
 const elements = {}
@@ -24,7 +24,7 @@ export async function initManobras() {
 			const secao = {};
 			secao.nome = tipo.nome
 			secao.manobras = []
-			secao.grupos_complementos = []
+			secao.gruposComplementos = []
 			json.manobras.map(
 				manobra => {
 
@@ -37,9 +37,9 @@ export async function initManobras() {
 
 
 				})
-			json.grupos_complementos.map(grupo => {
+			json.gruposComplementos.map(grupo => {
 				if (secao.manobras.some(manobra => manobra.complementos?.find(complemento => complemento.grupo?.id === grupo.id)))
-					secao.grupos_complementos.push(grupo)
+					secao.gruposComplementos.push(grupo)
 			})
 			secoes.push(secao)
 
@@ -64,14 +64,14 @@ export async function initManobras() {
 			thDescricao.rowSpan = 2
 			theadRow.appendChild(thDescricao)
 
-			if (secao.grupos_complementos?.length > 0) {
+			if (secao.gruposComplementos?.length > 0) {
 				let thGruposComplementos = document.createElement("th")
-				thGruposComplementos.colSpan = secao.grupos_complementos.length
+				thGruposComplementos.colSpan = secao.gruposComplementos.length
 				thGruposComplementos.innerHTML = "Complementos"
 				theadRow.appendChild(thGruposComplementos)
 				let theadRowGruposComplementos = document.createElement("tr")
 				let thGrupoComplemento
-				secao.grupos_complementos.map(grupo => {
+				secao.gruposComplementos.map(grupo => {
 					thGrupoComplemento = document.createElement("th")
 					thGrupoComplemento.innerHTML = grupo.nome
 					theadRowGruposComplementos.appendChild(thGrupoComplemento)
@@ -89,7 +89,7 @@ export async function initManobras() {
 				cel = row.insertCell(-1)
 				cel.innerHTML = manobra.descricao
 
-				secao.grupos_complementos.map(grupo => {
+				secao.gruposComplementos.map(grupo => {
 					cel = row.insertCell(-1)
 					manobra.complementos?.filter(c => c.grupo.id === grupo.id).map((complemento, indice, array) => {
 						cel.innerHTML += indice + 1 == array.length ? complemento.nome : complemento.nome + ", "
@@ -106,6 +106,5 @@ export async function initManobras() {
 	}
 	else
 		pagina_nao_encontrada();
-
 
 }

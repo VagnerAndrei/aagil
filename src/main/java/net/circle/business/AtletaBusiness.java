@@ -100,4 +100,14 @@ public class AtletaBusiness implements IAtletaBusiness {
 		return dao.findById(idAtleta).orElseThrow().getUsuario().getEmail();
 	}
 
+	@Override
+	public List<Atleta> consultarPagina(int... rowStartIdxAndCount) {
+		return dao.consultarPagina(rowStartIdxAndCount);
+	}
+
+	@Override
+	public int consultarContador() {
+		return dao.consultarCount();
+	}
+
 }

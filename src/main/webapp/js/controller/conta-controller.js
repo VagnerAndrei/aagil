@@ -1,4 +1,4 @@
-import { post, get, verificaURL, home } from './NavegacaoController.js';
+import { post, get, verificaURL, home } from './navegacao-controller.js';
 
 export let usuarioLogado;
 

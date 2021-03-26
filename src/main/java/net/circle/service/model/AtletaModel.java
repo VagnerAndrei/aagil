@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 
 @JsonInclude(value = Include.NON_NULL)
-public class AtletaModel {
+public class AtletaModel extends AbstractModel{
 
 	private Integer id;
 	private String nome;

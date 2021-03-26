@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -33,6 +34,7 @@ import net.circle.domain.entity.Atleta;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.ErroModel;
 import net.circle.service.model.LocalidadeModel;
+import net.circle.service.model.PaginacaoModel;
 
 @Path("/atletas")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -43,6 +45,33 @@ public class AtletaRest {
 	private IAtletaBusiness servicoAtleta;
 
 	public final static String[] fotoFormatos = { "PNG", "JPG", "JPEG", "BMP" };
+
+	/**
+	 * Realiza a obtenção da lista de atletas
+	 *
+	 * @returns List<AtletaModel>
+	 */
+	@GET
+	public List<AtletaModel> getLista() {
+		return parseModel(servicoAtleta.consultarLista());
+	}
+
+	/**
+	 * Realiza a obtenção da lista de atletas paginada
+	 *
+	 * @param contador
+	 * @param pagina
+	 * 
+	 * 
+	 * @returns PaginacaoModel
+	 */
+	@GET
+	@Path("/{indice}/{tamanho}")
+	public PaginacaoModel getListaPaginada(@PathParam("indice") Integer indice, @PathParam("tamanho") Integer tamanho) {
+		var paginacao = parseModelPaginacao(servicoAtleta.consultarPagina(indice, tamanho));
+		paginacao.setContador(servicoAtleta.consultarContador());
+		return paginacao;
+	}
 
 	/**
 	 * Realiza a obtenção de um atleta
@@ -317,6 +346,17 @@ public class AtletaRest {
 						: null,
 
 				pessoa.getCategoria() != null ? pessoa.getCategoria().toString() : null);
+	}
+
+	private List<AtletaModel> parseModel(List<Atleta> lista) {
+		return lista.stream().map(atleta -> parseModel(atleta)).collect(Collectors.toList());
+	}
+
+	private PaginacaoModel parseModelPaginacao(List<Atleta> lista) {
+		var paginacao = new PaginacaoModel();
+		paginacao.setPagina(lista.stream().map(atleta -> parseModel(atleta)).collect(Collectors.toList()));
+		return paginacao;
+
 	}
 
 }

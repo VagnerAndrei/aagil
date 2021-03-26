@@ -246,6 +246,13 @@ footer a {
 	flex-direction: row;
 }
 
+.lista-atletas {
+	display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    list-style: none;
+}
+
 .flex-column {
 	display: flex;
 	flex-direction: column;
@@ -280,6 +287,11 @@ ATLETA.HTML
 	border: solid;
 	border-width: 2;
 	width: 40%;
+}
+.lista-atleta {
+	border: solid;
+	border-width: 2;
+	width: 100%;
 }
 
 .manobras {

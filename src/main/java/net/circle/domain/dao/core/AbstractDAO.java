@@ -49,8 +49,11 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> consultarPagina(final int... rowStartIdxAndCount) {
-		final String queryString = "select model from " + getClassImplement().getName() + " model";
+	public List<T> consultarPagina(String orderBy, final int... rowStartIdxAndCount) {
+		String queryString = "select model from " + getClassImplement().getName() + " model";
+
+		if (orderBy != null)
+			queryString += " ORDER BY " + orderBy;
 
 		Query query = em.createQuery(queryString);
 

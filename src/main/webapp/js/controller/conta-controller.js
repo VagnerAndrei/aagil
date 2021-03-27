@@ -1,5 +1,7 @@
 import { post, get, verificaURL, home } from './navegacao-controller.js';
 
+
+// FIXME: export deve ser cons
 export let usuarioLogado;
 
 export function registro() {
@@ -36,14 +38,10 @@ export function registro() {
 		event.preventDefault();
 		messages.map(campo => campo.textContent = '');
 
-		if (inputs[0].value.length > 100)
-			messages[0].textContent = 'Máximo de 100 caracteres';
-		if (inputs[1].value.length > 100)
-			messages[1].textContent = 'Máximo de 100 caracteres';
-		if (inputs[2].value.length > 20)
-			messages[2].textContent = 'Máximo de 20 caracteres';
-		if (inputs[2].value !== inputs[3].value)
-			messages[3].textContent = 'Senha não confere';
+		if (inputs[0].value.length > 100) messages[0].textContent = 'Máximo de 100 caracteres';
+		if (inputs[1].value.length > 100) messages[1].textContent = 'Máximo de 100 caracteres';
+		if (inputs[2].value.length > 20) messages[2].textContent = 'Máximo de 20 caracteres';
+		if (inputs[2].value !== inputs[3].value) messages[3].textContent = 'Senha não confere';
 
 
 		if (!messages.some(message => message.textContent !== '')) {
@@ -58,10 +56,8 @@ export function registro() {
 			}
 			).then((response) => {
 				response.json().then(value => {
-					if (response.ok) {
-						loginHandler(value, true)
-					} else
-						messages.find(message => message.htmlFor == value.campo).textContent = value.mensagem
+					if (response.ok) loginHandler(value, true)
+					else messages.find(message => message.htmlFor === value.campo).textContent = value.mensagem
 				})
 				disabled(false);
 			}).catch(() => {
@@ -80,11 +76,19 @@ export function logout() {
 }
 
 export function verificaLogin() {
-	get('api/usuarios/autenticacao').then((response) => {
-		if (response.status == 302)
-			response.json().then(value => loginHandler(value))
-		else if (response.status == 404 || response.status == 500)
-			loginHandler()
+	get('api/usuarios/autenticacao').then(response => {
+		switch (response.status) {
+			case 302:
+				response.json().then(value => loginHandler(value))
+				break
+			case 404:
+				console.log("Não há um usuário logado")
+				loginHandler()
+				break
+			case 500:
+				console.log("Ocorreu um erro no servidor")
+				break
+		}
 	})
 }
 

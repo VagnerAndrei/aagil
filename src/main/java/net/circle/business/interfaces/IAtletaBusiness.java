@@ -19,5 +19,5 @@ public interface IAtletaBusiness extends IReadSaveDelete<Atleta> {
 
 	List<Atleta> consultarPagina(final int... rowStartIdxAndCount);
 	
-	int consultarContador();
+	int count();
 }

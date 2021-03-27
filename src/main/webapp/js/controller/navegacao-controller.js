@@ -1,6 +1,6 @@
 import { usuarioLogado, acesso, registro } from './conta-controller.js';
 import { initAtleta } from './atleta.js';
-import { Atletas } from './atletas.js';
+import { Atletas } from './Atletas.js';
 import { initManobras } from './manobras.js';
 
 const titulo = 'AAGIL'
@@ -28,7 +28,7 @@ export function put(url, json) {
 }
 
 
-export function deletar(url){
+export function deletar(url) {
 	return fetch(url, {
 		method: 'DELETE'
 	})
@@ -56,25 +56,25 @@ export const urls = {
 		id: NaN,
 		title: "Atleta"
 	},
-	
+
 	atletas: {
 		path: "pages/public/atletas.html",
 		name: "atletas",
 		title: "Lista de atletas"
 	},
-	
+
 	atleta_atualizar: {
 		path: "pages/user/atleta-atualizar.html",
 		name: "atleta-atualizar",
 		title: "Atualizar atleta"
 	},
-	
+
 	atleta_atualizar_foto: {
 		path: "pages/user/atleta-atualizar-foto.html",
 		name: "atleta-atualizar-foto",
 		title: "Atualizar foto"
 	},
-	
+
 	sobre: {
 		path: "pages/public/sobre.html",
 		name: "sobre",
@@ -91,9 +91,9 @@ export const urls = {
 		title: "Acesso"
 	},
 
-	
-	
-	
+
+
+
 
 	ja_autenticado: {
 		path: "pages/user/ja-autenticado.html",
@@ -236,7 +236,7 @@ export function atletas(e) {
 			changeState(urls.atletas)
 		}
 		const atletas = new Atletas()
-		atletas.init()
+		atletas.atualizarLista()
 	});
 
 }

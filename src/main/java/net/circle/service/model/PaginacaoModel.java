@@ -5,7 +5,7 @@ import java.util.List;
 public class PaginacaoModel {
 
 	private List<AbstractModel> pagina;
-	private int contador;
+	private int total;
 
 	public PaginacaoModel() {
 	}
@@ -18,12 +18,12 @@ public class PaginacaoModel {
 		this.pagina = pagina;
 	}
 
-	public int getContador() {
-		return contador;
+	public int getTotal() {
+		return total;
 	}
 
-	public void setContador(int contador) {
-		this.contador = contador;
+	public void setTotal(int total) {
+		this.total = total;
 	}
 
 }

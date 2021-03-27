@@ -115,6 +115,8 @@ public class ImagemUtil {
 		return bos.toByteArray();
 	}
 
+	
+	// TODO: USAR SCALR PARA REDIMENSIONAR A IMG, THUMBNAIL FICOU SEM QUALIDADE 
 	public static byte[] getThumbnail(byte[] img) throws Exception {
 		try {
 			BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(img));

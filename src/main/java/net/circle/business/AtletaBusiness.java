@@ -102,11 +102,11 @@ public class AtletaBusiness implements IAtletaBusiness {
 
 	@Override
 	public List<Atleta> consultarPagina(int... rowStartIdxAndCount) {
-		return dao.consultarPagina(rowStartIdxAndCount);
+		return dao.consultarPagina("nome", rowStartIdxAndCount);
 	}
 
 	@Override
-	public int consultarContador() {
+	public int count() {
 		return dao.consultarCount();
 	}
 

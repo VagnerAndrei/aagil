@@ -69,7 +69,7 @@ public class AtletaRest {
 	@Path("/{indice}/{tamanho}")
 	public PaginacaoModel getListaPaginada(@PathParam("indice") Integer indice, @PathParam("tamanho") Integer tamanho) {
 		var paginacao = parseModelPaginacao(servicoAtleta.consultarPagina(indice, tamanho));
-		paginacao.setContador(servicoAtleta.consultarContador());
+		paginacao.setTotal(servicoAtleta.count());
 		return paginacao;
 	}
 

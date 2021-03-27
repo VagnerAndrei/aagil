@@ -113,6 +113,10 @@ form progress {
 	width: 100%;
 }
 
+ul {
+  list-style-type: none;
+}
+
 #select-localidades{
 	width: 65%;
 }
@@ -248,7 +252,7 @@ footer a {
 
 .lista-atletas {
 	display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
     list-style: none;
 }
@@ -326,6 +330,20 @@ ATLETA.HTML
 .botao-foto:hover, .botao-editar:hover {
 	opacity: 100%;
 	cursor: pointer;
+}
+
+/* ATLETAS */
+
+.lista-paginas{
+	display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 10px;
+    list-style: none;
+	
+}
+
+.li-pagina-selecionada {
+	font-weight: bold
 }
 
 /* MODAL PANEL */

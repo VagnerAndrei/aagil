@@ -9,21 +9,29 @@ export class ListaPaginada extends Lista {
 
 	constructor() {
 		super()
-		this._buttonPrimeiraPagina = document.querySelector("#button-pagina-primeira")
-		this._buttonUltimaPagina = document.querySelector("#button-pagina-ultima")
-		this._buttonProximaPagina = document.querySelector("#button-pagina-proxima")
-		this._buttonPaginaAnterior = document.querySelector("#button-pagina-anterior")
-		this._selectTamanhoDaPagina = document.querySelector("#select-pagina-tamanho")
-		this._ulPaginas = document.querySelector("#ul-paginas")
 
-		this._tamanhoDaPagina = this._selectTamanhoDaPagina.value
+
+		this._ulPaginas = document.querySelector('#ul-paginas')
 		this._paginaAtual = 1
 		this._indice = 0
 
-		this._selectTamanhoDaPagina.addEventListener('change', event => this.tamanhoDaPagina(event))
+		this._buttonProximaPagina = document.querySelector('#button-pagina-proxima')
+		this._buttonUltimaPagina = document.querySelector('#button-pagina-ultima')
+		this._buttonPrimeiraPagina = document.querySelector('#button-pagina-primeira')
+		this._buttonPaginaAnterior = document.querySelector('#button-pagina-anterior')
+		this._selectTamanhoDaPagina = document.querySelector('#select-pagina-tamanho')
+
+		this._tamanhoDaPagina = this._selectTamanhoDaPagina.value
+
+		document.querySelector('#select-pagina-tamanho').addEventListener('change', event => this.tamanhoDaPagina(event))
+		document.querySelector('#button-pagina-proxima').addEventListener('click', event => this.proximaPagina(event))
+		document.querySelector('#button-pagina-anterior').addEventListener('click', event => this.paginaAnterior(event))
+		document.querySelector('#button-pagina-primeira').addEventListener('click', event => this.primeiraPagina(event))
+		document.querySelector('#button-pagina-ultima').addEventListener('click', event => this.ultimaPagina(event))
 	}
 
 	async atualizarLista(url) {
+
 		console.log(`${url}/${this._indice}/${this._tamanhoDaPagina}`)
 		const responseAtletas = await get(`${url}/${this._indice}/${this._tamanhoDaPagina}`)
 
@@ -40,18 +48,27 @@ export class ListaPaginada extends Lista {
 	}
 
 	atualizarHTML() {
-		console.log(this._totalResult)
-		const numeroDePaginas = Math.ceil(this._totalResult / this._tamanhoDaPagina)
+		this._numeroDePaginas = Math.ceil(this._totalResult / this._tamanhoDaPagina)
 		this._ulPaginas.innerHTML = ''
-		for (let i = 1; i < numeroDePaginas + 1; i++) {
+		
+		for (let i = 1; i < this._numeroDePaginas + 1; i++) {
+			
 			const li = document.createElement('li')
 			const a = document.createElement('a')
+			
 			a.textContent = i
 			a.addEventListener('click', event => this.pagina(event.currentTarget.textContent))
+			
 			if (Math.floor(this._indice / this._tamanhoDaPagina) !== i - 1) a.href = 'javascript:void(0)'
+			else this._paginaAtual = i
+
 			li.appendChild(a)
 			this._ulPaginas.appendChild(li)
 		}
+		
+		this._buttonProximaPagina.disabled = this._buttonUltimaPagina.disabled = this._numeroDePaginas === this._paginaAtual
+		this._buttonPaginaAnterior.disabled = this._buttonPrimeiraPagina.disabled = this._paginaAtual === 1
+		
 		super.atualizarHTML()
 	}
 
@@ -64,11 +81,24 @@ export class ListaPaginada extends Lista {
 	pagina(numero) {
 		this._indice = this._tamanhoDaPagina * (numero - 1)
 		this.atualizarLista()
+		document.body.scrollTop = 0
+		document.documentElement.scrollTop = 0
 	}
 
-	primeiraPagina() { }
-	ultimaPagina() { }
-	proximaPagina() { }
-	paginaAnterior() { }
+	primeiraPagina() {
+		this.pagina(1)
+	}
+
+	ultimaPagina() {
+		this.pagina(this._numeroDePaginas)
+	}
+
+	proximaPagina() {
+		this.pagina(this._paginaAtual + 1)
+	}
+
+	paginaAnterior() {
+		this.pagina(this._paginaAtual - 1)
+	}
 
 }

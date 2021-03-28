@@ -71,12 +71,13 @@ footer {
 	align-content: center;
 	width: 100%;
 	text-align: center;
-	position: fixed;
+	position: relative;
 	height: 33px;
 	bottom: 0px;
 	font-family: titulos;
 	font-size: 33px;
 	margin-bottom: 5px;
+	margin-top: 20px;
 }
 
 input[type=checkbox]:checked {

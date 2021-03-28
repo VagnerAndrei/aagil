@@ -137,18 +137,19 @@ public class ImagemUtil {
 			// Desenha a imagem original para o thumbnail e
 			// redimensiona para o novo tamanho
 
-			BufferedImage thumbImage = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
-			Graphics2D graphics2D = thumbImage.createGraphics();
-			graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			graphics2D.drawImage(imagem, 0, 0, largura, altura, null);
+//			BufferedImage thumbImage = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
+//			Graphics2D graphics2D = thumbImage.createGraphics();
+//			graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+//			graphics2D.drawImage(imagem, 0, 0, largura, altura, null);
+			imagem = Scalr.resize(imagem, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, largura, altura);
 
 			Rotation rotacao = getRotation(ImageMetadataReader.readMetadata(new ByteArrayInputStream(img)));
 			if (rotacao != null)
-				thumbImage = Scalr.rotate(thumbImage, rotacao);
+				imagem = Scalr.rotate(imagem, rotacao);
 
 			// Salva a nova imagem
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ImageIO.write(thumbImage, "jpg", bos);
+			ImageIO.write(imagem, "jpg", bos);
 			return bos.toByteArray();
 		} catch (Exception e) {
 			throw e;

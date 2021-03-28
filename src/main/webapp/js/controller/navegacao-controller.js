@@ -1,6 +1,6 @@
 import { usuarioLogado, acesso, registro } from './conta-controller.js';
 import { initAtleta } from './atleta.js';
-//import { Atletas } from './Atletas.js';
+import { Atletas } from './Atletas.js';
 import { initManobras } from './manobras.js';
 
 const titulo = 'AAGIL'
@@ -231,13 +231,13 @@ export function perfil(e) {
 }
 
 export function atletas(e) {
-//	mainNavigate(urls.atletas, () => {
-//		if (e) {
-//			changeState(urls.atletas)
-//		}
-//		const atletas = new Atletas()
-//		atletas.atualizarLista()
-//	});
+	mainNavigate(urls.atletas, () => {
+		if (e) {
+			changeState(urls.atletas)
+		}
+		const atletas = new Atletas()
+		atletas.atualizarLista()
+	});
 
 }
 

@@ -126,7 +126,7 @@ async function atualizarFoto() {
 		elementsModal.conteudoModal.innerHTML = '<h2>Acesso negado</h2>';
 	else {
 		const html = await response.text();
-		elementsModal.conteudoModal.innerHTML = new DOMParser().parseFromString(html, "text/html").getElementsByTagName('main')[0];
+		elementsModal.conteudoModal.innerHTML = new DOMParser().parseFromString(html, "text/html").getElementsByTagName('main')[0].innerHTML;
 
 
 		/*

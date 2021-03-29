@@ -20,6 +20,7 @@ export class ListaPaginada extends Lista {
 		this._buttonPrimeiraPagina = document.querySelector('#button-pagina-primeira')
 		this._buttonPaginaAnterior = document.querySelector('#button-pagina-anterior')
 		this._selectTamanhoDaPagina = document.querySelector('#select-pagina-tamanho')
+		this._labelTotal = document.querySelector('#label-total')
 
 		this._tamanhoDaPagina = this._selectTamanhoDaPagina.value
 
@@ -40,6 +41,7 @@ export class ListaPaginada extends Lista {
 				const json = await responseAtletas.json()
 				super._lista = json.pagina
 				this._totalResult = json.total
+				this._labelTotal.textContent = this._totalResult
 				break
 			case 500:
 				console.log(responseAtletas)

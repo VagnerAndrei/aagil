@@ -2,6 +2,7 @@
  * 
  */
 import { ListaPaginada } from './../components/ListaPaginada.js'
+import { perfilClick } from './../controller/navegacao-controller.js'
 
 export class Atletas extends ListaPaginada {
 
@@ -10,14 +11,24 @@ export class Atletas extends ListaPaginada {
 	}
 
 	async atualizarLista() {
+		// REALIZA CONSULTA DA LISTA
 		await super.atualizarLista('api/atletas')
+		
+		// ATUALIZA O COMPONENTE NO HTML
 		this.atualizarHTML()
+		
+		// ADICIONA LINK NO ITEM DA LISTA
+		this._lista?.map(atleta => {
+			document.querySelector(`#atleta-${atleta.id}`).addEventListener('click', () => {
+				perfilClick(atleta.id)
+			})
+		})
 	}
-
+	
 	template() {
 		let itemsHtml = ''
 		this.lista?.map(atleta => {
-			itemsHtml += `<div class="flex-column lista-atleta">
+			itemsHtml += `<div class="flex-column lista-atleta cursor-pointer"  id="atleta-${atleta.id}">
 								<div class="flex-row space-beetween">
 									<strong>${atleta.nome}</strong>
 								</div>

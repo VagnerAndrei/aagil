@@ -53,6 +53,11 @@ button {
 	color: #000000;
 }
 
+button:disabled,
+button[disabled]{
+	display: none
+}
+
 button:hover {
 	opacity: 100%;
 }
@@ -392,6 +397,10 @@ ATLETA.HTML
 	text-align: center;
 	cursor: pointer;
 	white-space: nowrap
+}
+
+.cursor-pointer{
+	cursor: pointer;
 }
 
 .close-button:disabled {

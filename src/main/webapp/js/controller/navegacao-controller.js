@@ -230,6 +230,14 @@ export function perfil(e) {
 
 }
 
+export function perfilClick(id) {
+	mainNavigate(urls.atleta, () => {
+		urls.atleta.id = id;
+		changeState(urls.atleta)
+		initAtleta();
+	});
+}
+
 export function atletas(e) {
 	mainNavigate(urls.atletas, () => {
 		if (e) {

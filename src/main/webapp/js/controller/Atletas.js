@@ -3,16 +3,17 @@
  */
 import { ListaPaginada } from './../components/ListaPaginada.js'
 import { perfilClick } from './../controller/navegacao-controller.js'
+import { getIdade } from './../util.js'
 
 export class Atletas extends ListaPaginada {
 
 	constructor() {
-		super()
+		super('api/atletas')
 	}
 
 	async atualizarLista() {
 		// REALIZA CONSULTA DA LISTA
-		await super.atualizarLista('api/atletas')
+		await super.atualizarLista()
 		
 		// ATUALIZA O COMPONENTE NO HTML
 		this.atualizarHTML()
@@ -40,7 +41,7 @@ export class Atletas extends ListaPaginada {
 									${atleta.localidade ? `<img src="assets/img/ufs/${atleta.localidade.uf}.png">
 									<strong>${atleta.localidade.nome} - ${atleta.localidade.uf}</strong>` : ''}
 									${atleta.categoria ? `<strong>${atleta.categoria}</strong>` : ''}
-									${atleta.nascimento ? `<strong>${this.getIdade(atleta.nascimento)}</strong>` : ''}
+									${atleta.nascimento ? `<strong>${getIdade(atleta.nascimento)}</strong>` : ''}
 									</div>
 								</div>
 							</div>`
@@ -49,19 +50,6 @@ export class Atletas extends ListaPaginada {
 	}
 
 
-
-	getIdade(nascimento) {
-		const now = new Date();
-
-		const aniversario = nascimento.split("-");
-		const anos = now.getFullYear() - new Number(aniversario[0]);
-		const mesAniversario = new Number(aniversario[1]);
-		const diaAniversario = new Number(aniversario[2]);
-
-		const idade = (now.getMonth() + 1 < mesAniversario || (now.getMonth() + 1 == mesAniversario && now.getDate() < diaAniversario)) ? anos - 1 : anos;
-
-		return `${idade} anos`;
-	}
 
 
 

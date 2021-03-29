@@ -76,7 +76,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	}
 
 	@Override
-	public void foto(Integer id, byte[] foto, String extensao) throws Exception {
+	public Atleta foto(Integer id, byte[] foto, String extensao) throws Exception {
 		var atleta = dao.findById(id).get();
 		if (atleta.getFoto() == null)
 			atleta.setFoto(new Foto());
@@ -84,7 +84,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 		atleta.getFoto().setArquivo(ImagemUtil.getTratamentoJPG(foto));
 		atleta.getFoto().setThumbnail(ImagemUtil.getThumbnail(foto));
 		atleta.getFoto().setExtensao(extensao);
-		dao.merge(atleta);
+		return dao.merge(atleta);
 	}
 
 	public void apagarFoto(Integer idAtleta) throws Exception {

@@ -21,6 +21,8 @@ import com.drew.metadata.gif.GifHeaderDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.png.PngDirectory;
 
+
+//TODO: REVISAR CODIGO
 public class ImagemUtil {
 
 	public ImagemUtil() {
@@ -79,7 +81,6 @@ public class ImagemUtil {
 				rotacao != null ? imageWidth : imageHeight);
 
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(img));
-
 		System.out.println(System.currentTimeMillis());
 		int altura = rotacao != null ? imageWidth : imageHeight;
 		if (altura > ALTURA_MAXIMA) {
@@ -115,8 +116,6 @@ public class ImagemUtil {
 		return bos.toByteArray();
 	}
 
-	
-	// TODO: USAR SCALR PARA REDIMENSIONAR A IMG, THUMBNAIL FICOU SEM QUALIDADE 
 	public static byte[] getThumbnail(byte[] img) throws Exception {
 		try {
 			BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(img));
@@ -134,22 +133,55 @@ public class ImagemUtil {
 			} else {
 				largura = (int) (altura * imageRatio);
 			}
-			// Desenha a imagem original para o thumbnail e
-			// redimensiona para o novo tamanho
 
-//			BufferedImage thumbImage = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
-//			Graphics2D graphics2D = thumbImage.createGraphics();
-//			graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-//			graphics2D.drawImage(imagem, 0, 0, largura, altura, null);
 			imagem = Scalr.resize(imagem, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.AUTOMATIC, largura, altura);
-
-			Rotation rotacao = getRotation(ImageMetadataReader.readMetadata(new ByteArrayInputStream(img)));
+			Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(img));
+			Rotation rotacao = getRotation(metadata);
 			if (rotacao != null)
 				imagem = Scalr.rotate(imagem, rotacao);
 
+			String type = "";
+			for (Directory directory : metadata.getDirectories()) {
+				// jpeg
+				if (directory instanceof JpegDirectory) {
+					type = "jpg";
+					break;
+				}
+				// png
+				if (directory instanceof PngDirectory) {
+					PngDirectory pngDirectory = (PngDirectory) directory;
+					PngChunkType pngChunkType = pngDirectory.getPngChunkType();
+					if (pngChunkType.equals(PngChunkType.IHDR)) {
+						type = "png";
+						break;
+					}
+
+				}
+				// gif
+				if (directory instanceof GifHeaderDirectory) {
+					type = "gif";
+					break;
+				}
+
+				// gif
+				if (directory instanceof BmpHeaderDirectory) {
+					type = "bmp";
+					break;
+				}
+
+			}
+			BufferedImage imgJPG;
+			if (!type.equals("jpg")) {
+				imgJPG = new BufferedImage(largura, altura, BufferedImage.TYPE_INT_RGB);
+				Graphics2D graphics2D = imgJPG.createGraphics();
+				graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+						RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+				graphics2D.drawImage(imagem, 0, 0, largura, altura, null);
+			} else
+				imgJPG = imagem;
 			// Salva a nova imagem
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			ImageIO.write(imagem, "jpg", bos);
+			ImageIO.write(imgJPG, "jpg", bos);
 			return bos.toByteArray();
 		} catch (Exception e) {
 			throw e;

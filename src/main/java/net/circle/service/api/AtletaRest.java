@@ -33,6 +33,7 @@ import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.domain.entity.Atleta;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.ErroModel;
+import net.circle.service.model.IDModel;
 import net.circle.service.model.LocalidadeModel;
 import net.circle.service.model.PaginacaoModel;
 
@@ -105,6 +106,7 @@ public class AtletaRest {
 	 * @param idAtleta
 	 * 
 	 * @returns Response: <br/>
+	 *          Status.NO_CONTENT(204, "No Content"),<br/>
 	 *          Status.FORBIDDEN(403, "Forbidden"),<br/>
 	 *          Status.NOT_ACCEPTABLE(406, "Not Acceptable"),<br/>
 	 *          Status. INTERNAL_SERVER_ERROR(500, "Internal Server Error")
@@ -288,6 +290,7 @@ public class AtletaRest {
 				return Response.status(Status.BAD_REQUEST)
 						.entity(new ErroModel(AtletaExcecao.FOTO_NAO_ENCONTRADA_NO_FORMULARIO)).build();
 
+			int idFoto=0;
 			for (InputPart inputPart : inputParts) {
 
 				String fileName = getFileName(inputPart.getHeaders());
@@ -300,10 +303,11 @@ public class AtletaRest {
 
 				// convert the uploaded file to inputstream
 				InputStream inputStream = inputPart.getBody(InputStream.class, null);
-				servicoAtleta.foto(idAtleta, inputStream.readAllBytes(), extensao);
+				var atleta = servicoAtleta.foto(idAtleta, inputStream.readAllBytes(), extensao);
+				idFoto = atleta.getFoto().getId();
 			}
 
-			return Response.accepted().build();
+			return Response.accepted().entity(new IDModel(idFoto)).build();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -345,7 +349,10 @@ public class AtletaRest {
 								pessoa.getLocalidade().getEstado().getSigla())
 						: null,
 
-				pessoa.getCategoria() != null ? pessoa.getCategoria().toString() : null);
+				pessoa.getCategoria() != null ? pessoa.getCategoria().toString() : null,
+
+				pessoa.getFoto() != null ? new IDModel(pessoa.getFoto().getId()) : null);
+
 	}
 
 	private List<AtletaModel> parseModel(List<Atleta> lista) {

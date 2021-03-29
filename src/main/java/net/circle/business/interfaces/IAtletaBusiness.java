@@ -13,7 +13,7 @@ public interface IAtletaBusiness extends IReadSaveDelete<Atleta> {
 
 	String consultarUsuario(Integer idAtleta) throws Exception;
 
-	void foto(Integer idAtleta, byte[] foto, String extensao) throws Exception;
+	Atleta foto(Integer idAtleta, byte[] foto, String extensao) throws Exception;
 
 	void apagarFoto(Integer idAtleta) throws Exception;
 

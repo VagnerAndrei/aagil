@@ -7,10 +7,10 @@ import { get } from './../controller/navegacao-controller.js'
 export class ListaPaginada extends Lista {
 
 
-	constructor() {
+	constructor(url) {
 		super()
 
-
+		this._url = url
 		this._ulPaginas = document.querySelector('#ul-paginas')
 		this._paginaAtual = 1
 		this._indice = 0
@@ -31,10 +31,10 @@ export class ListaPaginada extends Lista {
 		document.querySelector('#button-pagina-ultima').addEventListener('click', event => this.ultimaPagina(event))
 	}
 
-	async atualizarLista(url) {
+	async atualizarLista() {
 
-		console.log(`${url}/${this._indice}/${this._tamanhoDaPagina}`)
-		const responseAtletas = await get(`${url}/${this._indice}/${this._tamanhoDaPagina}`)
+		console.log(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
+		const responseAtletas = await get(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
 
 		switch (responseAtletas.status) {
 			case 200:

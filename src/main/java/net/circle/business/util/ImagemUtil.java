@@ -21,24 +21,21 @@ import com.drew.metadata.gif.GifHeaderDirectory;
 import com.drew.metadata.jpeg.JpegDirectory;
 import com.drew.metadata.png.PngDirectory;
 
-
-//TODO: REVISAR CODIGO
 public class ImagemUtil {
 
 	public ImagemUtil() {
 	}
 
 	public static byte[] getTratamentoJPG(byte[] img) throws Exception {
+		System.out.println(System.currentTimeMillis());
 		final int ALTURA_MAXIMA = 2400;
 		Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(img));
 
-		int imageWidth = 0, imageHeight = 0;
+		
 		String type = "";
 		for (Directory directory : metadata.getDirectories()) {
 			// jpeg
 			if (directory instanceof JpegDirectory) {
-				imageWidth = directory.getInteger(JpegDirectory.TAG_IMAGE_WIDTH);
-				imageHeight = directory.getInteger(JpegDirectory.TAG_IMAGE_HEIGHT);
 				type = "jpg";
 				break;
 			}
@@ -47,8 +44,6 @@ public class ImagemUtil {
 				PngDirectory pngDirectory = (PngDirectory) directory;
 				PngChunkType pngChunkType = pngDirectory.getPngChunkType();
 				if (pngChunkType.equals(PngChunkType.IHDR)) {
-					imageWidth = directory.getInteger(PngDirectory.TAG_IMAGE_WIDTH);
-					imageHeight = directory.getInteger(PngDirectory.TAG_IMAGE_HEIGHT);
 					type = "png";
 					break;
 				}
@@ -56,16 +51,12 @@ public class ImagemUtil {
 			}
 			// gif
 			if (directory instanceof GifHeaderDirectory) {
-				imageWidth = directory.getInteger(GifHeaderDirectory.TAG_IMAGE_WIDTH);
-				imageHeight = directory.getInteger(GifHeaderDirectory.TAG_IMAGE_HEIGHT);
 				type = "gif";
 				break;
 			}
 
 			// gif
 			if (directory instanceof BmpHeaderDirectory) {
-				imageWidth = directory.getInteger(BmpHeaderDirectory.TAG_IMAGE_WIDTH);
-				imageHeight = directory.getInteger(BmpHeaderDirectory.TAG_IMAGE_HEIGHT);
 				type = "bmp";
 				break;
 			}
@@ -74,14 +65,9 @@ public class ImagemUtil {
 
 		Rotation rotacao = getRotation(metadata);
 
-		System.out.println("rotacao != null ?" + (rotacao != null));
-
-		System.out.format("\n[original] imageWidth: %s , imageHeight: %s\n", imageWidth, imageHeight);
-		System.out.format("\nimageWidth: %s , imageHeight: %s\n", rotacao != null ? imageHeight : imageWidth,
-				rotacao != null ? imageWidth : imageHeight);
-
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(img));
-		System.out.println(System.currentTimeMillis());
+		int imageWidth = image.getWidth(), imageHeight = image.getHeight();
+		
 		int altura = rotacao != null ? imageWidth : imageHeight;
 		if (altura > ALTURA_MAXIMA) {
 			while (altura > ALTURA_MAXIMA) {
@@ -93,26 +79,23 @@ public class ImagemUtil {
 		} else if (type.equals("jpg"))
 			return img;
 
-		System.out.println(System.currentTimeMillis());
-		System.out.format("\n[REDUCED] imageWidth: %s , imageHeight: %s\n", rotacao != null ? imageHeight : imageWidth,
-				rotacao != null ? imageWidth : imageHeight);
 
 		if (rotacao != null)
 			image = Scalr.rotate(image, rotacao);
 
 		// Converter em JPG
 		BufferedImage imgJPG;
-		System.out.println("type: " + type);
 		if (!type.equals("jpg")) {
 			imgJPG = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics2D = imgJPG.createGraphics();
-			graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			//graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			graphics2D.drawImage(image, 0, 0, imageWidth, imageHeight, null);
 		} else
 			imgJPG = image;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(imgJPG, "jpg", bos);
 
+		System.out.println(System.currentTimeMillis());
 		return bos.toByteArray();
 	}
 
@@ -182,6 +165,33 @@ public class ImagemUtil {
 			// Salva a nova imagem
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(imgJPG, "jpg", bos);
+			return bos.toByteArray();
+		} catch (Exception e) {
+			throw e;
+		}
+
+	}
+
+	public static byte[] getThumbnailFromJPG(byte[] img) throws Exception {
+		try {
+			BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(img));
+
+			int largura = 300;
+			int altura = 160;
+
+			double thumbRatio = (double) largura / (double) altura;
+			double imageRatio = (double) imagem.getWidth() / (double) imagem.getHeight();
+
+			if (thumbRatio < imageRatio) {
+				altura = (int) (largura / imageRatio);
+			} else {
+				largura = (int) (altura * imageRatio);
+			}
+
+			imagem = Scalr.resize(imagem, Scalr.Method.ULTRA_QUALITY, Scalr.Mode.FIT_EXACT, largura, altura);
+
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			ImageIO.write(imagem, "jpg", bos);
 			return bos.toByteArray();
 		} catch (Exception e) {
 			throw e;

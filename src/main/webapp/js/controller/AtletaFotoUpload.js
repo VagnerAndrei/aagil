@@ -83,7 +83,7 @@ export class AtletaFotoUpload extends Modal {
 			this._xhr.upload.addEventListener('progress', e => {
 				const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
 				this._progressBar.value = percent;
-				this._labelProgress.textContent = percent != 100 ? `Enviando... (${percent})` : "Processando imagem..."
+				this._labelProgress.textContent = percent !== 100 ? `Enviando... (${Math.round(percent)})` : "Processando imagem..."
 				if (percent === 100) this._botaoCancelar.classList.add('display-none');
 			})
 
@@ -93,6 +93,7 @@ export class AtletaFotoUpload extends Modal {
 						case 500:
 						case 429:
 						case 400:
+							this._inputFoto.disabled = false
 							this._labelErroFoto.textContent = JSON.parse(this._xhr.response).mensagem
 							this._xhr = null
 							break
@@ -102,6 +103,7 @@ export class AtletaFotoUpload extends Modal {
 							this.fecharModal()
 							break
 						case 403:
+							this._inputFoto.disabled = false
 							this._labelErroFoto.textContent = "Acesso negado"
 							break
 					}
@@ -113,7 +115,8 @@ export class AtletaFotoUpload extends Modal {
 				console.log(e)
 				this._labelErroFoto.textContent = "Ocorreu um erro no envio da imagem"
 			}
-
+			console.log(event.target)
+			console.log(new FormData(event.target))
 			this._xhr.send(new FormData(event.target))
 		}
 
@@ -134,8 +137,7 @@ export class AtletaFotoUpload extends Modal {
 	}
 
 	cancelarUpload() {
-		if (this._xhr)
-			this._xhr.abort();
+		this._xhr?.abort();
 		this._labelErroFoto.textContent = '';
 		this._form.reset();
 		this.enviando(false);

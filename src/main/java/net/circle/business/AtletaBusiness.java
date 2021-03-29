@@ -82,7 +82,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 			atleta.setFoto(new Foto());
 		atleta.getFoto().setOriginal(foto);
 		atleta.getFoto().setArquivo(ImagemUtil.getTratamentoJPG(foto));
-		atleta.getFoto().setThumbnail(ImagemUtil.getThumbnail(foto));
+		atleta.getFoto().setThumbnail(ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivo()));
 		atleta.getFoto().setExtensao(extensao);
 		return dao.merge(atleta);
 	}

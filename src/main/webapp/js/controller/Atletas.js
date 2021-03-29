@@ -35,7 +35,7 @@ export class Atletas extends ListaPaginada {
 								</div>
 								<div class="flex-row space-beetween">
 									<div class="container-foto-atleta">
-										<img src="api/atletas/${atleta.id}/foto/thumb" onerror="this.src='assets/img/usuario.png'">
+										<img src="api/atletas/${atleta.id}/foto/thumb?t=${new Date().getTime()}" onerror="this.src='assets/img/usuario.png'">
 									</div>
 									<div class="flex-column space-beetween items-right">
 									${atleta.localidade ? `<img src="assets/img/ufs/${atleta.localidade.uf}.png">

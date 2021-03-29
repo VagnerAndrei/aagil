@@ -144,7 +144,6 @@ export function acesso() {
 				senha: inputs[1].value
 			})
 				.then((response) => {
-					console.log(response)
 					response.json().then(value => {
 						if (response.status == 202) {
 							loginHandler(value, true)

@@ -1,9 +1,9 @@
 /**
  * 
  */
-import { Modal } from './../components/Modal.js'
-import { urls } from './../controller/navegacao.js'
-import { get, put } from './../controller/fetch.js'
+import { Modal } from '../components/Modal.js'
+import { urls } from '../navegacao.js'
+import { get, put } from '../fetch.js'
 
 
 export class AtletaForm extends Modal {

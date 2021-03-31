@@ -1,9 +1,9 @@
 /**
  * 
  */
-import { View } from './../components/View.js'
-import { post } from './fetch.js'
-import { loginHandler } from './sessao.js'
+import { View } from '../components/View.js'
+import { post } from '../fetch.js'
+import { loginHandler } from '../sessao.js'
 
 export class Acesso extends View {
 

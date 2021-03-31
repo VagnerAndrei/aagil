@@ -1,9 +1,9 @@
 /**
  * 
  */
-import { ListaPaginada } from './../components/ListaPaginada.js'
-import { perfil } from './../controller/navegacao.js'
-import { getIdade } from './../util.js'
+import { ListaPaginada } from '../components/ListaPaginada.js'
+import { perfil } from '../navegacao.js'
+import { getIdade } from '../util.js'
 
 export class Atletas extends ListaPaginada {
 

@@ -1,6 +1,6 @@
-import { pagina_nao_encontrada } from './navegacao.js';
-import { get } from './fetch.js';
-import { View } from './../components/View.js';
+import { pagina_nao_encontrada } from '../navegacao.js';
+import { get } from '../fetch.js';
+import { View } from '../components/View.js';
 
 export class Manobras extends View {
 

@@ -1,10 +1,10 @@
 import { usuarioLogado } from './sessao.js';
 import { get } from './fetch.js';
-import { Atletas } from './Atletas.js';
-import { Atleta } from './Atleta.js';
-import { Registro } from './Registro.js'
-import { Acesso } from './Acesso.js'
-import { Manobras } from './Manobras.js';
+import { Atletas } from './controller/Atletas.js';
+import { Atleta } from './controller/Atleta.js';
+import { Registro } from './controller/Registro.js'
+import { Acesso } from './controller/Acesso.js'
+import { Manobras } from './controller/Manobras.js';
 
 const titulo = 'AAGIL'
 

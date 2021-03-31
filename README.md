@@ -26,7 +26,7 @@ Associação Paraense de Aggressive Inline
 	
 ### Application Server:
 <ul>
-	<li>Download and start a Wildfly 19 Application Server</li>
+	<li>Download and start a Wildfly 23 Application Server</li>
 	<li><strong>Run</strong>: "mvn wildfly:execute-commands"</li>
 	<li><strong>Run</strong>: "mvn wildfly:deploy"</li>
 </ul>

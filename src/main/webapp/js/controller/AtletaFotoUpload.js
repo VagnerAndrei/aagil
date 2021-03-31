@@ -1,9 +1,9 @@
 /**
  * 
  */
-import { Modal } from './../components/Modal.js'
-import { urls } from './../controller/navegacao.js'
-import { deletar } from './../controller/fetch.js'
+import { Modal } from '../components/Modal.js'
+import { urls } from '../navegacao.js'
+import { deletar } from '../fetch.js'
 
 export class AtletaFotoUpload extends Modal {
 	constructor(atleta, callbackHandler) {

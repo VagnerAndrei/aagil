@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { get } from './../controller/fetch.js'
+import { get } from './../fetch.js'
 
 
 export class Modal {

@@ -1,5 +1,5 @@
-import { verificaLogin, logout } from "./controller/sessao.js"
-import { verificaURL, registrar, acessar, home, manobras, sobre, perfil, atletas } from './controller/navegacao.js';
+import { verificaLogin, logout } from "./sessao.js"
+import { verificaURL, registrar, acessar, home, manobras, sobre, perfil, atletas } from './navegacao.js';
 
 document.getElementById('botao-registrar').addEventListener('click', registrar);
 document.getElementById('botao-acessar').addEventListener('click', acessar);

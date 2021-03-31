@@ -1,10 +1,10 @@
-import { get } from './fetch.js'
-import { pagina_nao_encontrada } from './navegacao.js';
-import { usuarioLogado } from './sessao.js';
-import { getIdade } from './../util.js'
+import { get } from '../fetch.js'
+import { pagina_nao_encontrada } from '../navegacao.js';
+import { usuarioLogado } from '../sessao.js';
+import { getIdade } from '../util.js'
 import { AtletaForm } from './AtletaForm.js'
 import { AtletaFotoUpload } from './AtletaFotoUpload.js'
-import { View } from './../components/View.js'
+import { View } from '../components/View.js'
 
 
 export class Atleta extends View {

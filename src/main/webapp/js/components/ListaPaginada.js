@@ -2,15 +2,13 @@
  * 
  */
 import { Lista } from './Lista.js'
-import { get } from './../controller/navegacao-controller.js'
+import { get } from './../controller/fetch.js'
 
 export class ListaPaginada extends Lista {
 
 
 	constructor(url) {
-		super()
-
-		this._url = url
+		super(url)
 		this._ulPaginas = document.querySelector('#ul-paginas')
 		this._paginaAtual = 1
 		this._indice = 0
@@ -32,7 +30,6 @@ export class ListaPaginada extends Lista {
 	}
 
 	async atualizarLista() {
-
 		console.log(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
 		const responseAtletas = await get(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
 
@@ -52,25 +49,27 @@ export class ListaPaginada extends Lista {
 	atualizarHTML() {
 		this._numeroDePaginas = Math.ceil(this._totalResult / this._tamanhoDaPagina)
 		this._ulPaginas.innerHTML = ''
-		
+
 		for (let i = 1; i < this._numeroDePaginas + 1; i++) {
-			
+
 			const li = document.createElement('li')
 			const a = document.createElement('a')
-			
+
 			a.textContent = i
 			a.addEventListener('click', event => this.pagina(event.currentTarget.textContent))
-			
+
 			if (Math.floor(this._indice / this._tamanhoDaPagina) !== i - 1) a.href = 'javascript:void(0)'
 			else this._paginaAtual = i
 
 			li.appendChild(a)
 			this._ulPaginas.appendChild(li)
 		}
-		
-		this._buttonProximaPagina.disabled = this._buttonUltimaPagina.disabled = this._numeroDePaginas === this._paginaAtual
-		this._buttonPaginaAnterior.disabled = this._buttonPrimeiraPagina.disabled = this._paginaAtual === 1
-		
+
+		this._buttonProximaPagina.disabled = this._numeroDePaginas === this._paginaAtual
+		this._buttonPaginaAnterior.disabled = this._paginaAtual === 1
+		this._buttonPrimeiraPagina.disabled = this._paginaAtual < 3
+		this._buttonUltimaPagina.disabled = this._numeroDePaginas < 3 || this._indice > this._numeroDePaginas - 2
+
 		super.atualizarHTML()
 	}
 

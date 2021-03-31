@@ -1,48 +1,17 @@
-import { usuarioLogado, acesso, registro } from './conta-controller.js';
-import { initAtleta } from './atleta.js';
+import { usuarioLogado } from './sessao.js';
+import { get } from './fetch.js';
 import { Atletas } from './Atletas.js';
-import { initManobras } from './manobras.js';
+import { Atleta } from './Atleta.js';
+import { Registro } from './Registro.js'
+import { Acesso } from './Acesso.js'
+import { Manobras } from './Manobras.js';
 
 const titulo = 'AAGIL'
 
-export function get(url) {
-	return fetch(url, {
-		method: 'GET',
-	});
-}
-
-export function post(url, json) {
-	return fetch(url, {
-		method: 'POST',
-		headers: new Headers({ 'Content-Type': 'application/json' }),
-		body: JSON.stringify(json)
-	})
-}
-
-export function put(url, json) {
-	return fetch(url, {
-		method: 'PUT',
-		headers: new Headers({ 'Content-Type': 'application/json' }),
-		body: JSON.stringify(json)
-	})
-}
-
-
-export function deletar(url) {
-	return fetch(url, {
-		method: 'DELETE'
-	})
-}
-
-export const urls = {
+const urls = {
 	home: {
 		path: "pages/public/home.html",
 		name: "home",
-		title: "Página Inicial"
-	},
-	home_replace: {
-		path: "pages/public/home.html",
-		name: "home_replace",
 		title: "Página Inicial"
 	},
 	manobras: {
@@ -56,22 +25,21 @@ export const urls = {
 		id: NaN,
 		title: "Atleta"
 	},
-
 	atletas: {
 		path: "pages/public/atletas.html",
 		name: "atletas",
 		title: "Lista de atletas"
 	},
 
-	atleta_atualizar: {
-		path: "pages/user/atleta-atualizar.html",
-		name: "atleta-atualizar",
+	atleta_form: {
+		path: "pages/user/atleta-form.html",
+		name: "atleta-form",
 		title: "Atualizar atleta"
 	},
 
-	atleta_atualizar_foto: {
-		path: "pages/user/atleta-atualizar-foto.html",
-		name: "atleta-atualizar-foto",
+	atleta_foto_upload: {
+		path: "pages/user/atleta-foto-upload.html",
+		name: "atleta-foto-upload",
 		title: "Atualizar foto"
 	},
 
@@ -108,7 +76,7 @@ export const urls = {
 }
 
 
-export function mainNavigate(url, queryFunction) {
+function mainNavigate(url, queryFunction) {
 	get(url.path).then(response => {
 		response.text().then(value => {
 			document.getElementsByTagName('main')[0].innerHTML = new DOMParser()
@@ -120,7 +88,7 @@ export function mainNavigate(url, queryFunction) {
 	document.getElementsByTagName('title')[0].innerHTML = titulo + " " + url.title;
 }
 
-export function changeState(url) {
+function changeState(url) {
 	if (url.name == urls.home.name) {
 		if (window.location.href != window.location.origin + window.location.pathname)
 			window.history.pushState(url.name, url.name, `${location.pathname}`)
@@ -136,7 +104,7 @@ export function changeState(url) {
 	}
 }
 
-export function verificaURL() {
+function verificaURL() {
 	const param = new URLSearchParams(new URL(window.location.href).search).get("p");
 
 	if (param == null && window.location != window.location.origin + window.location.pathname) {
@@ -166,8 +134,7 @@ function redirect(e) {
 		case urls.atleta.name:
 			const id = new URLSearchParams(new URL(window.location.href).search).get("id");
 			if (id && !isNaN(id) && id > 0) {
-				urls.atleta.id = id;
-				perfil();
+				perfil(id);
 			}
 			else
 				pagina_nao_encontrada();
@@ -200,77 +167,70 @@ function ja_autenticado() {
 	mainNavigate(urls.ja_autenticado)
 }
 
-export function pagina_nao_encontrada() {
+function pagina_nao_encontrada() {
 	mainNavigate(urls.pagina_nao_encontrada);
 }
 
-export function home(e) {
+function home(e) {
 	mainNavigate(urls.home, () => {
 		if (e)
 			changeState(urls.home)
 	});
 }
 
-export function manobras(e) {
+function manobras(e) {
 	mainNavigate(urls.manobras, () => {
 		if (e)
 			changeState(urls.manobras)
-		initManobras()
+		new Manobras()
 	});
 }
 
-export function perfil(e) {
+function perfil(e) {
 	mainNavigate(urls.atleta, () => {
 		if (e) {
-			urls.atleta.id = usuarioLogado.id;
+			urls.atleta.id = isNaN(e) ? usuarioLogado.id : e
 			changeState(urls.atleta)
+			new Atleta(urls.atleta.id)
 		}
-		initAtleta();
 	});
 
 }
 
-export function perfilClick(id) {
-	mainNavigate(urls.atleta, () => {
-		urls.atleta.id = id;
-		changeState(urls.atleta)
-		initAtleta();
-	});
-}
-
-export function atletas(e) {
+function atletas(e) {
 	mainNavigate(urls.atletas, () => {
 		if (e) {
 			changeState(urls.atletas)
 		}
-		const atletas = new Atletas()
-		atletas.atualizarLista()
+		new Atletas()
 	});
 
 }
 
 
-export function sobre(e) {
+function sobre(e) {
 	mainNavigate(urls.sobre, () => {
 		if (e)
 			changeState(urls.sobre)
 	});
 }
 
-export function acessar(e) {
+function acessar(e) {
 	mainNavigate(urls.acesso, () => {
-		acesso();
+		new Acesso()
 		if (e)
 			changeState(urls.acesso)
 	});
 
 }
 
-export function registrar(e) {
+function registrar(e) {
 	mainNavigate(urls.registro, () => {
-		registro();
+		new Registro()
 		if (e)
 			changeState(urls.registro)
 	});
 
 }
+
+export { urls, verificaURL, registrar, acessar, home, manobras, sobre, perfil, atletas, pagina_nao_encontrada }

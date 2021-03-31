@@ -2,17 +2,17 @@
  * 
  */
 import { Modal } from './../components/Modal.js'
-import { deletar, urls } from './../controller/navegacao-controller.js'
-
+import { urls } from './../controller/navegacao.js'
+import { deletar } from './../controller/fetch.js'
 
 export class AtletaFotoUpload extends Modal {
 	constructor(atleta, callbackHandler) {
-		super(urls.atleta_atualizar_foto.path, 'Atualizar Foto')
+		super(urls.atleta_foto_upload.path, 'Atualizar Foto')
 		this._atleta = atleta
 		this._callbackHandler = callbackHandler
 		this._tamanhoMaximo = 10
 	}
-
+	
 	init() {
 		/*
 	ATRIBUINDO HTML ELEMENTS ATUALIZAR FOTO ATLETA

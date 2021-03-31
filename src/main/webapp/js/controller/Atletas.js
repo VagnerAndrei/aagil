@@ -2,34 +2,35 @@
  * 
  */
 import { ListaPaginada } from './../components/ListaPaginada.js'
-import { perfilClick } from './../controller/navegacao-controller.js'
+import { perfil } from './../controller/navegacao.js'
 import { getIdade } from './../util.js'
 
 export class Atletas extends ListaPaginada {
 
 	constructor() {
 		super('api/atletas')
+		this.atualizarLista()
 	}
 
 	async atualizarLista() {
 		// REALIZA CONSULTA DA LISTA
 		await super.atualizarLista()
-		
+
 		// ATUALIZA O COMPONENTE NO HTML
 		this.atualizarHTML()
-		
+
 		// ADICIONA LINK NO ITEM DA LISTA
 		this._lista?.map(atleta => {
 			document.querySelector(`#atleta-${atleta.id}`).addEventListener('click', () => {
-				perfilClick(atleta.id)
+				perfil(atleta.id)
 			})
 		})
 	}
-	
+
 	template() {
 		let itemsHtml = ''
 		this.lista?.map(atleta => {
-			itemsHtml += `<div class="flex-column lista-atleta cursor-pointer"  id="atleta-${atleta.id}">
+			itemsHtml += `<div class="flex-column lista-atleta cursor-pointer" id="atleta-${atleta.id}">
 								<div class="flex-row space-beetween">
 									<strong>${atleta.nome}</strong>
 								</div>

@@ -1,16 +1,17 @@
 /**
  * 
  */
-import { get } from './../controller/navegacao-controller.js'
+import { get } from './../controller/fetch.js'
 
 export class Lista {
 
-	constructor() {
+	constructor(url) {
+		this._url = url
 		this._elemento = document.querySelector('#ul-lista')
 	}
-
-	async atualizarLista(url) {
-		const responseAtletas = await get(url)
+	
+	async atualizarLista() {
+		const responseAtletas = await get(this._url)
 
 		switch (responseAtletas.status) {
 			case 200:

@@ -2,12 +2,14 @@
  * 
  */
 import { Modal } from './../components/Modal.js'
-import { get, put, urls } from './../controller/navegacao-controller.js'
+import { urls } from './../controller/navegacao.js'
+import { get, put } from './../controller/fetch.js'
+
 
 export class AtletaForm extends Modal {
 
 	constructor(atleta, callbackHandler) {
-		super(urls.atleta_atualizar.path, 'Atualizar Atleta')
+		super(urls.atleta_form.path, 'Atualizar Atleta')
 
 		this._atleta = atleta
 		this._callbackHandler = callbackHandler

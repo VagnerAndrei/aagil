@@ -9,10 +9,18 @@ export class Atletas extends ListaPaginada {
 
 	constructor() {
 		super('Atletas', 'api/atletas')
+<<<<<<< HEAD
 		this.atualizarLista()
+=======
+		this.init()
+>>>>>>> branch 'main' of https://github.com/VagnerAndrei/aagil
 	}
 
+<<<<<<< HEAD
 	async atualizarLista() {
+=======
+	async init() {
+>>>>>>> branch 'main' of https://github.com/VagnerAndrei/aagil
 		await super.atualizarLista()
 
 		this.updateTemplate()

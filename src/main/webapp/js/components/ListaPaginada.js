@@ -7,11 +7,20 @@ import { get } from './../fetch.js'
 export class ListaPaginada extends Lista {
 
 
+<<<<<<< HEAD
 	constructor(titulo, url) {
 		super(titulo, url)
+=======
+	constructor(url, titulo) {
+		super(url, titulo)
+>>>>>>> branch 'main' of https://github.com/VagnerAndrei/aagil
 
 		this._paginaAtual = 1
 		this._indice = 0
+<<<<<<< HEAD
+=======
+
+>>>>>>> branch 'main' of https://github.com/VagnerAndrei/aagil
 		this._ulPaginas = document.querySelector('#ul-paginas')
 		this._buttonProximaPagina = document.querySelector('#button-pagina-proxima')
 		this._buttonUltimaPagina = document.querySelector('#button-pagina-ultima')

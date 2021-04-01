@@ -47,3 +47,8 @@ export function loginHandler(value, redirect) {
 	else
 		verificaURL();
 }
+
+export function setUsuarioLogado(usuario){
+	usuarioLogado = usuario
+	document.getElementById('label-usuario-logado').textContent = usuarioLogado ? usuarioLogado.nome : 'Bem-vindo';
+}

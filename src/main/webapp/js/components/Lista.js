@@ -2,14 +2,16 @@
  * 
  */
 import { get } from './../fetch.js'
+import { View } from './../components/View.js'
 
-export class Lista {
+export class Lista extends View {
 
-	constructor(url) {
+	constructor(titulo, url) {
+		super(titulo)
 		this._url = url
-		this._elemento = document.querySelector('#ul-lista')
+		this._ulLista = document.querySelector('#ul-lista')
 	}
-	
+
 	async atualizarLista() {
 		const responseAtletas = await get(this._url)
 
@@ -26,11 +28,15 @@ export class Lista {
 	get lista() {
 		return this._lista
 	}
-	
-	atualizarHTML() {
-		this._elemento.innerHTML = this.template()
+
+	updateTemplate() {
+		this._ulLista.innerHTML = this.listTemplate()
 	}
 
+	listTemplate() {
+		throw new Error('Not Yet Implemented')
+	}
+	
 	template() {
 		throw new Error('Not Yet Implemented')
 	}

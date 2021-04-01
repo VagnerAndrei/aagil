@@ -1,38 +1,38 @@
 /**
  * 
  */
-import { get } from './../fetch.js'
-
-
 export class Modal {
 
-	constructor(url, titulo) {
-		this._elemento = document.querySelector('#conteudo-modal')
-		this._bgModal = document.querySelector('#bg-modal');
-		this._url = url
-		document.querySelector('#bg-modal').style.display = 'block'
+	constructor(titulo) {
+		this._divModal = document.querySelector('#div-modal')
+		this._divModal.innerHTML = this.modal()
 		document.querySelector('#label-titulo').textContent = titulo
-		document.querySelector('#botao-fechar-modal').addEventListener('click', event => this.fecharModal(event))
-		this.loadPage()
+		document.querySelector('#div-bg-modal').style.display = 'block'
+		document.querySelector('#span-botao-fechar-modal').addEventListener('click', event => this.fecharModal(event))
+		document.querySelector('#div-conteudo-modal').innerHTML = this.template()
 	}
 
-	init() {
+	template() {
 		throw new Error('Not Yet Implemented')
 	}
 
-	async loadPage() {
-		const response = await get(this._url)
-		if (response.status == 403) this._elemento.innerHTML = '<h2>Acesso negado</h2>';
-		else {
-			const html = await response.text();
-			this._elemento.innerHTML = new DOMParser().parseFromString(html, "text/html").getElementsByTagName('main')[0].innerHTML;
-			this.init()
-		}
+	modal() {
+		return `<div id="div-bg-modal" class="modal">
+					<div class="modal-content">
+						<header class="modal-container modal-header">
+							<span id="span-botao-fechar-modal" title="Fechar"
+								class="close-button display-top-right">&times;</span> <strong
+								id="label-titulo">Atualizar</strong>
+						</header>
+						<div class="modal-container">
+							<div id="div-conteudo-modal"></div>
+						</div>
+					</div>
+				</div>`
 	}
 
 	fecharModal() {
-		this._elemento.innerHTML = '';
-		this._bgModal.style.display = 'none';
+		this._divModal.innerHTML = '';
 	}
 
 }

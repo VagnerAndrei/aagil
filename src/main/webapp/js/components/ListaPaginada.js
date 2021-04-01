@@ -7,12 +7,13 @@ import { get } from './../fetch.js'
 export class ListaPaginada extends Lista {
 
 
-	constructor(url) {
-		super(url)
-		this._ulPaginas = document.querySelector('#ul-paginas')
+	constructor(url, titulo) {
+		super(url, titulo)
+
 		this._paginaAtual = 1
 		this._indice = 0
 
+		this._ulPaginas = document.querySelector('#ul-paginas')
 		this._buttonProximaPagina = document.querySelector('#button-pagina-proxima')
 		this._buttonUltimaPagina = document.querySelector('#button-pagina-ultima')
 		this._buttonPrimeiraPagina = document.querySelector('#button-pagina-primeira')
@@ -22,11 +23,53 @@ export class ListaPaginada extends Lista {
 
 		this._tamanhoDaPagina = this._selectTamanhoDaPagina.value
 
-		document.querySelector('#select-pagina-tamanho').addEventListener('change', event => this.tamanhoDaPagina(event))
-		document.querySelector('#button-pagina-proxima').addEventListener('click', event => this.proximaPagina(event))
-		document.querySelector('#button-pagina-anterior').addEventListener('click', event => this.paginaAnterior(event))
-		document.querySelector('#button-pagina-primeira').addEventListener('click', event => this.primeiraPagina(event))
-		document.querySelector('#button-pagina-ultima').addEventListener('click', event => this.ultimaPagina(event))
+		this._selectTamanhoDaPagina.addEventListener('change', event => this.tamanhoDaPagina(event))
+		this._buttonProximaPagina.addEventListener('click', event => this.proximaPagina(event))
+		this._buttonPaginaAnterior.addEventListener('click', event => this.paginaAnterior(event))
+		this._buttonPrimeiraPagina.addEventListener('click', event => this.primeiraPagina(event))
+		this._buttonUltimaPagina.addEventListener('click', event => this.ultimaPagina(event))
+	}
+
+	template() {
+		return `
+		<div class="flex-column">
+			<h2>${this._titulo}:</h2>
+			<div id="paginacao">
+	
+				<label>Resultados por página:</label>
+				<select id="select-pagina-tamanho">
+					<option>10</option>
+					<option>20</option>
+					<option>30</option>
+					<option>40</option>
+					<option selected>50</option>
+					<option>60</option>
+					<option>70</option>
+					<option>80</option>
+					<option>90</option>
+					<option>100</option>
+				</select>
+				<label>Total:</label>
+				<label id="label-total"></label>
+			</div>
+			
+			<div>
+				<ul id="ul-lista" class="lista-atletas">
+	
+				</ul>
+			</div>
+			<div>
+				<ul id="ul-paginas" class="lista-paginas">
+				</ul>
+			</div>
+			<div>
+				<button id="button-pagina-primeira" title="Primeira página">&lt;&lt;</button>
+				<button id="button-pagina-anterior" title="Página anterior">&lt;</button>
+				<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
+				<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
+			</div>
+		</div>
+		`
 	}
 
 	async atualizarLista() {
@@ -46,7 +89,11 @@ export class ListaPaginada extends Lista {
 		}
 	}
 
-	atualizarHTML() {
+	updateTemplate() {
+		// ATUALIZA OTEMPLATE COM A LISTA CONSULTADA
+		super.updateTemplate()
+
+		// ATUALIA O TEMPLATE COM OS LINKS DAS PAGINAS E ATIVACAO DOS BOTOES
 		this._numeroDePaginas = Math.ceil(this._totalResult / this._tamanhoDaPagina)
 		this._ulPaginas.innerHTML = ''
 
@@ -69,8 +116,6 @@ export class ListaPaginada extends Lista {
 		this._buttonPaginaAnterior.disabled = this._paginaAtual === 1
 		this._buttonPrimeiraPagina.disabled = this._paginaAtual < 3
 		this._buttonUltimaPagina.disabled = this._numeroDePaginas < 3 || this._indice > this._numeroDePaginas - 2
-
-		super.atualizarHTML()
 	}
 
 	tamanhoDaPagina() {

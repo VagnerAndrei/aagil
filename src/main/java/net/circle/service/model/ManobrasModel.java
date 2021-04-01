@@ -20,12 +20,12 @@ public class ManobrasModel {
 		this.tipos = tipos;
 	}
 
-	public List<ManobraModel> getManobras() {
-		return manobras;
+	public List<ManobraComplementoGrupoModel> getGruposComplementos() {
+		return gruposComplementos;
 	}
 
-	public void setManobras(List<ManobraModel> manobras) {
-		this.manobras = manobras;
+	public void setGruposComplementos(List<ManobraComplementoGrupoModel> gruposComplementos) {
+		this.gruposComplementos = gruposComplementos;
 	}
 
 	public List<ManobraComplementoModel> getComplementos() {
@@ -36,12 +36,12 @@ public class ManobrasModel {
 		this.complementos = complementos;
 	}
 
-	public List<ManobraComplementoGrupoModel> getGruposComplementos() {
-		return gruposComplementos;
+	public List<ManobraModel> getManobras() {
+		return manobras;
 	}
 
-	public void setGruposComplementos(List<ManobraComplementoGrupoModel> gruposComplementos) {
-		this.gruposComplementos = gruposComplementos;
+	public void setManobras(List<ManobraModel> manobras) {
+		this.manobras = manobras;
 	}
 
 }

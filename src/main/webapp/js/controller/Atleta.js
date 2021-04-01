@@ -1,6 +1,6 @@
 import { get } from '../fetch.js'
 import { pagina_nao_encontrada } from '../navegacao.js';
-import { usuarioLogado } from '../sessao.js';
+import { usuarioLogado, setUsuarioLogado } from '../sessao.js';
 import { getIdade } from '../util.js'
 import { AtletaForm } from './AtletaForm.js'
 import { AtletaFotoUpload } from './AtletaFotoUpload.js'
@@ -10,7 +10,7 @@ import { View } from '../components/View.js'
 export class Atleta extends View {
 
 	constructor(idAtleta) {
-		super()
+		super("Atleta")
 		this._imgAtleta = document.querySelector('#img-atleta');
 		this._imgEstado = document.querySelector('#img-estado');
 		this._labelNome = document.querySelector('#label-nome');
@@ -23,6 +23,43 @@ export class Atleta extends View {
 		this._imgAtualizarFoto = document.querySelector('#img-atualizar-foto');
 		this._idAtleta = idAtleta
 		this.consultarAtleta()
+	}
+
+	template() {
+		return `
+		<div id="container" class="display-none">
+			<div class="flex-column atleta">
+				<h2>Atleta!</h2>
+				<div class="flex-row space-beetween">
+					<strong id="label-nome"></strong> <img id="img-atualizar-atleta"
+						src="assets/img/icon-editar.png" class="botao-editar display-none"
+						title="Editar informações">
+				</div>
+				<div class="flex-row space-beetween">
+					<div class="container-foto-atleta">
+						<img id="img-atleta" onerror="this.src='assets/img/usuario.png'">
+	
+						<img id="img-atualizar-foto" src="assets/img/icon-foto.png"
+							class="botao-foto display-none" title="Atualizar foto">
+					</div>
+					<div class="flex-column space-beetween items-right">
+	
+						<img id="img-estado"> <strong id="label-localidade-uf"></strong>
+						<strong id="label-categoria"></strong> <strong id="label-idade"></strong>
+					</div>
+				</div>
+				<div>
+					<p id="p-biografia"></p>
+				</div>
+			</div>
+			<div class="manobras">
+				<h2>Manobras!</h2>
+			</div>
+			<div class="grupos">
+				<h2>Grupos!</h2>
+			</div>
+		</div>
+		`
 	}
 
 	async consultarAtleta() {
@@ -76,6 +113,7 @@ export class Atleta extends View {
 
 		if (this._atleta.nascimento) this._labelIdade.textContent = getIdade(this._atleta.nascimento);
 		if (this._atleta.categoria) this._labelCategoria.textContent = this._atleta.categoria;
+		setUsuarioLogado(atleta)
 	}
 
 

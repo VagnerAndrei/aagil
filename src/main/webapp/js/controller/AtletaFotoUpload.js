@@ -2,21 +2,15 @@
  * 
  */
 import { Modal } from '../components/Modal.js'
-import { urls } from '../navegacao.js'
 import { deletar } from '../fetch.js'
 
 export class AtletaFotoUpload extends Modal {
 	constructor(atleta, callbackHandler) {
-		super(urls.atleta_foto_upload.path, 'Atualizar Foto')
+		super('Atualizar Foto')
 		this._atleta = atleta
 		this._callbackHandler = callbackHandler
 		this._tamanhoMaximo = 10
-	}
-	
-	init() {
-		/*
-	ATRIBUINDO HTML ELEMENTS ATUALIZAR FOTO ATLETA
-	*/
+		
 		this._form = document.forms.namedItem('form-upload');
 		this._labelErroFoto = document.querySelector('#label-erro-foto');
 		this._botaoRemoverFoto = document.querySelector('#botao-remover-foto');
@@ -26,20 +20,35 @@ export class AtletaFotoUpload extends Modal {
 		this._labelProgress = document.querySelector('#label-progress');
 		this._inputFoto = document.querySelector('#input-foto');
 
-		/*
-		ADICIONANDO EVENTOS
-		*/
 		this._form.addEventListener('submit', event => this.enviarFoto(event));
 		this._inputFoto.addEventListener('change', event => this.inputFotoChange(event))
 		this._botaoCancelar.addEventListener('click', event => this.cancelarUpload(event))
 
-		/*
-		VERIFICANDO FOTO ATUAL
-		*/
 		if (this._atleta.foto) {
 			this._botaoRemoverFoto.classList.remove('display-none');
 			this._botaoRemoverFoto.addEventListener('click', event => this.removerFoto(event));
 		}
+	}
+	
+	template(){
+		return `
+			<form enctype="multipart/form-data" name="form-upload">
+				<label id="label-erro-foto" for="foto" class="mensagem-erro"></label> 
+				<p>
+				<input id="input-foto" type="file" name="foto" required size="10"
+					accept="image/jpg, image/jpeg, image/png, image/bmp" multiple>
+					
+				<progress id="progress" value="0" max="100" class="display-none"></progress>
+				<label id="label-progress" for="foto" class="mensagem-progress"></label> 
+				<button id="botao-remover-foto" type="button"
+					class="display-none botao-cancelar">Remover foto atual</button>
+				
+				<button id="botao-cancelar" type="button"
+					class="display-none botao-cancelar">Cancelar</button>
+					
+				<button id="botao-enviar" class="display-none" type="submit">Enviar</button>
+			</form>
+		` 
 	}
 
 	inputFotoChange() {
@@ -115,8 +124,6 @@ export class AtletaFotoUpload extends Modal {
 				console.log(e)
 				this._labelErroFoto.textContent = "Ocorreu um erro no envio da imagem"
 			}
-			console.log(event.target)
-			console.log(new FormData(event.target))
 			this._xhr.send(new FormData(event.target))
 		}
 

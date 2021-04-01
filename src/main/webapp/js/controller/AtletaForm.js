@@ -2,37 +2,77 @@
  * 
  */
 import { Modal } from '../components/Modal.js'
-import { urls } from '../navegacao.js'
 import { get, put } from '../fetch.js'
 
 
 export class AtletaForm extends Modal {
 
 	constructor(atleta, callbackHandler) {
-		super(urls.atleta_form.path, 'Atualizar Atleta')
-
+		super('Editar informações')
 		this._atleta = atleta
 		this._callbackHandler = callbackHandler
-	}
-
-	init() {
-		this._form = document.forms.namedItem('form-atualizar-atleta');
+		
 		this._labelErro = document.querySelector('#label-erro');
 		this._inputNome = document.querySelector('#input-nome');
 		this._textareaBiografia = document.querySelector('#textarea-biografia');
 		this._inputNascimento = document.querySelector('#input-nascimento');
 		this._radioCategoria = document.getElementsByName('radio-categoria');
-		this._form.addEventListener('submit', event => this.enviarAtualizacao(event));
-
-		this._botaoEnviar = document.querySelector('#botao-enviar');
 		this._selectUfs = document.querySelector('#select-ufs');
 		this._selectLocalidades = document.querySelector('#select-localidades');
 
+		document.forms.namedItem('form-atualizar-atleta').addEventListener('submit', event => this.enviarAtualizacao(event));
 		this._selectUfs.addEventListener('change', event => this.carregarLocalidades(event))
-		this._selectLocalidades = document.querySelector('#select-localidades');
-
+		
 		this.setAtleta()
 		this.carregarUFs()
+	}
+
+	template() {
+		return `
+		<form name="form-atualizar-atleta" id="form-atualizar-atleta">
+			<div>
+				<label for="nome">Nome:</label> <input id="input-nome" type="text"
+					required="required">
+			</div>
+	
+			<div>
+				<label for="nascimento">Data de nascimento:</label> <input
+					id="input-nascimento" type="date" required min="1920-01-01"
+					max="2010-12-31">
+			</div>
+	
+			<div class="flex-row space-beetween">
+				<label for="categoria">Localidade:</label> <select id="select-ufs"
+					required>
+					<option value="">UF:</option>
+				</select> <select id="select-localidades" required>
+					<option value="">Localidade:</option>
+				</select>
+			</div>
+	
+	
+			<div class="flex-row">
+				<label for="categoria">Categoria:</label> <input
+					id="input-categoria-iniciante" type="radio" name="radio-categoria"
+					value="Iniciante" required> <label
+					for="input-categoria-iniciante">Iniciante</label> <input
+					id="input-categoria-amador" type="radio" name="radio-categoria"
+					value="Amador" required> <label for="input-categoria-amador">Amador</label>
+	
+				<input id="input-categoria-profissional" type="radio"
+					name="radio-categoria" value="Profissional" required> <label
+					for="input-categoria-profissional">Profissional</label>
+			</div>
+	
+			<div>
+				<label for="nome">Biografia:</label>
+				<textarea id="textarea-biografia" rows="20" cols="48"
+					style="resize: none" maxlength="5000"></textarea>
+			</div>
+			<label id="label-erro" for="Email" class="mensagem-erro"></label>
+			<button id="botao-enviar" type="submit">Enviar</button>
+		</form>
+				`
 	}
 
 	setAtleta() {

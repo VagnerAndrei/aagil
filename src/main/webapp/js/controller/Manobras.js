@@ -5,9 +5,15 @@ import { View } from '../components/View.js';
 export class Manobras extends View {
 
 	constructor() {
-		super()
-		this._conteudoManobras = document.getElementById('conteudo-manobras')
+		super('Manobras')
+		this._divConteudoManobras = document.getElementById('div-conteudo-manobras')
 		this.consultarManobras()
+	}
+	
+	template(){
+		return `
+			<div id="div-conteudo-manobras"></div>
+		`
 	}
 
 	async consultarManobras() {
@@ -97,8 +103,8 @@ export class Manobras extends View {
 				})
 				const titulo = document.createElement("h2")
 				titulo.innerHTML = secao.nome
-				this._conteudoManobras.appendChild(titulo)
-				this._conteudoManobras.appendChild(table)
+				this._divConteudoManobras.appendChild(titulo)
+				this._divConteudoManobras.appendChild(table)
 			})
 
 		}

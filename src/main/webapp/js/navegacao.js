@@ -6,8 +6,6 @@ import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
 import { Manobras } from './controller/Manobras.js';
 
-const titulo = 'AAGIL'
-
 const urls = {
 	home: {
 		path: "pages/public/home.html",
@@ -59,10 +57,6 @@ const urls = {
 		title: "Acesso"
 	},
 
-
-
-
-
 	ja_autenticado: {
 		path: "pages/user/ja-autenticado.html",
 		name: "ja-autenticado",
@@ -85,7 +79,6 @@ function mainNavigate(url, queryFunction) {
 			if (queryFunction) queryFunction();
 		})
 	})
-	document.getElementsByTagName('title')[0].innerHTML = titulo + " " + url.title;
 }
 
 function changeState(url) {
@@ -179,32 +172,23 @@ function home(e) {
 }
 
 function manobras(e) {
-	mainNavigate(urls.manobras, () => {
-		if (e)
-			changeState(urls.manobras)
-		new Manobras()
-	});
+	new Manobras()
+	if (e)
+		changeState(urls.manobras)
 }
 
 function perfil(e) {
-	mainNavigate(urls.atleta, () => {
-		if (e) {
-			urls.atleta.id = isNaN(e) ? usuarioLogado.id : e
-			changeState(urls.atleta)
-			new Atleta(urls.atleta.id)
-		}
-	});
+	urls.atleta.id = isNaN(e) ? usuarioLogado.id : e
+	new Atleta(urls.atleta.id)
+	changeState(urls.atleta)
 
 }
 
 function atletas(e) {
-	mainNavigate(urls.atletas, () => {
-		if (e) {
-			changeState(urls.atletas)
-		}
-		new Atletas()
-	});
-
+	new Atletas()
+	if (e) {
+		changeState(urls.atletas)
+	}
 }
 
 
@@ -216,12 +200,9 @@ function sobre(e) {
 }
 
 function acessar(e) {
-	mainNavigate(urls.acesso, () => {
-		new Acesso()
-		if (e)
-			changeState(urls.acesso)
-	});
-
+	new Acesso()
+	if (e)
+		changeState(urls.acesso)
 }
 
 function registrar(e) {

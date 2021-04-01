@@ -26,6 +26,34 @@ export class Acesso extends View {
 
 		document.querySelector('form').addEventListener('submit', event => this.acessar(event));
 	}
+	
+	template(){
+		return `
+			<div>
+				<h1>Acesso</h1>
+				<div class="conta">
+					<small>ou</small><small> crie sua conta</small>
+				</div>
+		
+				<form>
+					<div class="form-group">
+						<label id="label-erro-email" for="Email" class="mensagem-erro"></label> <input
+							id="input-email" type="email" required="required"
+							placeholder="Email">
+					</div>
+					<div class="form-group">
+						<label id="label-erro-senha" for="Senha"  class="mensagem-erro"></label> <input
+							id="input-senha" type="password" required="required"
+							placeholder="Senha">
+					</div>
+					<label class="checkbox-inline"><input type="checkbox" checked="checked"
+						id="check-manter-dados">Lembrar meus dados</label>
+					<button type="submit" id="button-acessar">Acessar</button>
+				</form>
+				<img id="img-loading" class="loading display-none" src="assets/img/loading.gif">
+			</div>		
+		`
+	}
 
 	disabled(boolean) {
 		[this._buttonAcessar, this._inputEmail, this._inputSenha, this._checkManterDados].map(item => item.disabled = boolean)

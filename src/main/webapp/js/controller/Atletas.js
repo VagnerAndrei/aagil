@@ -8,18 +8,15 @@ import { getIdade } from '../util.js'
 export class Atletas extends ListaPaginada {
 
 	constructor() {
-		super('api/atletas')
+		super('Atletas', 'api/atletas')
 		this.atualizarLista()
 	}
 
 	async atualizarLista() {
-		// REALIZA CONSULTA DA LISTA
 		await super.atualizarLista()
 
-		// ATUALIZA O COMPONENTE NO HTML
-		this.atualizarHTML()
+		this.updateTemplate()
 
-		// ADICIONA LINK NO ITEM DA LISTA
 		this._lista?.map(atleta => {
 			document.querySelector(`#atleta-${atleta.id}`).addEventListener('click', () => {
 				perfil(atleta.id)
@@ -27,7 +24,7 @@ export class Atletas extends ListaPaginada {
 		})
 	}
 
-	template() {
+	listTemplate() {
 		let itemsHtml = ''
 		this.lista?.map(atleta => {
 			itemsHtml += `<div class="flex-column lista-atleta cursor-pointer" id="atleta-${atleta.id}">

@@ -28,6 +28,39 @@ export class Registro extends View {
 
 	}
 
+	template() {
+		return `
+		<div>
+			<h1>Registre-se</h1>
+			<div class="conta">
+			<small>ou</small><small> acesse sua conta</small>
+			</div>
+	
+			<form autocomplete="off">
+				<div class="form-group">
+					<label id="label-erro-nome" for="Nome" class="mensagem-erro"></label> <input
+						id="input-nome" type="text" required="required" placeholder="Nome">
+				</div>
+				<div  class="form-group">
+					<label id="label-erro-email" for="Email" class="mensagem-erro"></label> <input id="input-email"
+						type="email" required="required" placeholder="Email">
+				</div>
+				<div class="form-group">
+					<label id="label-erro-senha" for="Senha" class="mensagem-erro"></label> <input
+						id="input-senha" type="password" required="required"
+						placeholder="Senha">
+				</div>
+				<div class="form-group">
+					<label id="label-erro-confere-senha" class="mensagem-erro"></label> <input id="input-confere-senha" type="password"
+						required="required" placeholder="Confere Senha">
+				</div>
+				<button type="submit" id="button-registrar">Registrar</button>
+			</form>
+			<img id="img-loading" class="loading  display-none" src="assets/img/loading.gif">
+		</div>
+		`
+	}
+
 	registrar(event) {
 		console.log('asd')
 		event.preventDefault();

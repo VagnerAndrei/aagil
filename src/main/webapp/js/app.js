@@ -1,4 +1,4 @@
-import { isLogged, logout } from "./sessao.js"
+import { isUser, logout } from "./sessao.js"
 import { verificaURL, registrar, acessar, home, manobras, sobre, perfil, atletas } from './navegacao.js';
 
 document.getElementById('botao-registrar').addEventListener('click', registrar);
@@ -10,7 +10,7 @@ document.getElementById('botao-atletas').addEventListener('click', atletas);
 document.getElementById('botao-sobre').addEventListener('click', sobre);
 document.getElementById('botao-logout').addEventListener('click', logout);
 
-isLogged('onLoadEvent')
+isUser('onLoadEvent')
 
 window.onpopstate = (event) => {
 	document.getElementById('div-modal').innerHTML = ''

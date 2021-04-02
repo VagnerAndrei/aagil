@@ -1,6 +1,6 @@
 import { get } from '../fetch.js'
 import { pagina_nao_encontrada } from '../navegacao.js';
-import { usuarioLogado, isLogged } from '../sessao.js';
+import { atletaLogado, isUser } from '../sessao.js';
 import { getIdade } from '../util.js'
 import { AtletaForm } from './AtletaForm.js'
 import { AtletaFotoUpload } from './AtletaFotoUpload.js'
@@ -22,7 +22,26 @@ export class Atleta extends View {
 		this._imgAtualizarAtleta = document.querySelector('#img-atualizar-atleta');
 		this._imgAtualizarFoto = document.querySelector('#img-atualizar-foto');
 		this._idAtleta = idAtleta
+		this._imgAtualizarFoto.addEventListener('click', event => this.atualizarFoto(event))
+		this._imgAtualizarAtleta.addEventListener('click', event => this.atualizarAtleta(event))
 		this.consultarAtleta()
+	}
+
+	applyRole(role) {
+		switch (role) {
+			case 'User':
+				if (atletaLogado.id == this._idAtleta) {
+					this._imgAtualizarFoto.classList.remove('display-none');
+					this._imgAtualizarAtleta.classList.remove('display-none');
+				} else {
+					this._imgAtualizarFoto.classList.add('display-none');
+					this._imgAtualizarAtleta.classList.add('display-none');
+				}
+				break
+			default:
+				this._imgAtualizarFoto.classList.add('display-none');
+				this._imgAtualizarAtleta.classList.add('display-none');
+		}
 	}
 
 	template() {
@@ -86,21 +105,15 @@ export class Atleta extends View {
 	}
 
 	async atualizarFoto() {
-		if (await isLogged())
+		if (await isUser('linkVerificationEvent'))
 			new AtletaFotoUpload(this._atleta, event => this.confereFoto(event))
-		else {
-			this._imgAtualizarFoto.classList.add('display-none');
-			this._imgAtualizarAtleta.classList.add('display-none');
-		}
+		// TODO: adicionar mensagem de login em outra conta
 	}
 
 	async atualizarAtleta() {
-		if (await isLogged())
+		if (await isUser('linkVerificationEvent'))
 			new AtletaForm(this._atleta, event => this.setAtleta(event))
-		else {
-			this._imgAtualizarFoto.classList.add('display-none');
-			this._imgAtualizarAtleta.classList.add('display-none');
-		}
+		// TODO: adicionar mensagem de login em outra conta 
 	}
 
 	setAtleta(atleta) {
@@ -117,11 +130,12 @@ export class Atleta extends View {
 		if (this._atleta.nascimento) this._labelIdade.textContent = getIdade(this._atleta.nascimento);
 		if (this._atleta.categoria) this._labelCategoria.textContent = this._atleta.categoria;
 
-		if (usuarioLogado && usuarioLogado.id == this._idAtleta) {
+		if (atletaLogado && atletaLogado.id == this._idAtleta) {
 			this._imgAtualizarFoto.classList.remove('display-none');
 			this._imgAtualizarAtleta.classList.remove('display-none');
-			this._imgAtualizarFoto.addEventListener('click', event => this.atualizarFoto(event))
-			this._imgAtualizarAtleta.addEventListener('click', event => this.atualizarAtleta(event))
+		} else {
+			this._imgAtualizarFoto.classList.add('display-none');
+			this._imgAtualizarAtleta.classList.add('display-none');
 		}
 	}
 

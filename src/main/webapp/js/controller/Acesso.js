@@ -76,7 +76,7 @@ export class Acesso extends View {
 				.then((response) => {
 					response.json().then(value => {
 						if (response.status == 202) {
-							loginHandler(value, true)
+							loginHandler(value, 'acessoEvent')
 						}
 						else
 							messages.find(message => message.htmlFor == value.campo ? value.campo : "Email").textContent = value.mensagem

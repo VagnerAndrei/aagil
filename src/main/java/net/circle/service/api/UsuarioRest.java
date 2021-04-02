@@ -41,6 +41,9 @@ public class UsuarioRest {
 	@Inject
 	private IAtletaBusiness servico;
 
+//	@Context
+//	private SecurityContext securityContext;
+
 	/**
 	 * Realiza o registro do usuário
 	 *
@@ -74,8 +77,8 @@ public class UsuarioRest {
 	 *
 	 * 
 	 * @returns Response: <br/>
-	 *          Status.UNAUTHORIZED(401, "Unauthorized"),<br/>
-	 *          Status.ACCEPTED(202, "Accepted"),<br/>
+	 *          Status.NOT_FOUND(404, "Not Found"),<br/>
+	 *          Status.FOUND(302, "Found"),<br/>
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 */
 	@GET
@@ -83,10 +86,10 @@ public class UsuarioRest {
 	public Response obterUsuarioLogado(@Context HttpServletRequest servletRequest) {
 		try {
 			if (servletRequest.getUserPrincipal() == null) {
-				return Response.status(Status.UNAUTHORIZED).build();
+				return Response.status(Status.NOT_FOUND).build();
 			} else {
 				var pessoa = servico.findByKey("usuario.email", servletRequest.getUserPrincipal().getName());
-				return Response.status(Status.ACCEPTED).entity(parseModel(pessoa)).build();
+				return Response.status(Status.FOUND).entity(parseModel(pessoa)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -95,9 +98,11 @@ public class UsuarioRest {
 	}
 
 	@GET
-	@Path("/autenticacao/boolean")
-	public Boolean isUsuarioLogado(@Context HttpServletRequest servletRequest) {
-		return servletRequest.getUserPrincipal() != null;
+	@Path("/autenticado")
+	public Response isUsuarioLogado(@Context HttpServletRequest servletRequest) {
+		return Response
+				.ok(servletRequest.getUserPrincipal() != null ? servletRequest.getUserPrincipal().getName() : false)
+				.build();
 	}
 
 	/**
@@ -170,7 +175,7 @@ public class UsuarioRest {
 	}
 
 	private AtletaModel parseModel(Atleta pessoa) {
-		return new AtletaModel(pessoa.getId(), pessoa.getNome());
+		return new AtletaModel(pessoa.getId(), pessoa.getNome(), pessoa.getUsuario().getEmail());
 	}
 
 }

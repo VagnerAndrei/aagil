@@ -1,23 +1,23 @@
-import { verificaURL, home } from './navegacao.js';
+import { verificaURL, applyRole, perfil } from './navegacao.js';
 import { get } from './fetch.js';
 
 // FIXME: export deve ser cons
-export let usuarioLogado;
+export let atletaLogado;
 
 export function logout() {
 	get('api/usuarios/sair').then(() => {
-		loginHandler(undefined, false, 'logoutEvent')
+		loginHandler(undefined, 'logoutEvent')
 	}).catch(() => { })
 }
 
-export function getLogin(event) {
+export function getUser(event) {
 	get('api/usuarios/autenticacao').then(response => {
 		switch (response.status) {
-			case 202:
-				response.json().then(value => loginHandler(value, false, event))
+			case 302:
+				response.json().then(value => loginHandler(value, event))
 				break
-			case 401:
-				loginHandler(undefined, false, event)
+			case 404:
+				loginHandler(undefined, event)
 				break
 			case 500:
 				console.log("Ocorreu um erro no servidor")
@@ -26,18 +26,33 @@ export function getLogin(event) {
 	})
 }
 
-export async function isLogged(onLoadEvent) {
-	const response = await get('api/usuarios/autenticacao/boolean')
-	const value = await response.json()
-	if (value) getLogin(onLoadEvent ? undefined : 'onChangeNavigationEvent')
-	else loginHandler(undefined, false, onLoadEvent ? undefined : 'onChangeNavigationEvent')
-	return value
+export async function isUser(event) {
+	const response = await get('api/usuarios/autenticado')
+	const value = await response.text()
+	if (value !== 'false') {
+		if (!atletaLogado) {
+			getUser(event)
+			return true
+		}
+		if (atletaLogado.usuario.email !== value) {
+			getUser(event)
+			return false
+		}
+
+		return true
+	}
+	else if (atletaLogado || event === 'onLoadEvent')
+		loginHandler(undefined, event)
+	return false
 }
 
-export function loginHandler(value, redirect, event) {
-	usuarioLogado = value;
-	document.getElementById('label-usuario-logado').textContent = usuarioLogado ? `Bem-vindo, ${usuarioLogado.nome}` : 'Bem-vindo.';
-	if (usuarioLogado) {
+export function loginHandler(value, event) {
+	console.log('loginHandler', value, event)
+	atletaLogado = value;
+
+	document.getElementById('label-usuario-logado').textContent = atletaLogado ? `Bem-vindo, ${atletaLogado.nome}` : 'Bem-vindo.';
+
+	if (atletaLogado) {
 		document.getElementById('botao-acessar').classList.add('display-none');
 		document.getElementById('botao-registrar').classList.add('display-none');
 		document.getElementById('botao-perfil').classList.remove('display-none');
@@ -49,9 +64,19 @@ export function loginHandler(value, redirect, event) {
 		document.getElementById('botao-acessar').classList.remove('display-none');
 		document.getElementById('botao-registrar').classList.remove('display-none');
 	}
-	if (redirect)
-		home('onLoginEvent');
-	else if (!event)
-		verificaURL();
+
+	switch (event) {
+		case 'acessoEvent':
+		case 'registroEvent':
+			perfil(event)
+			break
+		case 'onLoadEvent':
+			verificaURL()
+			break
+		case 'navigationEvent':
+		case 'logoutEvent':
+		case 'linkVerificationEvent':
+			applyRole(atletaLogado ? 'User' : undefined)
+	}
 }
 

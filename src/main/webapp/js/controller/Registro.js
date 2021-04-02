@@ -87,7 +87,7 @@ export class Registro extends View {
 				response.json().then(json => {
 					switch (response.status) {
 						case 201:
-							loginHandler(json, true)
+							loginHandler(json, 'registroEvent')
 							break
 						case 409:
 						case 500:

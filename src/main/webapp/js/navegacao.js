@@ -1,4 +1,4 @@
-import { usuarioLogado, isLogged } from './sessao.js';
+import { atletaLogado, isUser } from './sessao.js';
 import { get } from './fetch.js';
 import { Home } from './controller/Home.js';
 import { Sobre } from './controller/Sobre.js';
@@ -7,6 +7,18 @@ import { Atleta } from './controller/Atleta.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
 import { Manobras } from './controller/Manobras.js';
+
+const instances = { current: undefined, atletas: undefined }
+
+export function applyRole(role) {
+	Object.keys(instances).map(key => {
+		if (key === 'current' || instances[key] && instances[key] !== instances[current]) {
+			instances[key]?.applyRole(role)
+			console.log('aplicou', key)
+		}
+
+	})
+}
 
 const urls = {
 	home: {
@@ -107,7 +119,7 @@ function verificaURL(event) {
 		pagina_nao_encontrada();
 		return;
 	}
-	if (usuarioLogado)
+	if (atletaLogado)
 		if (param == null) {
 			home();
 			return;
@@ -159,51 +171,50 @@ function redirect(param, event) {
 
 
 function ja_autenticado() {
-	current = null
+	instances.current = undefined
 	mainNavigate(urls.ja_autenticado)
 }
 
 function pagina_nao_encontrada() {
-	current = null
+	instances.current = undefined
 	mainNavigate(urls.pagina_nao_encontrada);
 }
 
 function home(e) {
 	current_verify()
-	current = new Home()
+	instances.current = new Home()
 	if (e) changeState(urls.home, e === 'onLoginEvent')
 }
 
 function manobras(e) {
 	current_verify()
-	current = new Manobras()
+	instances.current = new Manobras()
 	if (e) changeState(urls.manobras)
 }
 
 let current
 function perfil(eventOrIdUsuario, onPopStateEvent) {
 	current_verify()
-	urls.atleta.id = isNaN(eventOrIdUsuario) ? usuarioLogado.id : eventOrIdUsuario
-	current = new Atleta(urls.atleta.id)
+	urls.atleta.id = isNaN(eventOrIdUsuario) ? atletaLogado.id : eventOrIdUsuario
+	instances.current = new Atleta(urls.atleta.id)
 	if (eventOrIdUsuario && !onPopStateEvent) changeState(urls.atleta, eventOrIdUsuario === 'onLoggedEvent')
 }
 
-let atletasL
 function atletas(clickEvent) {
 	current_verify()
-	if (!atletasL)
-		atletasL = new Atletas()
+	if (!instances.atletas)
+		instances.atletas = new Atletas()
 	else
-		atletasL.display(true)
-	current = atletasL
+		instances.atletas.display(true)
+	instances.current = instances.atletas
 	if (clickEvent) changeState(urls.atletas)
 }
 function current_verify() {
-	isLogged()
-	if (current) {
-		switch (current.constructor) {
+	isUser('navigationEvent')
+	if (instances.current) {
+		switch (instances.current.constructor) {
 			case Atletas:
-				current.display(false)
+				instances.current.display(false)
 				break
 			case Acesso:
 			case Atleta:
@@ -211,7 +222,7 @@ function current_verify() {
 			case Registro:
 			case Home:
 			case Sobre:
-				current.remove()
+				instances.current.remove()
 				break
 		}
 		current = null
@@ -220,19 +231,19 @@ function current_verify() {
 
 function sobre(clickEvent) {
 	current_verify()
-	current = new Sobre()
+	instances.current = new Sobre()
 	if (clickEvent) changeState(urls.sobre)
 }
 
 function acessar(clickEvent) {
 	current_verify()
-	current = new Acesso()
+	instances.current = new Acesso()
 	if (clickEvent) changeState(urls.acesso)
 }
 
 function registrar(clickEvent) {
 	current_verify()
-	current = new Registro()
+	instances.current = new Registro()
 	if (clickEvent) changeState(urls.registro)
 
 }

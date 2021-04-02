@@ -11,6 +11,9 @@ export class View {
 		this.update()
 	}
 
+	applyRole() {
+	}
+
 	save() {
 		this._saved = document.getElementsByTagName('main')[0].innerHTML
 	}
@@ -21,12 +24,12 @@ export class View {
 
 
 	display(condition) {
-		condition ? 
-		document.getElementById(this._viewName).classList.remove('display-none') : 
-		document.getElementById(this._viewName).classList.add('display-none')
+		condition ?
+			document.getElementById(this._viewName).classList.remove('display-none') :
+			document.getElementById(this._viewName).classList.add('display-none')
 	}
-	
-	remove(){
+
+	remove() {
 		this._main.removeChild(document.getElementById(this._viewName))
 	}
 

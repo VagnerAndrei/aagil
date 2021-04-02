@@ -23,11 +23,14 @@ public class AtletaModel extends AbstractModel{
 	private LocalidadeModel localidade;
 	private String categoria;
 	private IDModel foto;
-
-	public AtletaModel(Integer id, String nome) {
+	
+	private UsuarioModel usuario;
+	
+	public AtletaModel(Integer id, String nome, String email) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.usuario = new UsuarioModel(email);
 	}
 
 	public AtletaModel(Integer id, String nome, String biografia,LocalDate nascimento, LocalidadeModel localidade, String categoria, IDModel foto) {
@@ -95,6 +98,14 @@ public class AtletaModel extends AbstractModel{
 
 	public void setFoto(IDModel foto) {
 		this.foto = foto;
+	}
+
+	public UsuarioModel getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(UsuarioModel usuario) {
+		this.usuario = usuario;
 	}
 	
 }

@@ -1,6 +1,6 @@
 import { get } from '../fetch.js'
 import { pagina_nao_encontrada } from '../navegacao.js';
-import { usuarioLogado } from '../sessao.js';
+import { usuarioLogado, isLogged } from '../sessao.js';
 import { getIdade } from '../util.js'
 import { AtletaForm } from './AtletaForm.js'
 import { AtletaFotoUpload } from './AtletaFotoUpload.js'
@@ -85,12 +85,22 @@ export class Atleta extends View {
 		this._imgAtleta.src = `api/atletas/${this._atleta.id}/foto/thumb?t=${new Date().getTime()}`
 	}
 
-	atualizarFoto() {
-		new AtletaFotoUpload(this._atleta, event => this.confereFoto(event))
+	async atualizarFoto() {
+		if (await isLogged())
+			new AtletaFotoUpload(this._atleta, event => this.confereFoto(event))
+		else {
+			this._imgAtualizarFoto.classList.add('display-none');
+			this._imgAtualizarAtleta.classList.add('display-none');
+		}
 	}
 
-	atualizarAtleta() {
-		new AtletaForm(this._atleta, event => this.setAtleta(event))
+	async atualizarAtleta() {
+		if (await isLogged())
+			new AtletaForm(this._atleta, event => this.setAtleta(event))
+		else {
+			this._imgAtualizarFoto.classList.add('display-none');
+			this._imgAtualizarAtleta.classList.add('display-none');
+		}
 	}
 
 	setAtleta(atleta) {

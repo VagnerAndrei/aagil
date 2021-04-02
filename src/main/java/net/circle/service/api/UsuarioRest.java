@@ -74,24 +74,30 @@ public class UsuarioRest {
 	 *
 	 * 
 	 * @returns Response: <br/>
-	 *          Status.NOT_FOUND(404, "Not Found"),<br/>
-	 *          Status.FOUND(302, "Found"),<br/>
+	 *          Status.UNAUTHORIZED(401, "Unauthorized"),<br/>
+	 *          Status.ACCEPTED(202, "Accepted"),<br/>
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 */
 	@GET
 	@Path("/autenticacao")
-	public Response isUsuarioLogado(@Context HttpServletRequest servletRequest) {
+	public Response obterUsuarioLogado(@Context HttpServletRequest servletRequest) {
 		try {
 			if (servletRequest.getUserPrincipal() == null) {
-				return Response.status(Status.NOT_FOUND).build();
+				return Response.status(Status.UNAUTHORIZED).build();
 			} else {
 				var pessoa = servico.findByKey("usuario.email", servletRequest.getUserPrincipal().getName());
-				return Response.status(Status.FOUND).entity(parseModel(pessoa)).build();
+				return Response.status(Status.ACCEPTED).entity(parseModel(pessoa)).build();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
+	}
+
+	@GET
+	@Path("/autenticacao/boolean")
+	public Boolean isUsuarioLogado(@Context HttpServletRequest servletRequest) {
+		return servletRequest.getUserPrincipal() != null;
 	}
 
 	/**

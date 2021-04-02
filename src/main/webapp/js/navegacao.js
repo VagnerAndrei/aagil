@@ -1,4 +1,4 @@
-import { usuarioLogado } from './sessao.js';
+import { usuarioLogado, isLogged } from './sessao.js';
 import { get } from './fetch.js';
 import { Home } from './controller/Home.js';
 import { Sobre } from './controller/Sobre.js';
@@ -199,6 +199,7 @@ function atletas(clickEvent) {
 	if (clickEvent) changeState(urls.atletas)
 }
 function current_verify() {
+	isLogged()
 	if (current) {
 		switch (current.constructor) {
 			case Atletas:

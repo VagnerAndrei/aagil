@@ -6,18 +6,18 @@ export let usuarioLogado;
 
 export function logout() {
 	get('api/usuarios/sair').then(() => {
-		loginHandler()
+		loginHandler(undefined, false, 'logoutEvent')
 	}).catch(() => { })
 }
 
-export function verificaLogin() {
+export function getLogin(event) {
 	get('api/usuarios/autenticacao').then(response => {
 		switch (response.status) {
-			case 302:
-				response.json().then(value => loginHandler(value))
+			case 202:
+				response.json().then(value => loginHandler(value, false, event))
 				break
-			case 404:
-				loginHandler()
+			case 401:
+				loginHandler(undefined, false, event)
 				break
 			case 500:
 				console.log("Ocorreu um erro no servidor")
@@ -26,7 +26,15 @@ export function verificaLogin() {
 	})
 }
 
-export function loginHandler(value, redirect) {
+export async function isLogged(onLoadEvent) {
+	const response = await get('api/usuarios/autenticacao/boolean')
+	const value = await response.json()
+	if (value) getLogin(onLoadEvent ? undefined : 'onChangeNavigationEvent')
+	else loginHandler(undefined, false, onLoadEvent ? undefined : 'onChangeNavigationEvent')
+	return value
+}
+
+export function loginHandler(value, redirect, event) {
 	usuarioLogado = value;
 	document.getElementById('label-usuario-logado').textContent = usuarioLogado ? `Bem-vindo, ${usuarioLogado.nome}` : 'Bem-vindo.';
 	if (usuarioLogado) {
@@ -43,7 +51,7 @@ export function loginHandler(value, redirect) {
 	}
 	if (redirect)
 		home('onLoginEvent');
-	else
+	else if (!event)
 		verificaURL();
 }
 

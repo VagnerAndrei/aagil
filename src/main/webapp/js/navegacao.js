@@ -1,5 +1,7 @@
 import { usuarioLogado } from './sessao.js';
 import { get } from './fetch.js';
+import { Home } from './controller/Home.js';
+import { Sobre } from './controller/Sobre.js';
 import { Atletas } from './controller/Atletas.js';
 import { Atleta } from './controller/Atleta.js';
 import { Registro } from './controller/Registro.js'
@@ -81,15 +83,17 @@ function mainNavigate(url, queryFunction) {
 	})
 }
 
-function changeState(url) {
+function changeState(url, onLoginEvent) {
 	if (url.name == urls.home.name) {
 		if (window.location.href != window.location.origin + window.location.pathname)
-			window.history.pushState(url.name, url.name, `${location.pathname}`)
+			if (!onLoginEvent) window.history.pushState(url.name, url.name, `${location.pathname}`)
+			else window.history.replaceState(url.name, url.name, `${location.pathname}`)
 	}
 	else {
 
 		if (url == urls.atleta) {
-			window.history.pushState(url.name, url.name, "?p=" + url.name + "&id=" + url.id);
+			if (!onLoginEvent) window.history.pushState(url.name, url.name, "?p=" + url.name + "&id=" + url.id)
+			else window.history.replaceState(url.name, url.name, "?p=" + url.name + "&id=" + url.id)
 		}
 		else
 			if (new URLSearchParams(new URL(window.location.href).search).get("p") != url.name)
@@ -97,9 +101,8 @@ function changeState(url) {
 	}
 }
 
-function verificaURL() {
+function verificaURL(event) {
 	const param = new URLSearchParams(new URL(window.location.href).search).get("p");
-
 	if (param == null && window.location != window.location.origin + window.location.pathname) {
 		pagina_nao_encontrada();
 		return;
@@ -110,24 +113,23 @@ function verificaURL() {
 			return;
 		}
 		else if (param == urls.acesso.name || param == urls.registro.name) {
-			ja_autenticado();
+			perfil('onLoggedEvent');
 			return;
 		}
-
-	redirect(param)
+	redirect(param, event)
 
 }
 
 
-function redirect(e) {
-	switch (e) {
+function redirect(param, event) {
+	switch (param) {
 		case null:
 			home();
 			break;
 		case urls.atleta.name:
 			const id = new URLSearchParams(new URL(window.location.href).search).get("id");
 			if (id && !isNaN(id) && id > 0) {
-				perfil(id);
+				perfil(id, event);
 			}
 			else
 				pagina_nao_encontrada();
@@ -157,60 +159,80 @@ function redirect(e) {
 
 
 function ja_autenticado() {
+	current = null
 	mainNavigate(urls.ja_autenticado)
 }
 
 function pagina_nao_encontrada() {
+	current = null
 	mainNavigate(urls.pagina_nao_encontrada);
 }
 
 function home(e) {
-	mainNavigate(urls.home, () => {
-		if (e)
-			changeState(urls.home)
-	});
+	current_verify()
+	current = new Home()
+	if (e) changeState(urls.home, e === 'onLoginEvent')
 }
 
 function manobras(e) {
-	new Manobras()
-	if (e)
-		changeState(urls.manobras)
+	current_verify()
+	current = new Manobras()
+	if (e) changeState(urls.manobras)
 }
 
-function perfil(e) {
-	urls.atleta.id = isNaN(e) ? usuarioLogado.id : e
-	new Atleta(urls.atleta.id)
-	changeState(urls.atleta)
-
+let current
+function perfil(eventOrIdUsuario, onPopStateEvent) {
+	current_verify()
+	urls.atleta.id = isNaN(eventOrIdUsuario) ? usuarioLogado.id : eventOrIdUsuario
+	current = new Atleta(urls.atleta.id)
+	if (eventOrIdUsuario && !onPopStateEvent) changeState(urls.atleta, eventOrIdUsuario === 'onLoggedEvent')
 }
 
-function atletas(e) {
-	new Atletas()
-	if (e) {
-		changeState(urls.atletas)
+let atletasL
+function atletas(clickEvent) {
+	current_verify()
+	if (!atletasL)
+		atletasL = new Atletas()
+	else
+		atletasL.display(true)
+	current = atletasL
+	if (clickEvent) changeState(urls.atletas)
+}
+function current_verify() {
+	if (current) {
+		switch (current.constructor) {
+			case Atletas:
+				current.display(false)
+				break
+			case Acesso:
+			case Atleta:
+			case Manobras:
+			case Registro:
+			case Home:
+			case Sobre:
+				current.remove()
+				break
+		}
+		current = null
 	}
 }
 
-
-function sobre(e) {
-	mainNavigate(urls.sobre, () => {
-		if (e)
-			changeState(urls.sobre)
-	});
+function sobre(clickEvent) {
+	current_verify()
+	current = new Sobre()
+	if (clickEvent) changeState(urls.sobre)
 }
 
-function acessar(e) {
-	new Acesso()
-	if (e)
-		changeState(urls.acesso)
+function acessar(clickEvent) {
+	current_verify()
+	current = new Acesso()
+	if (clickEvent) changeState(urls.acesso)
 }
 
-function registrar(e) {
-	mainNavigate(urls.registro, () => {
-		new Registro()
-		if (e)
-			changeState(urls.registro)
-	});
+function registrar(clickEvent) {
+	current_verify()
+	current = new Registro()
+	if (clickEvent) changeState(urls.registro)
 
 }
 

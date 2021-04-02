@@ -9,6 +9,9 @@ export class Lista extends View {
 	constructor(titulo, url) {
 		super(titulo)
 		this._url = url
+	}
+	
+	init(){
 		this._ulLista = document.querySelector('#ul-lista')
 	}
 

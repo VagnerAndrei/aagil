@@ -1,6 +1,6 @@
 import { get } from '../fetch.js'
 import { pagina_nao_encontrada } from '../navegacao.js';
-import { usuarioLogado, setUsuarioLogado } from '../sessao.js';
+import { usuarioLogado } from '../sessao.js';
 import { getIdade } from '../util.js'
 import { AtletaForm } from './AtletaForm.js'
 import { AtletaFotoUpload } from './AtletaFotoUpload.js'
@@ -18,7 +18,7 @@ export class Atleta extends View {
 		this._labelIdade = document.querySelector('#label-idade');
 		this._labelCategoria = document.querySelector('#label-categoria');
 		this._labelLocalidadeUf = document.querySelector('#label-localidade-uf');
-		this._container = document.querySelector('#container');
+		this._container = document.querySelector('#div-atleta');
 		this._imgAtualizarAtleta = document.querySelector('#img-atualizar-atleta');
 		this._imgAtualizarFoto = document.querySelector('#img-atualizar-foto');
 		this._idAtleta = idAtleta
@@ -27,7 +27,7 @@ export class Atleta extends View {
 
 	template() {
 		return `
-		<div id="container" class="display-none">
+		<div id="div-atleta" class="display-none">
 			<div class="flex-column atleta">
 				<h2>Atleta!</h2>
 				<div class="flex-row space-beetween">
@@ -70,13 +70,6 @@ export class Atleta extends View {
 
 			this.setAtleta(atleta);
 
-			if (usuarioLogado && usuarioLogado.id == this._idAtleta) {
-				this._imgAtualizarFoto.classList.remove('display-none');
-				this._imgAtualizarAtleta.classList.remove('display-none');
-				this._imgAtualizarFoto.addEventListener('click', event => this.atualizarFoto(event))
-				this._imgAtualizarAtleta.addEventListener('click', event => this.atualizarAtleta(event))
-			}
-
 			this._container.classList.add('container-atleta');
 			this._container.classList.remove('display-none');
 
@@ -113,8 +106,15 @@ export class Atleta extends View {
 
 		if (this._atleta.nascimento) this._labelIdade.textContent = getIdade(this._atleta.nascimento);
 		if (this._atleta.categoria) this._labelCategoria.textContent = this._atleta.categoria;
-		setUsuarioLogado(atleta)
+
+		if (usuarioLogado && usuarioLogado.id == this._idAtleta) {
+			this._imgAtualizarFoto.classList.remove('display-none');
+			this._imgAtualizarAtleta.classList.remove('display-none');
+			this._imgAtualizarFoto.addEventListener('click', event => this.atualizarFoto(event))
+			this._imgAtualizarAtleta.addEventListener('click', event => this.atualizarAtleta(event))
+		}
 	}
+
 
 
 }

@@ -8,7 +8,7 @@ import { loginHandler } from '../sessao.js'
 export class Acesso extends View {
 
 	constructor() {
-		super()
+		super('Acesso')
 		this._labelErroEmail = document.querySelector('#label-erro-email')
 		this._labelErroSenha = document.querySelector('#label-erro-senha')
 

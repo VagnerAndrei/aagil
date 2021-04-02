@@ -4,7 +4,7 @@
 function get(url) {
 	return fetch(url, {
 		method: 'GET',
-	});
+	})
 }
 
 function post(url, json) {

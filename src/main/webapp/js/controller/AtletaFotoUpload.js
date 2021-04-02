@@ -156,7 +156,6 @@ export class AtletaFotoUpload extends Modal {
 
 	async removerFoto() {
 		const response = await deletar(`api/atletas/${this._atleta.id}/foto`)
-		console.log(response)
 		switch (response.status) {
 			case 403:
 				this._labelErroFoto.textContent = 'Acesso negado!'

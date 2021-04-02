@@ -10,6 +10,7 @@ export class Atletas extends ListaPaginada {
 	constructor() {
 		super('Atletas', 'api/atletas')
 		this.atualizarLista()
+		this.init()
 	}
 
 	async atualizarLista() {
@@ -17,6 +18,15 @@ export class Atletas extends ListaPaginada {
 
 		this.updateTemplate()
 
+		this.adicionarClickEvent() 
+	}
+	
+	init(){
+		super.init()
+		this.adicionarClickEvent()
+	}
+
+	adicionarClickEvent() {
 		this._lista?.map(atleta => {
 			document.querySelector(`#atleta-${atleta.id}`).addEventListener('click', () => {
 				perfil(atleta.id)

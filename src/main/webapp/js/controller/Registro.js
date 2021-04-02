@@ -8,7 +8,7 @@ import { loginHandler } from '../sessao.js'
 export class Registro extends View {
 
 	constructor() {
-		super()
+		super('Registro')
 
 		this._labelErroNome = document.querySelector('#label-erro-nome')
 		this._labelErroEmail = document.querySelector('#label-erro-email')
@@ -62,7 +62,6 @@ export class Registro extends View {
 	}
 
 	registrar(event) {
-		console.log('asd')
 		event.preventDefault();
 
 		const messages = [this._labelErroNome, this._labelErroEmail, this._labelErroSenha, this._labelErroConfereSenha]
@@ -85,7 +84,6 @@ export class Registro extends View {
 					senha: this._inputSenha.value
 				}
 			}).then(response => {
-				console.log(response)
 				response.json().then(json => {
 					switch (response.status) {
 						case 201:

@@ -12,7 +12,8 @@ document.getElementById('botao-logout').addEventListener('click', logout);
 
 verificaLogin();
 
-window.onpopstate = () => {
-	verificaURL();
+window.onpopstate = (event) => {
+	document.getElementById('div-modal').innerHTML = ''
+	verificaURL(event);
 }
 

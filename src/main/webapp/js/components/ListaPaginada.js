@@ -11,7 +11,11 @@ export class ListaPaginada extends Lista {
 		super(titulo, url)
 		this._paginaAtual = 1
 		this._indice = 0
+		this._tamanhoDaPagina = document.querySelector('#select-pagina-tamanho').value
+	}
 
+	init() {
+		super.init()
 		this._ulPaginas = document.querySelector('#ul-paginas')
 		this._buttonProximaPagina = document.querySelector('#button-pagina-proxima')
 		this._buttonUltimaPagina = document.querySelector('#button-pagina-ultima')
@@ -20,18 +24,19 @@ export class ListaPaginada extends Lista {
 		this._selectTamanhoDaPagina = document.querySelector('#select-pagina-tamanho')
 		this._labelTotal = document.querySelector('#label-total')
 
-		this._tamanhoDaPagina = this._selectTamanhoDaPagina.value
+		document.querySelector('#select-pagina-tamanho').value = this._tamanhoDaPagina
 
 		this._selectTamanhoDaPagina.addEventListener('change', event => this.tamanhoDaPagina(event))
 		this._buttonProximaPagina.addEventListener('click', event => this.proximaPagina(event))
 		this._buttonPaginaAnterior.addEventListener('click', event => this.paginaAnterior(event))
 		this._buttonPrimeiraPagina.addEventListener('click', event => this.primeiraPagina(event))
 		this._buttonUltimaPagina.addEventListener('click', event => this.ultimaPagina(event))
+
 	}
 
 	template() {
 		return `
-		<div class="flex-column">
+		<div id="div-atletas" class="flex-column">
 			<h2>${this._titulo}:</h2>
 			<div id="paginacao">
 	
@@ -72,7 +77,7 @@ export class ListaPaginada extends Lista {
 	}
 
 	async atualizarLista() {
-		console.log(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
+//		console.log(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
 		const responseAtletas = await get(`${this._url}/${this._indice}/${this._tamanhoDaPagina}`)
 
 		switch (responseAtletas.status) {
@@ -102,9 +107,12 @@ export class ListaPaginada extends Lista {
 			const a = document.createElement('a')
 
 			a.textContent = i
-			a.addEventListener('click', event => this.pagina(event.currentTarget.textContent))
 
-			if (Math.floor(this._indice / this._tamanhoDaPagina) !== i - 1) a.href = 'javascript:void(0)'
+
+			if (Math.floor(this._indice / this._tamanhoDaPagina) !== i - 1) {
+				a.addEventListener('click', event => this.pagina(event.currentTarget.textContent))
+				a.href = 'javascript:void(0)'
+			}
 			else this._paginaAtual = i
 
 			li.appendChild(a)

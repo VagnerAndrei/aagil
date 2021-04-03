@@ -29,7 +29,7 @@ export class Atletas extends ListaPaginada {
 	adicionarClickEvent() {
 		this._lista?.map(atleta => {
 			document.querySelector(`#atleta-${atleta.id}`).addEventListener('click', () => {
-				perfil(atleta.id)
+				perfil('atletaClickEvent', atleta.id)
 			})
 		})
 	}

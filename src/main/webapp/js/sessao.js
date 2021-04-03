@@ -66,9 +66,8 @@ export function loginHandler(value, event) {
 	}
 
 	switch (event) {
-		case 'acessoEvent':
-		case 'registroEvent':
-			perfil(event)
+		case 'authEvent':
+			perfil(event, atletaLogado.id)
 			break
 		case 'onLoadEvent':
 			verificaURL()

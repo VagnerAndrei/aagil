@@ -41,7 +41,7 @@ export class View {
 	}
 
 	template() {
-		throw new Error('Not Yet Implemented')
+		return `<h2>${this._titulo}</h2>`
 	}
 
 }

@@ -91,7 +91,7 @@ export class Registro extends View {
 							break
 						case 409:
 						case 500:
-							messages.find(message => message.htmlFor === json.campo).textContent = json.mensagem
+							messages.find(message => message.htmlFor === json.campo ? json.campo : 'Email').textContent = json.mensagem
 							break
 					}
 					this.disabled(false);

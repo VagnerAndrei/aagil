@@ -7,7 +7,7 @@ export class View {
 		this._titulo = titulo
 		this._viewName = `view-${this._titulo.toLowerCase().trim()}`
 		this._main = document.getElementsByTagName('main')[0]
-		document.getElementsByTagName('title')[0].innerHTML = this._titulo;
+		document.getElementsByTagName('title')[0].textContent = this._titulo;
 		this.update()
 	}
 
@@ -24,9 +24,11 @@ export class View {
 
 
 	display(condition) {
-		condition ?
-			document.getElementById(this._viewName).classList.remove('display-none') :
-			document.getElementById(this._viewName).classList.add('display-none')
+		if (condition) {
+			document.getElementsByTagName('title')[0].textContent = this._titulo
+			document.getElementById(this._viewName).style.display = ''
+		} else
+			document.getElementById(this._viewName).style.display = 'none'
 	}
 
 	remove() {

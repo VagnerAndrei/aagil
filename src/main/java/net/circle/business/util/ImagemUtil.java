@@ -27,11 +27,10 @@ public class ImagemUtil {
 	}
 
 	public static byte[] getTratamentoJPG(byte[] img) throws Exception {
-		System.out.println(System.currentTimeMillis());
+		var start = System.currentTimeMillis();
 		final int ALTURA_MAXIMA = 2400;
 		Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(img));
 
-		
 		String type = "";
 		for (Directory directory : metadata.getDirectories()) {
 			// jpeg
@@ -67,7 +66,7 @@ public class ImagemUtil {
 
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(img));
 		int imageWidth = image.getWidth(), imageHeight = image.getHeight();
-		
+
 		int altura = rotacao != null ? imageWidth : imageHeight;
 		if (altura > ALTURA_MAXIMA) {
 			while (altura > ALTURA_MAXIMA) {
@@ -79,7 +78,6 @@ public class ImagemUtil {
 		} else if (type.equals("jpg"))
 			return img;
 
-
 		if (rotacao != null)
 			image = Scalr.rotate(image, rotacao);
 
@@ -88,19 +86,21 @@ public class ImagemUtil {
 		if (!type.equals("jpg")) {
 			imgJPG = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
 			Graphics2D graphics2D = imgJPG.createGraphics();
-			//graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			// graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+			// RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			graphics2D.drawImage(image, 0, 0, imageWidth, imageHeight, null);
 		} else
 			imgJPG = image;
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(imgJPG, "jpg", bos);
 
-		System.out.println(System.currentTimeMillis());
+		System.out.println(System.currentTimeMillis() - start + " ms. getTratamentoJPG(" + String.format("%.2f MB)", (float) img.length / 1024 / 1024));
 		return bos.toByteArray();
 	}
 
 	public static byte[] getThumbnail(byte[] img) throws Exception {
 		try {
+			var start = System.currentTimeMillis();
 			BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(img));
 
 			int largura = 300;
@@ -165,6 +165,7 @@ public class ImagemUtil {
 			// Salva a nova imagem
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(imgJPG, "jpg", bos);
+			System.out.println(System.currentTimeMillis() - start + " ms. getThumbnail()");
 			return bos.toByteArray();
 		} catch (Exception e) {
 			throw e;
@@ -174,6 +175,7 @@ public class ImagemUtil {
 
 	public static byte[] getThumbnailFromJPG(byte[] img) throws Exception {
 		try {
+			var start = System.currentTimeMillis();
 			BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(img));
 
 			int largura = 300;
@@ -192,6 +194,7 @@ public class ImagemUtil {
 
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			ImageIO.write(imagem, "jpg", bos);
+			System.out.println(System.currentTimeMillis() - start + " ms. getThumbnailFromJPG()");
 			return bos.toByteArray();
 		} catch (Exception e) {
 			throw e;

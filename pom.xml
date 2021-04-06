@@ -22,7 +22,7 @@
     <groupId>net</groupId>
     
     <artifactId>aagil</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.4-SNAPSHOT</version>
     
     <packaging>war</packaging>
     <name>AAGIL</name>
@@ -41,7 +41,6 @@
 
         <!-- Define the version of the JBoss BOMs we want to import to specify tested stacks. -->
         <version.jboss.bom>23.0.0.Final</version.jboss.bom>
-        
         
         <!-- If change postgresql version, run mvn wildfly:execute-commands -->
         
@@ -242,7 +241,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.7.1</version>
                 <configuration>
-                    <url>jdbc:postgresql://localhost:5432/${project.artifactId}</url>
+                    <url>jdbc:postgresql://192.168.15.13:5432/${project.artifactId}</url>
                     <user>postgres</user>
                     <password>postgres</password>
                 </configuration>
@@ -266,13 +265,15 @@
                 <version>${version.wildfly.maven.plugin}</version>
                 <configuration>
 			        <commands>
+			        	<command>/subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)</command>
 			            <command>deploy /target/${project.artifactId}/WEB-INF/lib/postgresql-${version.postgresql}.jar</command>
 			            <command>data-source add --name=${project.artifactId}-data-source --jndi-name=java:jboss/${project.artifactId}-data-source --driver-name=postgresql-${version.postgresql}.jar  --connection-url=jdbc:postgresql://localhost:5432/${project.artifactId} --user-name=postgres --password=postgres</command>
 			            <command>/subsystem=elytron/jdbc-realm=${project.artifactId}-jdbc-realm:add(principal-query=[{data-source=${project.artifactId}-data-source, sql="SELECT perfil, senha FROM usuario WHERE email =?", attribute-mapping=[{index=1, to=groups}],  simple-digest-mapper={algorithm=simple-digest-md5,password-index=2}}])</command>
 			            <command>/subsystem=elytron/security-domain=${project.artifactId}-security-domain:add(realms=[{realm=${project.artifactId}-jdbc-realm,role-decoder=groups-to-roles}],default-realm=${project.artifactId}-jdbc-realm,permission-mapper=default-permission-mapper)</command>
 			            <command>/subsystem=elytron/http-authentication-factory=${project.artifactId}-db-http-auth:add(http-server-mechanism-factory=global,security-domain=${project.artifactId}-security-domain,mechanism-configurations=[{mechanism-name=FORM,mechanism-realm-configurations=[{realm-name=${project.artifactId}-jdbc-realm}]}])</command>
 			            <command>/subsystem=undertow/application-security-domain=${project.artifactId}-application-domain:add(http-authentication-factory=${project.artifactId}-db-http-auth)</command>
-			        </commands>
+				    <command>/subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)</command>
+					</commands>
 				</configuration>
             </plugin>
         </plugins>

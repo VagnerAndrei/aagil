@@ -139,9 +139,11 @@ function changeState(view, event) {
 					window.history.replaceState(view.nome, view.nome, `?p=${views.atleta.nome}&id=${views.atleta.id}`)
 					break
 				case 'click':
+				case 'atletaClickEvent':
 					if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)
 						window.history.pushState(view.nome, view.nome, `?p=${views.atleta.nome}&id=${views.atleta.id}`)
 			}
+			break
 		default:
 			if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)
 				window.history.pushState(view, view, `?p=${view}`)

@@ -80,7 +80,7 @@ export class Atleta extends View {
 		</div>
 		`
 	}
-
+	// TODO: asd
 	async consultarAtleta() {
 		const response = await get(`api/atletas/${this._idAtleta}`);
 

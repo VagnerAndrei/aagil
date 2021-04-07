@@ -11,7 +11,6 @@ export class ListaPaginada extends Lista {
 		super(titulo, url)
 		this._paginaAtual = 1
 		this._indice = 0
-		this._tamanhoDaPagina = document.querySelector('#select-pagina-tamanho').value
 	}
 
 	init() {
@@ -23,8 +22,7 @@ export class ListaPaginada extends Lista {
 		this._buttonPaginaAnterior = document.querySelector('#button-pagina-anterior')
 		this._selectTamanhoDaPagina = document.querySelector('#select-pagina-tamanho')
 		this._labelTotal = document.querySelector('#label-total')
-
-		document.querySelector('#select-pagina-tamanho').value = this._tamanhoDaPagina
+		this._tamanhoDaPagina = document.querySelector('#select-pagina-tamanho').value
 
 		this._selectTamanhoDaPagina.addEventListener('change', event => this.tamanhoDaPagina(event))
 		this._buttonProximaPagina.addEventListener('click', event => this.proximaPagina(event))
@@ -33,47 +31,64 @@ export class ListaPaginada extends Lista {
 		this._buttonUltimaPagina.addEventListener('click', event => this.ultimaPagina(event))
 
 	}
+	
+	async update(){
+		
+		// ATUALIZA O MAIN COM O HTML DE template()
+		super.update(await this.template())
+		
+		// INICIA A LEITURA DOS COMPONENTES
+		this.init()
+		
+		// ATUALIZA A LISTA
+		await this.atualizarLista()
+		
+		// ATUALIZA O TEMPLATE COM A LISTA CONSULTADA
+		this.updateTemplate()
+	}
 
-	template() {
-		return `
-		<div id="div-atletas" class="flex-column">
-			<h2>${this._titulo}:</h2>
-			<div id="paginacao">
-	
-				<label>Resultados por página:</label>
-				<select id="select-pagina-tamanho">
-					<option>10</option>
-					<option>20</option>
-					<option>30</option>
-					<option>40</option>
-					<option selected>50</option>
-					<option>60</option>
-					<option>70</option>
-					<option>80</option>
-					<option>90</option>
-					<option>100</option>
-				</select>
-				<label>Total:</label>
-				<label id="label-total"></label>
-			</div>
-			
-			<div>
-				<ul id="ul-lista" class="lista-atletas">
-	
-				</ul>
-			</div>
-			<div>
-				<ul id="ul-paginas" class="lista-paginas">
-				</ul>
-			</div>
-			<div>
-				<button id="button-pagina-primeira" title="Primeira página">&lt;&lt;</button>
-				<button id="button-pagina-anterior" title="Página anterior">&lt;</button>
-				<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
-				<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
-			</div>
-		</div>
-		`
+	// RETORNA O TEMPLATE DA LISTA TODA
+	async template() {
+		return this.getHTML('pages/public/atletas.html')
+//		`
+//		<div id="div-atletas" class="flex-column">
+//			<h2>${this._titulo}:</h2>
+//			<div id="paginacao">
+//	
+//				<label>Resultados por página:</label>
+//				<select id="select-pagina-tamanho">
+//					<option>10</option>
+//					<option>20</option>
+//					<option>30</option>
+//					<option>40</option>
+//					<option selected>50</option>
+//					<option>60</option>
+//					<option>70</option>
+//					<option>80</option>
+//					<option>90</option>
+//					<option>100</option>
+//				</select>
+//				<label>Total:</label>
+//				<label id="label-total"></label>
+//			</div>
+//			
+//			<div>
+//				<ul id="ul-lista" class="lista-atletas">
+//	
+//				</ul>
+//			</div>
+//			<div>
+//				<ul id="ul-paginas" class="lista-paginas">
+//				</ul>
+//			</div>
+//			<div>
+//				<button id="button-pagina-primeira" title="Primeira página">&lt;&lt;</button>
+//				<button id="button-pagina-anterior" title="Página anterior">&lt;</button>
+//				<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
+//				<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
+//			</div>
+//		</div>
+//		`
 	}
 
 	async atualizarLista() {
@@ -94,7 +109,7 @@ export class ListaPaginada extends Lista {
 	}
 
 	updateTemplate() {
-		// ATUALIZA OTEMPLATE COM A LISTA CONSULTADA
+		// ATUALIZA O TEMPLATE COM OS ITEMS E A LISTA CONSULTADA
 		super.updateTemplate()
 
 		// ATUALIA O TEMPLATE COM OS LINKS DAS PAGINAS E ATIVACAO DOS BOTOES
@@ -123,6 +138,13 @@ export class ListaPaginada extends Lista {
 		this._buttonPaginaAnterior.disabled = this._paginaAtual === 1
 		this._buttonPrimeiraPagina.disabled = this._paginaAtual < 3
 		this._buttonUltimaPagina.disabled = this._numeroDePaginas < 3 || this._indice > this._numeroDePaginas - 2
+		
+		// ADICIONA OS EVENTOS NOS ITEMS DA LISTA
+		this.adicionarClickEvent()
+	}
+	
+	adicionarClickEvent() {
+		throw new Error('Not Yet Implemented')
 	}
 
 	tamanhoDaPagina() {

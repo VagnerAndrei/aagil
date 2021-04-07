@@ -1,6 +1,8 @@
 /**
  * 
  */
+import { get } from '../fetch.js'
+
 export class View {
 
 	constructor(titulo) {
@@ -35,10 +37,23 @@ export class View {
 		this._main.removeChild(document.getElementById(this._viewName))
 	}
 
-	update() {
+	async getHTML(url) {
+		const response = await get(url)
+		switch (response.status) {
+			case 200:
+				const html = await response.text()
+				return new DOMParser().parseFromString(html, 'text/html').getElementsByTagName('main')[0].innerHTML
+			case 403:
+				return `<h2>Acesso negado!</h2>`
+			case 404:
+				return `<h2>Página não encontrada!</h2>`
+		}
+	}
+
+	update(template) {
 		const div = document.createElement('div')
 		div.id = this._viewName
-		div.innerHTML = this.template()
+		div.innerHTML = !template ? this.template() : template
 		this._main.append(div)
 	}
 

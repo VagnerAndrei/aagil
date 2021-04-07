@@ -78,8 +78,9 @@ export class Acesso extends View {
 						if (response.status == 202) {
 							loginHandler(value, 'authEvent')
 						}
-						else
-							messages.find(message => message.htmlFor == value.campo ? value.campo : "Email").textContent = value.mensagem
+						else{
+							messages.find(message => message.htmlFor == (value.campo ? value.campo : "Email")).textContent = value.mensagem
+						}
 					})
 					this.disabled(false);
 					if (this._checkManterDados.checked) {

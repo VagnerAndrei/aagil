@@ -9,26 +9,11 @@ export class Atletas extends ListaPaginada {
 
 	constructor() {
 		super('Atletas', 'api/atletas')
-		this.atualizarLista()
-		this.init()
-	}
-
-	async atualizarLista() {
-		await super.atualizarLista()
-
-		this.updateTemplate()
-
-		this.adicionarClickEvent() 
-	}
-	
-	init(){
-		super.init()
-		this.adicionarClickEvent()
 	}
 
 	adicionarClickEvent() {
 		this._lista?.map(atleta => {
-			document.querySelector(`#atleta-${atleta.id}`).addEventListener('click', () => {
+			document.querySelector(`#li-atleta-${atleta.id}`).addEventListener('click', () => {
 				perfil('atletaClickEvent', atleta.id)
 			})
 		})
@@ -37,22 +22,22 @@ export class Atletas extends ListaPaginada {
 	listTemplate() {
 		let itemsHtml = ''
 		this.lista?.map(atleta => {
-			itemsHtml += `<div class="flex-column lista-atleta cursor-pointer" id="atleta-${atleta.id}">
-								<div class="flex-row space-beetween">
-									<strong>${atleta.nome}</strong>
+			itemsHtml += `	
+						<li class="flex-column lista-atleta cursor-pointer" id="li-atleta-${atleta.id}">
+							<strong>${atleta.nome}</strong>
+							<div class="flex-row space-beetween">
+								<div class="container-foto-atleta">
+									<img src="api/atletas/${atleta.id}/foto/thumb?t=${new Date().getTime()}" onerror="this.src='assets/img/usuario.png'">
 								</div>
-								<div class="flex-row space-beetween">
-									<div class="container-foto-atleta">
-										<img src="api/atletas/${atleta.id}/foto/thumb?t=${new Date().getTime()}" onerror="this.src='assets/img/usuario.png'">
-									</div>
-									<div class="flex-column space-beetween items-right">
+								<div class="flex-column space-beetween items-right">
 									${atleta.localidade ? `<img src="assets/img/ufs/${atleta.localidade.uf}.png">
 									<strong>${atleta.localidade.nome} - ${atleta.localidade.uf}</strong>` : ''}
 									${atleta.categoria ? `<strong>${atleta.categoria}</strong>` : ''}
 									${atleta.nascimento ? `<strong>${getIdade(atleta.nascimento)}</strong>` : ''}
-									</div>
 								</div>
-							</div>`
+							</div>
+						</li>
+						`
 		})
 		return itemsHtml
 	}

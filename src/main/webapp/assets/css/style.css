@@ -3,9 +3,33 @@
 	src: url('../font/Flamenco-Regular.ttf');
 }
 
+* {
+	box-sizing: border-box;
+}
+
 body {
 	margin: 0;
 	padding: 0;
+}
+
+button {
+	background-color: #330033;
+	width: 133px;
+	color: #FFFFFF;
+	border-radius: 4px;
+	cursor: pointer;
+	font-family: titulos;
+	font-size: 18px;
+	opacity: 95%;
+	margin: 0.1em 0.1em;
+}
+
+button:disabled, button[disabled] {
+	display: none
+}
+
+button:hover {
+	opacity: 100%;
 }
 
 header {
@@ -36,32 +60,6 @@ header img+div {
 	justify-content: flex-end;
 }
 
-button {
-	background-color: #330033;
-	width: 133px;
-	color: #FFFFFF;
-	border-radius: 4px;
-	cursor: pointer;
-	font-family: titulos;
-	font-size: 18px;
-	opacity: 95%;
-	margin: 0.1em 0.1em;
-}
-
-.botao-cancelar {
-	background-color: #ccc;
-	color: #000000;
-}
-
-button:disabled,
-button[disabled]{
-	display: none
-}
-
-button:hover {
-	opacity: 100%;
-}
-
 main {
 	display: flex;
 	width: 100%;
@@ -87,14 +85,8 @@ footer {
 	margin-top: 40px;
 }
 
-input[type=checkbox]:checked {
-	color: #660066
-}
-
-
-
-h1 {
-	color: #330033;
+footer a {
+	cursor: pointer;
 }
 
 form {
@@ -103,8 +95,24 @@ form {
 	width: 366px;
 }
 
+form button {
+	width: 100%;
+	height: 36px;
+	border-radius: 4px;
+}
 
-form input[type="text"], form input[type="password"], form input[type="email"]{
+form div {
+	margin: 0 0 10px 0;
+	padding: 0 7px 0 3px;
+}
+
+form font {
+	font-size: 16px;
+	margin-left: 1px;
+}
+
+form input[type="text"], form input[type="password"], form input[type="email"]
+	{
 	width: 100%;
 	min-width: 233px;
 	margin: 5px 5px 5px 0;
@@ -113,20 +121,36 @@ form input[type="text"], form input[type="password"], form input[type="email"]{
 	font-size: 15px;
 }
 
-input[type="radio"]{
-	margin-left: 12px;	
-}
-
 form progress {
 	width: 100%;
 }
 
-ul {
-  list-style-type: none;
+input[type="radio"] {
+	margin-left: 12px;
 }
 
-#select-localidades{
+h1 {
+	color: #330033;
+}
+
+input[type=checkbox]:checked {
+	color: #660066
+}
+
+ul {
+	list-style-type: none;
+}
+
+/* 				IDS 			*/
+
+#select-localidades {
 	width: 65%;
+}
+
+/* 				Class Names 			*/
+.botao-cancelar {
+	background-color: #ccc;
+	color: #000000;
 }
 
 .conta {
@@ -137,22 +161,6 @@ ul {
 .conta small+small {
 	color: #0000FF;
 	cursor: pointer;
-}
-
-form font {
-	font-size: 16px;
-	margin-left: 1px;
-}
-
-form div {
-	margin: 0 0 10px 0;
-	padding: 0 7px 0 3px;
-}
-
-form button {
-	width: 100%;
-	height: 36px;
-	border-radius: 4px;
 }
 
 .form-group {
@@ -187,9 +195,7 @@ form button {
 	height: 100%;
 }
 
-footer a {
-	cursor: pointer;
-}
+
 
 .padding-top {
 	padding-top: 100px;
@@ -260,9 +266,9 @@ footer a {
 
 .lista-atletas {
 	display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-    list-style: none;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	list-style: none;
 }
 
 .flex-column {
@@ -282,7 +288,6 @@ footer a {
 	justify-content: flex-start;
 }
 
-
 .items-right {
 	align-items: flex-end;
 }
@@ -300,6 +305,7 @@ ATLETA.HTML
 	border-width: 2;
 	width: 40%;
 }
+
 .lista-atleta {
 	border: solid;
 	border-width: 2;
@@ -341,13 +347,11 @@ ATLETA.HTML
 }
 
 /* ATLETAS */
-
-.lista-paginas{
+.lista-paginas {
 	display: grid;
-    grid-template-columns: repeat(10, 1fr);
-    gap: 10px;
-    list-style: none;
-	
+	grid-template-columns: repeat(10, 1fr);
+	gap: 10px;
+	list-style: none;
 }
 
 .li-pagina-selecionada {
@@ -401,7 +405,7 @@ ATLETA.HTML
 	white-space: nowrap
 }
 
-.cursor-pointer{
+.cursor-pointer {
 	cursor: pointer;
 }
 

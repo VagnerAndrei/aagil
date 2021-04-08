@@ -27,25 +27,22 @@ export function getUser(event) {
 }
 
 export async function isUser(event) {
+	console.log('isUser()')
 	const response = await get('api/usuarios/autenticado')
 	const value = await response.text()
 	if (value !== 'false') {
 		if (!atletaLogado) {
 			getUser(event)
-			console.log('1','true')
 			return true
 		}
 		if (atletaLogado.usuario.email !== value) {
 			getUser(event)
-			console.log('2','false')
 			return false
 		}
-		console.log('3','true')
 		return true
 	}
 	else if (atletaLogado || event === 'onLoadEvent')
 		loginHandler(undefined, event)
-	console.log('4','false')
 	return false
 }
 

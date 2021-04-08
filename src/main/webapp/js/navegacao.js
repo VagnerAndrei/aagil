@@ -172,4 +172,21 @@ function applyRole(role) {
 	})
 }
 
+// Verifica usuário quando o foco da app retorna, podendo haver caso de window.focus ou apenas tab visibilityChange
+document.addEventListener("DOMContentLoaded", () => {
+	document.addEventListener("visibilitychange", isUserOnFocus)
+})
+
+window.addEventListener('focus', isUserOnFocus)
+
+function isUserOnFocus() {
+	if (document.visibilityState === 'visible') debounce(() => isUser('navigationEvent'))
+}
+
+let timer = 0;
+function debounce(fn) {
+	clearTimeout(timer);
+	timer = setTimeout(fn, 1);
+}
+
 export { views, verificaURL, registrar, acessar, home, manobras, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }

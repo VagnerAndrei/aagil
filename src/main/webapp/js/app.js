@@ -16,16 +16,3 @@ window.onpopstate = (event) => {
 	document.getElementById('div-modal').innerHTML = ''
 	verificaURL(event);
 }
-
-/*document.addEventListener("DOMContentLoaded", () => {
-		console.log('DOMContentLoaded')
-	document.addEventListener("visibilitychange", event => {
-		console.log('visibility', event.type, document.visibilityState)
-		if (document.visibilityState === 'visible') isUser('navigationEvent')
-	})
-
-})*/
-
-window.addEventListener('focus', () => {
-	if (document.visibilityState == 'visible') isUser('navigationEvent')
-})

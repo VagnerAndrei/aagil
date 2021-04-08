@@ -73,10 +73,19 @@ function manobras(e) {
 	if (e) changeState(views.manobras)
 }
 
-function perfil(event, idAtleta) {
+async function perfil(event, idAtleta) {
 	current_verify()
-	views.atleta.id = idAtleta ? idAtleta : atletaLogado.id
-	instances.current = new Atleta(views.atleta.id)
+	const idAtual = (idAtleta ? idAtleta : atletaLogado.id)
+	if (!instances.atleta)
+		instances.atleta = new Atleta(idAtual)
+	else {
+		if (isNaN(views.atleta.id) || views.atleta.id !== idAtual)
+			await instances.atleta.consultarAtleta(idAtual)
+		instances.atleta.applyRole(atletaLogado ? 'User' : undefined)
+		instances.atleta.display(true)
+	}
+	instances.current = instances.atleta
+	views.atleta.id = idAtual
 	changeState(views.atleta.nome, event instanceof Event ? event.type : event)
 }
 
@@ -96,24 +105,24 @@ function sobre(clickEvent) {
 	if (clickEvent) changeState(views.sobre)
 }
 
-function acessar(clickEvent) {
+async function acessar(clickEvent) {
 	current_verify()
 	instances.current = new Acesso()
 	if (clickEvent) changeState(views.acesso)
 }
 
-function registrar(clickEvent) {
+async function registrar(clickEvent) {
 	current_verify()
 	instances.current = new Registro()
 	if (clickEvent) changeState(views.registro)
-
 }
 
 function current_verify() {
-	isUser('navigationEvent')
+	//isUser('navigationEvent')
 	if (instances.current) {
 		switch (instances.current.constructor) {
 			case Atletas:
+			case Atleta:
 				instances.current.display(false)
 				break
 			default:
@@ -152,8 +161,10 @@ function changeState(view, event) {
 }
 
 function applyRole(role) {
+	if (instances.current?.constructor == Acesso || instances.current?.constructor == Registro)
+		perfil('authEvent')
 	Object.keys(instances).map(key => {
-		if (key === 'current' || instances[key] && instances[key] !== instances[current]) {
+		if (key === 'current' || instances[key] && instances[key] !== instances['current']) {
 			instances[key]?.applyRole(role)
 			console.log('aplicou', key)
 		}

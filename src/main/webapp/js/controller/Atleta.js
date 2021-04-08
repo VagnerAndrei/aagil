@@ -11,6 +11,10 @@ export class Atleta extends View {
 
 	constructor(idAtleta) {
 		super("Atleta")
+		this._idAtleta = idAtleta
+	}
+
+	init() {
 		this._imgAtleta = document.querySelector('#img-atleta');
 		this._imgEstado = document.querySelector('#img-estado');
 		this._labelNome = document.querySelector('#label-nome');
@@ -21,31 +25,19 @@ export class Atleta extends View {
 		this._container = document.querySelector('#div-atleta');
 		this._imgAtualizarAtleta = document.querySelector('#img-atualizar-atleta');
 		this._imgAtualizarFoto = document.querySelector('#img-atualizar-foto');
-		this._idAtleta = idAtleta
 		this._imgAtualizarFoto.addEventListener('click', event => this.atualizarFoto(event))
 		this._imgAtualizarAtleta.addEventListener('click', event => this.atualizarAtleta(event))
 		this.consultarAtleta()
 	}
 
-	applyRole(role) {
-		switch (role) {
-			case 'User':
-				if (atletaLogado.id == this._idAtleta) {
-					this._imgAtualizarFoto.classList.remove('display-none');
-					this._imgAtualizarAtleta.classList.remove('display-none');
-				} else {
-					this._imgAtualizarFoto.classList.add('display-none');
-					this._imgAtualizarAtleta.classList.add('display-none');
-				}
-				break
-			default:
-				this._imgAtualizarFoto.classList.add('display-none');
-				this._imgAtualizarAtleta.classList.add('display-none');
-		}
+	async update() {
+		super.update(await this.template())
+		this.init()
 	}
 
-	template() {
-		return `
+	async template() {
+		return this.getHTML('pages/public/atleta.html')
+		/*`
 		<div id="div-atleta" class="display-none">
 			<div class="flex-column atleta">
 				<h2>Atleta!</h2>
@@ -78,10 +70,29 @@ export class Atleta extends View {
 				<h2>Grupos!</h2>
 			</div>
 		</div>
-		`
+		`*/
 	}
+
+	applyRole(role) {
+		switch (role) {
+			case 'User':
+				if (atletaLogado.id == this._idAtleta) {
+					this._imgAtualizarFoto.classList.remove('display-none');
+					this._imgAtualizarAtleta.classList.remove('display-none');
+				} else {
+					this._imgAtualizarFoto.classList.add('display-none');
+					this._imgAtualizarAtleta.classList.add('display-none');
+				}
+				break
+			default:
+				this._imgAtualizarFoto.classList.add('display-none');
+				this._imgAtualizarAtleta.classList.add('display-none');
+		}
+	}
+
 	// TODO: asd
-	async consultarAtleta() {
+	async consultarAtleta(idAtleta) {
+		if (idAtleta) this._idAtleta = idAtleta
 		const response = await get(`api/atletas/${this._idAtleta}`);
 
 		if (response.status == 302) {

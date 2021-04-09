@@ -241,7 +241,7 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.7.1</version>
                 <configuration>
-                    <url>jdbc:postgresql://192.168.15.13:5432/${project.artifactId}</url>
+                    <url>jdbc:postgresql://localhost:5432/${project.artifactId}</url>
                     <user>postgres</user>
                     <password>postgres</password>
                 </configuration>

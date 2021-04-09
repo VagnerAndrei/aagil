@@ -8,14 +8,19 @@ export class Home extends View {
 	constructor() {
 		super('Página Inicial')
 	}
+	
+	async update(){
+		super.update(await this.template())
+	}
 
-	template() {
-		return `
-		<div class="padding-top">
-			<div class="border-container">
-				<img alt="Circle" src="assets/img/home.png">
-			</div>
-		</div>
-		`
+	async template() {
+		return this.getHTML('pages/public/home.html')
+//		`
+//		<div class="padding-top">
+//			<div class="border-container">
+//				<img alt="Circle" src="assets/img/home.png">
+//			</div>
+//		</div>
+//		`
 	}
 }

@@ -10,12 +10,14 @@
 body {
 	margin: 0;
 	padding: 0;
+	margin: auto;
 }
 
 button {
-	background-color: #330033;
+	background-color: #000;
 	width: 133px;
-	color: #FFFFFF;
+	border-color: #000;
+	color: #FFF;
 	border-radius: 4px;
 	cursor: pointer;
 	font-family: titulos;
@@ -65,7 +67,7 @@ main {
 	width: 100%;
 	height: 100%;
 	min-height: 600px;
-	max-width: 766px;
+	max-width: 1024px;
 	justify-content: center;
 	margin: 26px auto auto auto;
 	position: relative;
@@ -173,22 +175,53 @@ ul {
 	font-family: titulos;
 }
 
+/* 		INDEX.HTML */
+.header-index{
+	display : block;
+	margin: 3px;
+	height: 100%;
+	width: 100%;
+	background-color: #1A1A1A;
+}
+
+.header-logo{
+	display : block;
+	margin: auto auto 10px auto;
+	width: 60%;
+}
+
+
+.header-index-img{
+	height: 100%;
+	max-width: 1024px;
+	min-height: 450px;
+	background-image: url("../img/bg/tony-elevado.jpg");
+	margin: 0 auto;
+	background-position: center;
+	background-size: contain;
+	background-repeat: no-repeat;
+	border-radius: 10px;
+	border-width: 5px;
+}
+
+
 /* 		HOME.HTML */
 
 .semi-titulo {
 	display: block;
-	margin: auto auto -30px 110px;
-	text-align: left;
+	color: gray;
+	margin: auto auto auto auto;
+	text-align: right;
 	font-size: 45px;
 	font-weight: bold;
 	font-family: sans-serif;
-	color: gray;
 }
 
 .titulo-principal {
 	display: block;
+	
 	margin: auto ;
-	text-align: right;
+	text-align: left;
 	width: 800px;
 	height: 100%;
 	font-size: 150px;
@@ -202,7 +235,7 @@ ul {
 	border-width: 2px;
 	padding: 5px;
 	display: block;
-	border-color: gray;
+	border-color:#0071BC;
 	border-radius: 3px;
 	margin-left: auto;
 	margin-right: auto;

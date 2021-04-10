@@ -10,18 +10,23 @@
 
 <body>
 	<header class="header-index">
-		<div class="header-index-img">
-			<img class="header-logo" src="assets/img/svg/aagil.svg"/>
+		<div class="header-index-fixed">
+			<div class="header-index-fixed-max-width">
+				<img id="img-logo" src="assets/img/svg/aagil.svg"/> <label
+					id="label-usuario-logado" for="usuario" class="nome-usuario"></label>
+				<div class="display-inline">
+					<button type="button" id="botao-acessar" class="display-none">Acessar</button>
+					<button type="button" id="botao-registrar" class="display-none">Registrar-se</button>
+					<button type="button" id="botao-logout" class="display-none">Sair</button>
+				</div>
+			</div>
 		</div>
+		<div class="header-index-img"></div>
 		<div class="display-inline">
-			<label id="label-usuario-logado" for="usuario" class="nome-usuario"></label>
-			<button type="button" id="botao-logout" class="display-none">Sair</button>
-			<button type="button" id="botao-registrar" class="display-none">Registrar-se</button>
 			<button type="button" id="botao-home">Inicial</button>
 			<button type="button" id="botao-manobras">Manobras</button>
 			<button type="button" id="botao-perfil" class="display-none">Atleta</button>
 			<button type="button" id="botao-atletas">Atletas</button>
-			<button type="button" id="botao-acessar" class="display-none">Acessar</button>
 
 		</div>
 	</header>

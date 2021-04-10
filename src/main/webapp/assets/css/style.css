@@ -14,7 +14,7 @@ body {
 }
 
 button {
-	background-color: #000;
+	background-color: #0071BC;
 	width: 133px;
 	border-color: #000;
 	color: #FFF;
@@ -176,37 +176,62 @@ ul {
 }
 
 /* 		INDEX.HTML */
-.header-index{
-	display : block;
-	margin: 3px;
+.header-index {
+	display: block;
 	height: 100%;
 	width: 100%;
 	background-color: #1A1A1A;
 }
 
-.header-logo{
-	display : block;
-	margin: auto auto 10px auto;
-	width: 60%;
+.header-index-fixed {
+	width: 100%;
+	height: 45px;
+	margin: auto;
+	padding: 10px 0 0 5px;
+	background-color: #1A1A1B;
+	display: inline;
+	position: fixed;
+	z-index: 100;
+	top: 0;
+	left: 0;
 }
 
-
-.header-index-img{
-	height: 100%;
+.header-index-fixed-max-width{
+	display: inline;
+	width: 100%;
 	max-width: 1024px;
-	min-height: 450px;
-	background-image: url("../img/bg/tony-elevado.jpg");
-	margin: 0 auto;
+}
+
+#img-logo{
+	left: 0;
+	height: 20px;
+}
+
+#img-topo {
+	width: 100%;
+	height: 100%;
+	content: url("../img/bg/magno-marex.jpg");
+	position: relative;
+	margin: auto;
+	content: url("../img/bg/tony-elevado.jpg")
+}
+
+.header-index-img {
+	height: auto;
+	width: auto;
+	min-height: 350px;
+	margin: 45px 0 0 0 ;
+	padding: 0;
 	background-position: center;
 	background-size: contain;
 	background-repeat: no-repeat;
 	border-radius: 10px;
 	border-width: 5px;
+	background-position: center;
+	background-image: url("../img/bg/magno-marex.jpg");
 }
 
-
 /* 		HOME.HTML */
-
 .semi-titulo {
 	display: block;
 	color: gray;
@@ -219,8 +244,7 @@ ul {
 
 .titulo-principal {
 	display: block;
-	
-	margin: auto ;
+	margin: auto;
 	text-align: left;
 	width: 800px;
 	height: 100%;
@@ -229,13 +253,12 @@ ul {
 	font-family: sans-serif;
 }
 
-
 .img-logo {
-	border : solid;
+	border: solid;
 	border-width: 2px;
 	padding: 5px;
 	display: block;
-	border-color:#0071BC;
+	border-color: #0071BC;
 	border-radius: 3px;
 	margin-left: auto;
 	margin-right: auto;
@@ -268,7 +291,6 @@ ul {
 	width: 33px;
 	display: block;
 }
-
 
 .display-block {
 	display: inline-block;

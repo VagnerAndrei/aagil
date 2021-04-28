@@ -1,9 +1,16 @@
 package net.circle.domain.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -11,7 +18,7 @@ import javax.validation.constraints.Size;
 import net.circle.domain.entity.core.AbstractEntity;
 
 @Entity
-public class Usuario extends AbstractEntity{
+public class Usuario extends AbstractEntity {
 
 	@Id
 	@NotBlank
@@ -21,9 +28,12 @@ public class Usuario extends AbstractEntity{
 
 	@NotBlank
 	private String senha;
-	
+
 	@Enumerated(EnumType.STRING)
-	private Perfil perfil;
+	@ElementCollection(targetClass = Perfil.class)
+	@CollectionTable(name = "usuarios_perfis", joinColumns = @JoinColumn(name = "email"))
+	@Column(name = "perfil")
+	private List<Perfil> perfis = new ArrayList<Perfil>();
 
 	public String getEmail() {
 		return email;
@@ -40,13 +50,13 @@ public class Usuario extends AbstractEntity{
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
-	public Perfil getPerfil() {
-		return perfil;
+
+	public List<Perfil> getPerfis() {
+		return perfis;
 	}
 
-	public void setPerfil(Perfil perfil) {
-		this.perfil = perfil;
+	public void setPerfis(List<Perfil> perfis) {
+		this.perfis = perfis;
 	}
 
 	@Override

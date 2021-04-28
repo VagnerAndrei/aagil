@@ -66,8 +66,10 @@ public class UsuarioRest {
 			servletRequest.login(registro.getUsuario().getEmail(), senha);
 			return Response.status(Status.CREATED).entity(parseModel(registro)).build();
 		} catch (UsuarioBusinessException e) {
+			e.printStackTrace();
 			return Response.status(Status.CONFLICT).entity(new ErroModel(e.getExcecao())).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
@@ -137,6 +139,7 @@ public class UsuarioRest {
 				return Response.status(Status.CONFLICT)
 						.entity(new ErroModel(UsuarioExcecao.EXISTE_UM_EMAIL_AUTENTICADO)).build();
 		} catch (Exception e) {
+			e.printStackTrace();
 			if (e.getMessage().contains("Login failed"))
 				return Response.status(Status.BAD_REQUEST).entity(new ErroModel(UsuarioExcecao.SENHA_INVALIDA)).build();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();

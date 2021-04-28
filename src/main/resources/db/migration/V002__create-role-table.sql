@@ -2,9 +2,11 @@ CREATE TABLE perfil(
 	nome VARCHAR(5) PRIMARY KEY
 );
 
-ALTER TABLE usuario	ADD COLUMN perfil VARCHAR(5) NOT NULL REFERENCES perfil(nome);
-
-ALTER TABLE atleta ALTER COLUMN usuario_email TYPE VARCHAR(100);
+CREATE TABLE usuarios_perfis(
+	email varchar(100),
+	perfil varchar(5),
+	PRIMARY KEY(email, perfil)
+);
 
 INSERT INTO perfil VALUES('ADMIN');
 INSERT INTO perfil VALUES('USER');

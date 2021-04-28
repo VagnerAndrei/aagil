@@ -36,7 +36,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	public Atleta salvar(Atleta atleta) throws Exception {
 		if (usuarioDAO.exist(atleta.getUsuario().getEmail()))
 			throw new UsuarioBusinessException(UsuarioExcecao.EMAIL_JA_CADASTRADO);
-		atleta.getUsuario().setPerfil(Perfil.USER);
+		atleta.getUsuario().getPerfis().add(Perfil.USER);
 		atleta.getUsuario().setSenha(Encriptador.MD5(atleta.getUsuario().getSenha()));
 		return dao.merge(atleta);
 	}

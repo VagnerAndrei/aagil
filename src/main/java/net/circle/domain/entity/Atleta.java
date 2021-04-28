@@ -23,6 +23,8 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 
 import net.circle.domain.entity.core.AbstractEntity;
 
+
+
 @Entity
 public class Atleta extends AbstractEntity {
 
@@ -33,7 +35,7 @@ public class Atleta extends AbstractEntity {
 	@NotBlank
 	@Size(max = 100)
 	private String nome;
-	
+
 	@Column(length = 5000)
 	private String biografia;
 
@@ -70,7 +72,7 @@ public class Atleta extends AbstractEntity {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	
+
 	public String getBiografia() {
 		return biografia;
 	}

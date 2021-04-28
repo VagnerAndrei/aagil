@@ -7,18 +7,41 @@
 	box-sizing: border-box;
 }
 
+:root{
+	--white: #FFF;
+	--black: #000;
+	
+	
+	--blue-100: #2D91CD;
+	--blue-200: #0071BC;
+	--blue-300: #00558D;
+	--blue-400: #00395E;
+	--blue-500: #001C2F;
+	
+	--gray-100: #F0ECEC;
+	--gray-200: #F0EFEC;
+	
+	--yellow: #FCEE21;
+	--yellow-100: #FFFEED; 
+	--yellow-200: #FEFCD3; 
+	--yellow-300: #FEF8A6; 
+	--yellow-400: #BDB319; 
+	--yellow-500: #7E7711; 
+	
+}
+
 body {
 	margin: 0;
 	padding: 0;
 	margin: auto;
-	background-color: #1A1A1A;
+	background-color: var(--yellow-200);
 }
 
 button {
-	background-color: #0071BC;
+	background-color: var(--blue-100);
 	width: 133px;
 	border-color: #000;
-	color: #FFF;
+	color: var(--white);
 	border-radius: 4px;
 	cursor: pointer;
 	font-family: titulos;
@@ -73,7 +96,7 @@ main {
 	margin: 26px auto auto auto;
 	position: relative;
 	font-family: titulos;
-	background-color: #FFF;
+	background-color: var(--yellow-200);
 }
 
 footer {
@@ -182,14 +205,14 @@ ul {
 	display: block;
 	height: 100%;
 	width: 100%;
-	background-color: #1A1A1A;
+	background-color: var(--yellow-200);
 }
 
 .header-index-fixed {
 	width: 100%;
 	height: 65px;
 	margin: auto;
-	background-color: #1A1A1B;
+	background-color: var(--yellow);
 	display: inline;
 	position: fixed;
 	z-index: 100;
@@ -198,24 +221,32 @@ ul {
 }
 
 .header-index-fixed-max-width{
-	display: flex;
-	justify-content: space-between;
+	align-items:stretch;
 	width: 100%;
-	padding: 0 100px 0 100px ;
+	height: 65px;
+	padding: 0 ;
 	margin: auto;
+	width: 1024px;
 	max-width: 1024px;
 }
 
 #img-logo{
+	display: inline-block;
 	left: 0;
-	height: 45px;
-	margin: 10px auto;
+	height: 50px;
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
-#img-descricao-logo{
-	margin: 20px auto;
-	width: 1024px;
+#img-slogan{
+	top: 0;
+	bottom: 0;
+	width: 500px;
+	margin-bottom: 5px;
 }
+
+
+
 
 #img-topo {
 	width: 100%;
@@ -228,13 +259,15 @@ ul {
 .header-index-img {
 	height: auto;
 	width: auto;
+	border: 1px solid;
+	border-radius: 5px;
 	max-width: 1024px;
 	min-height: 540px;
 	margin: 45px auto 0 auto ;
 	background-position: center;
-	background-size: contain;
+	background-size: cover;
 	background-repeat: no-repeat;
-	background-image: url("../img/bg/tony-elevado.jpg");
+	background-image: url("../img/bg/magno-marex.jpg");
 }
 
 /* 		HOME.HTML */
@@ -247,6 +280,22 @@ ul {
 	font-weight: bold;
 	font-family: sans-serif;
 }
+
+.navigation-user{
+	text-align: right;
+	margin-bottom: 5px;
+	display: block;
+	width: 100vh;
+}
+
+.acess-panel{
+	margin-top: 5px;
+	justify-content: space-between;
+	text-align: right;
+	display: flex;
+	flex-direction: column;
+}
+
 
 .titulo-principal {
 	display: block;
@@ -311,10 +360,12 @@ ul {
 }
 
 .nome-usuario {
-	max-width: 266px;
+	display: block;
+	padding-right: 5px;
+	width: 100%;
 	font-family: titulos;
 	font-size: 12ox;
-	color: #FFF;
+	color: #000;
 }
 
 .checkbox-inline input[type="checkbox"] {

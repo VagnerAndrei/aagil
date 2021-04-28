@@ -7,5 +7,5 @@ CREATE TABLE atleta(
 	id SERIAL PRIMARY KEY,
 	nome VARCHAR(100) NOT NULL,
 	biografia TEXT,
-	usuario_email VARCHAR NOT NULL UNIQUE REFERENCES usuario(email)
+	usuario_email VARCHAR(100) NOT NULL UNIQUE REFERENCES usuario(email)
 );

@@ -1,10 +1,11 @@
 package net.circle.domain.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,13 +28,13 @@ public class Pico extends AbstractEntity {
 	@OneToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE })
 	private Endereco endereco;
 
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST }, fetch = FetchType.EAGER)
 	@JoinTable(name = "tags_picos", joinColumns = @JoinColumn(name = "pico_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
-	private List<Tag> tags = new ArrayList<Tag>();
+	private Set<Tag> tags = new HashSet<Tag>();
 
-	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
+	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER)
 	@JoinTable(name = "fotos_picos", joinColumns = @JoinColumn(name = "pico_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
-	private List<Foto> fotos = new ArrayList<Foto>();
+	private Set<Foto> fotos = new HashSet<Foto>();
 
 	private Boolean ativo;
 
@@ -61,19 +62,19 @@ public class Pico extends AbstractEntity {
 		this.endereco = endereco;
 	}
 
-	public List<Tag> getTags() {
+	public Set<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(List<Tag> tags) {
+	public void setTags(Set<Tag> tags) {
 		this.tags = tags;
 	}
 
-	public List<Foto> getFotos() {
+	public Set<Foto> getFotos() {
 		return fotos;
 	}
 
-	public void setFotos(List<Foto> fotos) {
+	public void setFotos(Set<Foto> fotos) {
 		this.fotos = fotos;
 	}
 

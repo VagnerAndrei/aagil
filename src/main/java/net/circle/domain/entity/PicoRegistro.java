@@ -2,6 +2,7 @@ package net.circle.domain.entity;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -10,10 +11,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 import net.circle.domain.entity.core.AbstractEntity;
 
 @Entity
+@Table(name = "pico_registro")
 public class PicoRegistro extends AbstractEntity {
 
 	@Id
@@ -24,11 +27,11 @@ public class PicoRegistro extends AbstractEntity {
 	@JoinColumn(name = "pico_atual_id")
 	private Pico picoAtual;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.MERGE)
 	@JoinColumn(name = "pico_novo_id")
 	private Pico picoNovo;
 
-	private LocalDate dataRegistro;
+	private LocalDate data;
 
 	@ManyToOne
 	private Atleta atleta;
@@ -62,12 +65,12 @@ public class PicoRegistro extends AbstractEntity {
 		this.picoNovo = picoNovo;
 	}
 
-	public LocalDate getDataRegistro() {
-		return dataRegistro;
+	public LocalDate getData() {
+		return data;
 	}
 
-	public void setDataRegistro(LocalDate dataRegistro) {
-		this.dataRegistro = dataRegistro;
+	public void setData(LocalDate data) {
+		this.data = data;
 	}
 
 	public Atleta getAtleta() {

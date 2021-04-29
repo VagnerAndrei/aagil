@@ -4,6 +4,9 @@ public class IDModel {
 
 	private Integer id;
 
+	public IDModel() {
+	}
+
 	public IDModel(Integer id) {
 		this.id = id;
 	}

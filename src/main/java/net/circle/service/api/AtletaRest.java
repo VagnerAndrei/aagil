@@ -222,7 +222,7 @@ public class AtletaRest {
 			return response.build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+			return Response.status(Status.NOT_FOUND).build();
 		}
 	}
 
@@ -290,7 +290,7 @@ public class AtletaRest {
 				return Response.status(Status.BAD_REQUEST)
 						.entity(new ErroModel(AtletaExcecao.FOTO_NAO_ENCONTRADA_NO_FORMULARIO)).build();
 
-			int idFoto=0;
+			int idFoto = 0;
 			for (InputPart inputPart : inputParts) {
 
 				String fileName = getFileName(inputPart.getHeaders());

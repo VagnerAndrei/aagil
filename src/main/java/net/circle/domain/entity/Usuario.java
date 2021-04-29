@@ -1,7 +1,7 @@
 package net.circle.domain.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -9,6 +9,7 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.validation.constraints.Email;
@@ -30,10 +31,10 @@ public class Usuario extends AbstractEntity {
 	private String senha;
 
 	@Enumerated(EnumType.STRING)
-	@ElementCollection(targetClass = Perfil.class)
+	@ElementCollection(targetClass = Perfil.class, fetch = FetchType.EAGER)
 	@CollectionTable(name = "usuarios_perfis", joinColumns = @JoinColumn(name = "email"))
 	@Column(name = "perfil")
-	private List<Perfil> perfis = new ArrayList<Perfil>();
+	private Set<Perfil> perfis = new HashSet<Perfil>();
 
 	public String getEmail() {
 		return email;
@@ -51,11 +52,11 @@ public class Usuario extends AbstractEntity {
 		this.senha = senha;
 	}
 
-	public List<Perfil> getPerfis() {
+	public Set<Perfil> getPerfis() {
 		return perfis;
 	}
 
-	public void setPerfis(List<Perfil> perfis) {
+	public void setPerfis(Set<Perfil> perfis) {
 		this.perfis = perfis;
 	}
 

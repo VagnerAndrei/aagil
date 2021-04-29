@@ -8,6 +8,8 @@ import net.circle.domain.entity.Atleta;
 public interface IAtletaBusiness extends IReadSaveDelete<Atleta> {
 
 	Atleta findByKey(String key, String valor) throws Exception;
+	
+	Atleta findByKey(String key, Number valor) throws Exception;
 
 	Atleta atualizar(Atleta atleta) throws Exception;
 

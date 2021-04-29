@@ -90,7 +90,7 @@ export class AtletaFotoUpload extends Modal {
 			this._xhr.upload.addEventListener('error', this.enviando(false));
 
 			this._xhr.upload.addEventListener('progress', e => {
-				const percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
+				let percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
 				this._progressBar.value = percent;
 				this._labelProgress.textContent = percent !== 100 ? `Enviando... ${Math.round(percent)}%` : "Processando imagem..."
 				if (percent === 100) this._botaoCancelar.classList.add('display-none');

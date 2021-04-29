@@ -9,13 +9,21 @@ import net.circle.domain.entity.core.AbstractEntity;
 
 @Entity
 public class Tag extends AbstractEntity {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	private String nome;
-	
+
+	public Tag() {
+	}
+
+	public Tag(String nome) {
+		super();
+		this.nome = nome;
+	}
+
 	public String getNome() {
 		return nome;
 	}

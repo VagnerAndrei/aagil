@@ -74,6 +74,11 @@ public class AtletaBusiness implements IAtletaBusiness {
 	public Atleta findByKey(String key, String valor) throws Exception {
 		return dao.findByKey(key, valor);
 	}
+	
+	@Override
+	public Atleta findByKey(String key, Number valor) throws Exception {
+		return dao.findByKey(key, valor);
+	}
 
 	@Override
 	public Atleta foto(Integer id, byte[] foto, String extensao) throws Exception {
@@ -109,5 +114,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	public int count() {
 		return dao.consultarCount();
 	}
+
+	
 
 }

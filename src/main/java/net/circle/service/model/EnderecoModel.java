@@ -1,18 +1,6 @@
-package net.circle.domain.entity;
+package net.circle.service.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import net.circle.domain.entity.core.AbstractEntity;
-
-@Entity
-public class Endereco extends AbstractEntity {
-
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
+public class EnderecoModel {
 
 	private String cep;
 
@@ -29,17 +17,6 @@ public class Endereco extends AbstractEntity {
 	private String perimetro;
 
 	private String referencia;
-
-	// TODO: endereço
-	// geolocalizacao
-
-	public Integer getId() {
-		return id;
-	}
-
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
 	public String getCep() {
 		return cep;
@@ -104,5 +81,5 @@ public class Endereco extends AbstractEntity {
 	public void setReferencia(String referencia) {
 		this.referencia = referencia;
 	}
-	
+
 }

@@ -36,7 +36,7 @@ export class Registro extends View {
 			<small>ou</small><small> acesse sua conta</small>
 			</div>
 	
-			<form autocomplete="off">
+			<form class="form-acesso" autocomplete="off">
 				<div class="form-group">
 					<label id="label-erro-nome" for="Nome" class="mensagem-erro"></label> <input
 						id="input-nome" type="text" required="required" placeholder="Nome">

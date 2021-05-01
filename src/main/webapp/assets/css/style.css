@@ -30,6 +30,10 @@
 	
 }
 
+h1, h2, h3, h4, h5, h6, h7 {
+	font-family: titulos;
+}
+
 body {
 	margin: 0;
 	padding: 0;
@@ -50,8 +54,9 @@ button {
 	margin: 0.1em 0.1em;
 }
 
-button:disabled, button[disabled] {
-	display: none
+button:disabled, button[disabled], button:disabled:hover {
+	cursor: default;
+	opacity: 50%;
 }
 
 button:hover {
@@ -88,14 +93,13 @@ header img+div {
 
 main {
 	display: flex;
-	width: 100%;
+	width: 100vh;
 	height: 100%;
 	min-height: 600px;
 	max-width: 1024px;
 	justify-content: center;
 	margin: 26px auto auto auto;
 	position: relative;
-	font-family: titulos;
 	background-color: var(--yellow-200);
 }
 
@@ -138,13 +142,16 @@ form font {
 	margin-left: 1px;
 }
 
-form input[type="text"], form input[type="password"], form input[type="email"]
+.form-acesso input[type="text"], form input[type="password"], form input[type="email"]
 	{
 	width: 100%;
 	min-width: 233px;
 	margin: 5px 5px 5px 0;
-	height: 33px;
 	color: #660066;
+}
+
+input{
+	height: 30px;
 	font-size: 15px;
 }
 
@@ -197,7 +204,6 @@ ul {
 	color: #d0d5d7;
 	padding-left: 5px;
 	font-size: 19px;
-	font-family: titulos;
 }
 
 /* 		INDEX.HTML */
@@ -322,7 +328,6 @@ ul {
 .sobre {
 	text-align: center;
 	max-width: 433px;
-	font-family: titulos;
 	line-height: 1.5;
 }
 
@@ -480,6 +485,76 @@ ATLETA.HTML
 .botao-foto:hover, .botao-editar:hover {
 	opacity: 100%;
 	cursor: pointer;
+}
+/* PICOS */
+
+.botao-selecionar-fotos{
+	width: 100px;
+	height: 25px;
+	background-color: var(--blue-500);
+}
+
+.ul-fotos{
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+}
+
+.ul-fotos li{
+	margin-right: 0 50px;
+	border: 1px;
+	display: inline-block;
+	text-align: left;
+}
+
+.ul-fotos li:hover{
+	cursor: pointer;
+	opacity: 65%;
+}
+
+.ul-fotos li img, .ul-fotos li span{
+	display: inline-block;
+	margin: auto auto auto 0;
+}
+
+.ul-fotos li img:hover:after{
+	
+	position: relative;
+	bottom: 50px;
+	left: 0;
+	content: "\274c";
+	
+}
+
+.picos-header{
+	display: flex;
+	justify-content: space-between;
+	flex-direction: row;
+	width: 100vh;
+}
+
+.form-item{
+}
+
+#form-pico{
+	width: 100vh;
+}
+
+.form-item label{
+	margin-top: 7px;
+	vertical-align: top;
+	display: inline-block;
+	width: 100px;
+	text-align: right;
+}
+
+.form-item input{
+	display: inline-block;
+}
+
+.form-item textarea{
+	margin-left: 3px;
+	display: inline-block;
 }
 
 /* ATLETAS */

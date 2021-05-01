@@ -1,7 +1,7 @@
 package net.circle.domain.entity;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -38,7 +38,7 @@ public class Manobra extends AbstractEntity {
 
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "manobras_complementos", joinColumns = @JoinColumn(name = "manobra_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "complemento_id", referencedColumnName = "id"))
-	private List<ManobraComplemento> complementos = new ArrayList<ManobraComplemento>();
+	private Set<ManobraComplemento> complementos = new HashSet<ManobraComplemento>();
 
 	public Integer getId() {
 		return id;
@@ -72,11 +72,11 @@ public class Manobra extends AbstractEntity {
 		this.tipo = tipo;
 	}
 
-	public List<ManobraComplemento> getComplementos() {
+	public Set<ManobraComplemento> getComplementos() {
 		return complementos;
 	}
 
-	public void setComplementos(List<ManobraComplemento> complementos) {
+	public void setComplementos(Set<ManobraComplemento> complementos) {
 		this.complementos = complementos;
 	}
 

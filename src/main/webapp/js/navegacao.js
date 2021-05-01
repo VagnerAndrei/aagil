@@ -6,6 +6,8 @@ import { Atleta } from './controller/Atleta.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
 import { Manobras } from './controller/Manobras.js';
+import { Picos } from './controller/Picos.js';
+import { PicoRegistro } from './controller/PicoRegistro.js';
 import { View } from './components/View.js';
 
 const instances = { current: undefined, atletas: undefined }
@@ -13,6 +15,8 @@ const instances = { current: undefined, atletas: undefined }
 const views = {
 	home: "home",
 	manobras: "manobras",
+	picos: "picos",
+	pico_registro: "pico-registro",
 	atleta: { nome: "atleta", id: NaN },
 	atletas: "atletas",
 	sobre: "sobre",
@@ -51,6 +55,10 @@ function verificaURL(event) {
 			break;
 		case views.atletas: atletas()
 			break;
+		case views.picos: picos()
+			break
+		case views.pico_registro: picoRegistro()
+			break
 		default: pagina_nao_encontrada();
 			break;
 	}
@@ -71,6 +79,18 @@ function manobras(e) {
 	current_verify()
 	instances.current = new Manobras()
 	if (e) changeState(views.manobras)
+}
+
+function picos(e) {
+	current_verify()
+	instances.current = new Picos()
+	if (e) changeState(views.picos)
+}
+
+function picoRegistro(e) {
+	current_verify()
+	instances.current = new PicoRegistro()
+	if (e) changeState(views.pico_registro)
 }
 
 async function perfil(event, idAtleta) {
@@ -189,4 +209,4 @@ function debounce(fn) {
 	timer = setTimeout(fn, 1);
 }
 
-export { views, verificaURL, registrar, acessar, home, manobras, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }
+export { views, verificaURL, registrar, acessar, home, manobras, picos, picoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }

@@ -80,26 +80,31 @@ public class PicoRest {
 
 			var registro = parseEntity(model);
 
-			for (InputPart inputPart : fotos) {
+			if (fotos != null)
+				if (fotos.size() > 10)
+					return Response.status(Status.BAD_REQUEST)
+							.entity(new ErroModel(PicoExcecao.LIMITE_DE_FOTOS_EXCEDIDO)).build();
+				else
+					for (InputPart inputPart : fotos) {
 
-				String fileName = getFileName(inputPart.getHeaders());
+						String fileName = getFileName(inputPart.getHeaders());
 
-				var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
+						var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
 
-				if (!Arrays.asList(fotoFormatos).contains(extensao))
-					return Response.status(Status.BAD_REQUEST).entity(new ErroModel(PicoExcecao.FORMATO_INVALIDO))
-							.build();
+						if (!Arrays.asList(fotoFormatos).contains(extensao))
+							return Response.status(Status.BAD_REQUEST)
+									.entity(new ErroModel(PicoExcecao.FORMATO_INVALIDO)).build();
 
-				// convert the uploaded file to inputstream
-				InputStream inputStream = inputPart.getBody(InputStream.class, null);
-				var foto = new Foto();
-				foto.setOriginal(inputStream.readAllBytes());
-				foto.setExtensao(extensao);
-				foto.setArquivo(ImagemUtil.getTratamentoJPG(foto.getOriginal()));
-				foto.setThumbnail(ImagemUtil.getThumbnailFromJPG(foto.getArquivo()));
-				registro.getPicoNovo().getFotos().add(foto);
+						// convert the uploaded file to inputstream
+						InputStream inputStream = inputPart.getBody(InputStream.class, null);
+						var foto = new Foto();
+						foto.setOriginal(inputStream.readAllBytes());
+						foto.setExtensao(extensao);
+						foto.setArquivo(ImagemUtil.getTratamentoJPG(foto.getOriginal()));
+						foto.setThumbnail(ImagemUtil.getThumbnailFromJPG(foto.getArquivo()));
+						registro.getPicoNovo().getFotos().add(foto);
 
-			}
+					}
 
 			picoRegistroBusiness.salvar(registro);
 

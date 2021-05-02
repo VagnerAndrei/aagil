@@ -1,80 +1,83 @@
 <main>
 	<form id="form-pico">
 		<h2>Registro de Pico</h2>
-
+			<div class="form-item">
+				<label>Título:</label>
+				<input type="text" id="input-titulo" style="width: 50%" required>
+			</div>
 		<div>
 			<h3>Endereço:</h3>
 			<div class="form-item">
 				<label>CEP:</label>
-				<input type="text" maxlength="9" id="input-cep" style="width: 85px">
+				<input type="text" maxlength="9" id="input-cep" style="width: 85px" required>
 				<strong id="strong-cep-msg"></strong>
 			</div>
 
 			<div class="form-item">
 				<label>UF:</label>
-				<input type="text" id="input-estado" style="width: 40px" disabled>
+				<input type="text" id="input-estado" style="width: 40px" disabled required>
 			</div>
 
 			<div class="form-item">
 				<label>Localidade:</label>
-				<input type="text" id="input-localidade" style="width: 250px" disabled>
+				<input type="text" id="input-localidade" style="width: 30%" disabled required>
 			</div>
 
 			<div class="form-item">
 				<label>Bairro:</label>
-				<input type="text" id="input-bairro" style="width: 250px" disabled>
+				<input type="text" id="input-bairro" style="width: 30%" disabled required>
 			</div>
 
 			<div class="form-item">
 				<label>Logradouro:</label>
-				 <input type="text" id="input-logradouro" style="width: 80%" disabled>
+				 <input type="text" id="input-logradouro" style="width: 80%" disabled required>
 			</div>
 
 			<div class="form-item">
 				<label>Complemento:</label> 
-				<input type="text" id="input-complemento" style="width: 50%" disabled>
+				<input type="text" id="input-complemento" style="width: 50%" disabled required>
 			</div>
 
 			<div class="form-item">
 				<label>Perímetro:</label>
-				 <input type="text" id="input-perimetro" style="width: 50%">
+				 <input type="text" id="input-perimetro" style="width: 50%" required>
 			</div>
 
 			<div class="form-item">
 				<label>Referência(s):</label>
-				 <input type="text" id="input-referencia" style="width: 50% ">
+				 <input type="text" id="input-referencia" style="width: 50%" required>
 			</div>
 
 		</div>
 		
-		<div>
-			<h3>Imagens:</h3>
-			
-			<div class="form-item">
-				<label>Fotos:</label>
-				<input type="file" id="input-fotos" accept="image/jpg, image/jpeg, image/png, image/bmp" multiple style="display:none">
-				<button id="button-selecionar-fotos" type="button" class="botao-selecionar-fotos">Selecionar...</button>
-				<span id="span-limite-fotos"></span>
-			</div>
-			<ul id="ul-fotos" class="ul-fotos">
-			</ul>
-		</div>
 		
-		<div>
-			<h3>Tags:</h3>
-			
-			<div class="form-item">
-				<label>Tags:</label>
-				<input type="text" id="input-tag">
-				<strong id="strong-tag-msg"></strong>
+		<br/>
+		<br/>
+			<div>
+				<div class="form-item">
+					<label>Fotos:</label>
+					<input type="file" id="input-fotos" accept="image/jpg, image/jpeg, image/png, image/bmp" multiple style="display:none">
+					<button id="button-selecionar-fotos" type="button" class="botao-selecionar-fotos">Selecionar...</button>
+					<span id="span-limite-fotos"></span>
+				</div>
+				<ul id="ul-fotos">
+				</ul>
 			</div>
-			<ul id="ul-tags" ></ul>
-		</div>
+			<div>
+				<div class="form-item">
+					<label>Tags: #</label>
+					<input type="text" id="input-tag">
+					<button id="button-adicionar-tag" type="button" class="botao-adicionar-tag" title="Adicionar">+</button>
+					<strong id="strong-tag-msg"></strong>
+				</div>
+				<ul id="ul-tags"></ul>
+			</div>
+			<div class="form-item">
+					<label>Observações:</label>
+					 <textarea id="textarea-observacoes" rows="7" cols="50"
+					style="resize: none" maxlength="1000"></textarea>
+			</div>
 		
-		<div class="form-item">
-				<label>Observações:</label>
-				 <textarea id="textarea-observacoes" rows="7" cols="50"
-				style="resize: none" maxlength="1000"></textarea>
-		</div>
+		<button id="button-enviar" class="botao-form-pico">Enviar</button>
 	</form>
 </main>

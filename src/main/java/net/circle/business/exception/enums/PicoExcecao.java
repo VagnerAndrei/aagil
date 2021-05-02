@@ -7,6 +7,7 @@ import net.circle.service.api.PicoRest;
 
 public enum PicoExcecao implements INegocioExcecao {
 
+	LIMITE_DE_FOTOS_EXCEDIDO("InputFoto", "Este serviço tem limite de 10 fotos por pico"),
 	FORMATO_INVALIDO("InputFoto", "Formato inválido. Formatos aceitos: " + Arrays.asList(PicoRest.fotoFormatos));
 
 	private String campo;

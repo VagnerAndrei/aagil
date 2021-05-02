@@ -3,6 +3,7 @@
  */
 import { View } from '../components/View.js'
 import { get } from '../fetch.js'
+import { atletaLogado } from '../sessao.js'
 
 export class PicoRegistro extends View {
 
@@ -14,6 +15,8 @@ export class PicoRegistro extends View {
 	}
 
 	init() {
+		this._inputTitulo = document.querySelector('#input-titulo')
+
 		this._inputCEP = document.querySelector('#input-cep')
 		this._strongCepMsg = document.querySelector('#strong-cep-msg')
 
@@ -35,38 +38,151 @@ export class PicoRegistro extends View {
 		this._ulTags = document.querySelector('#ul-tags')
 		this._ulFotos = document.querySelector('#ul-fotos')
 
+		this._strongTagMsg = document.querySelector('#strong-tag-msg')
+
+		this._buttonEnviar = document.querySelector('#button-enviar')
+
+
 		this._inputCEP.addEventListener('change', event => this.handleInputCEP(event))
 		this._inputFotos.addEventListener('change', event => this.handleFiles(event))
 		this._buttonSelecionarFotos.addEventListener('click', event => this.selecionarFotos(event), false)
 
-		this._inputTag.addEventListener('change', event => this.handleInputTags(event))
-		this._strongTagMsg = document.querySelector('#strong-tag-msg')
+		document.querySelector('#button-adicionar-tag').addEventListener('click', (e) => {
+			e.preventDefault()
+			this.handleInputTags()
+		}
+		)
+
+		this._buttonEnviar.addEventListener('click', event => this.enviar(event))
+
+		this._formPico = document.querySelector('#form-pico')
+
+		this._formPico.addEventListener('submit', e => { e.preventDefault() })
+
+		this._inputTag.addEventListener('keypress', (event) => {
+			if (event.keyCode == 13) {
+				event.preventDefault()
+				this.handleInputTags()
+			}
+		})
 	}
 
-	handleInputTags(event) {
-		const value = event.currentTarget.value.toLowerCase()
+	enviar(event) {
+		if (this._formPico.checkValidity()) {
+			const imgs = document.querySelectorAll('.imgFileObject')
+
+			const formData = new FormData()
+
+			/*
+							FOTOS ATTACHMENT
+			*/
+
+			for (let i = 0; i < imgs.length; i++) {
+				formData.append('foto', imgs[i].file)
+			}
+
+
+			/*
+							JSON OBJECT
+			*/
+
+			const json = {
+				"atleta": {
+					"id": atletaLogado.id
+				},
+				"picoNovo": {
+					"titulo": this._inputTitulo.value,
+					"endereco": {
+						"cep": this._inputCEP.value,
+						"estado": this._inputUF.value,
+						"localidade": this._inputLocalidade.value,
+						"bairro": this._inputBairro.value,
+						"logradouro": this._inputLogradouro.value,
+						"complemento": this._inputComplemento.value,
+						"perimetro": this._inputPerimetro.value,
+						"referencia": this._inputReferencia.value
+					},
+					"tags": this._tags
+				},
+				"observacoes": this._textareaObservacoes.value
+			}
+
+			const blobJSON = new Blob([JSON.stringify(json)], { type: 'application/json' })
+			formData.append('json', blobJSON)
+
+			/*
+							XML HTTP REQUEST
+					
+			*/
+
+			this._xhr = new XMLHttpRequest();
+
+			this._xhr.open('POST', 'api/picos')
+
+			this._xhr.addEventListener('load', () => {
+				console.log('load')
+			})
+
+			this._xhr.addEventListener('loadstart', () => {
+				console.log('loadstart')
+			})
+
+			this._xhr.addEventListener('abort', () => {
+				console.log('abort')
+			})
+
+			this._xhr.addEventListener('error', () => {
+				console.log('error')
+			})
+
+			this._xhr.addEventListener('progress', () => {
+				console.log('progress')
+
+			})
+
+			this._xhr.onreadystatechange = () => {
+				if (this._xhr.readyState === 4) {
+					console.log('ready', this._xhr.status)
+					switch (this._xhr.status) {
+					}
+				}
+			}
+
+			this._xhr.onerror = () => {
+				console.log('onerror')
+			}
+
+			this._xhr.send(formData)
+		} else this._formPico.reportValidity()
+	}
+
+	handleInputTags() {
+		const value = this._inputTag.value.toLowerCase()
 		const regex = new RegExp('^[a-z0-9]+$')
 		if (regex.test(value)) {
 			this._strongTagMsg.textContent = ''
 			if (!this._tags.some(tag => tag == value)) {
 				this._tags.push(value)
 				const tag = document.createElement('li')
+				tag.title = 'Remover esta tag'
+				tag.addEventListener('click', e => {
+					this._tags.splice(this._tags.indexOf(e.target.textContent), 1)
+					this._ulTags.removeChild(e.currentTarget)
+					this._inputTag.focus()
+				})
 				tag.textContent = value;
 				this._ulTags.appendChild(tag)
 			} else this._strongTagMsg.textContent = 'Tag já inserida'
+			this._inputTag.value = ''
 		} else
 			this._strongTagMsg.textContent = 'Tag inválida'
-
-		this._inputTag.value = ''
+		this._inputTag.focus()
 	}
 
 
 	handleFiles(event) {
 		const files = event.target.files
-		if (!files.length) {
-			console.log('sem arquivos selecionados')
-		} else {
-
+		if (files.length) {
 			for (let i = 0; i < files.length; i++) {
 				if (this._ulFotos.children.length == this._maxFiles) {
 					this._buttonSelecionarFotos.disabled = true;
@@ -88,17 +204,24 @@ export class PicoRegistro extends View {
 				})
 
 				let img = document.createElement('img')
-				img.src = window.URL.createObjectURL(file)
 				img.height = 60
+				img.classList.add('imgFileObject')
+				img.file = file;
+
+
+				/*img.src = window.URL.createObjectURL(file)
 				img.onload = function() {
 					window.URL.revokeObjectURL(this.src)
-				}
+				}*/
+
+				const reader = new FileReader()
+				reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result } })(img)
+				reader.readAsDataURL(file)
 
 				li.appendChild(img)
 				li.appendChild(fileName)
 				li.appendChild(fileSize)
 				this._ulFotos.appendChild(li)
-				console.log('arquivos selecionados')
 			}
 			this._inputFotos.value = ''
 			this.setSpanText()
@@ -138,7 +261,7 @@ export class PicoRegistro extends View {
 	}
 
 	async consultaCEP(cep) {
-		const result = await get(`https://viacep.com.br/ws/${cep}/json/`)
+		const result = await get(`https://viacep.com.br/ws/${cep}/json`)
 		const json = await result.json()
 		if (!json.erro) {
 			const { logradouro, complemento, localidade, bairro, uf } = json;

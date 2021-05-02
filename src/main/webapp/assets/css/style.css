@@ -146,7 +146,8 @@ form font {
 	{
 	width: 100%;
 	min-width: 233px;
-	margin: 5px 5px 5px 0;
+	height: 35px;
+	margin: 0 0 0 2px;
 	color: #660066;
 }
 
@@ -168,7 +169,7 @@ h1 {
 }
 
 input[type=checkbox]:checked {
-	color: #660066
+	color: #660066;
 }
 
 ul {
@@ -203,7 +204,7 @@ ul {
 ::placeholder {
 	color: #d0d5d7;
 	padding-left: 5px;
-	font-size: 19px;
+	font-size: 15px;
 }
 
 /* 		INDEX.HTML */
@@ -490,34 +491,76 @@ ATLETA.HTML
 
 .botao-selecionar-fotos{
 	width: 100px;
+}
+
+.botao-adicionar-tag{
+	width: 25px;
+	font-weight: bold;
+}
+
+.form-item button{
 	height: 25px;
-	background-color: var(--blue-500);
+	background-color: var(--blue-400);
 }
 
-.ul-fotos{
+.botao-form-pico{
+	margin: 50px auto ;
+	display: block;
+	width: 250px;
+}
+
+
+#ul-fotos{
 	display: flex;
-	flex-direction: column;
+	margin-left: 75px;
 	flex-wrap: wrap;
+	flex-direction: column;
 }
 
-.ul-fotos li{
+
+#ul-tags{
+	display: flex;
+	margin-left: 60px;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+#ul-fotos li{
+	margin: 5px auto 0 5px;
+}
+
+#form-pico ul li{
+	padding: 10px;
+	border-radius: 10px;
+	background-color: var(--yellow-300);
+}
+
+#ul-tags li{
+	margin: 5px 5px;
+}
+
+#ul-tags li:before{
+	content: "#";
+}
+
+#ul-fotos li{
 	margin-right: 0 50px;
 	border: 1px;
 	display: inline-block;
 	text-align: left;
 }
 
-.ul-fotos li:hover{
+#ul-fotos li:hover, #ul-tags li:hover{
 	cursor: pointer;
 	opacity: 65%;
 }
 
-.ul-fotos li img, .ul-fotos li span{
+#ul-fotos li img, #ul-fotos li span{
 	display: inline-block;
 	margin: auto auto auto 0;
 }
 
-.ul-fotos li img:hover:after{
+#ul-fotos li img:hover:after{
 	
 	position: relative;
 	bottom: 50px;
@@ -531,9 +574,6 @@ ATLETA.HTML
 	justify-content: space-between;
 	flex-direction: row;
 	width: 100vh;
-}
-
-.form-item{
 }
 
 #form-pico{
@@ -557,6 +597,10 @@ ATLETA.HTML
 	display: inline-block;
 }
 
+.form-item strong{
+	color: red;
+}
+
 /* ATLETAS */
 .lista-paginas {
 	display: grid;
@@ -566,7 +610,7 @@ ATLETA.HTML
 }
 
 .li-pagina-selecionada {
-	font-weight: bold
+	font-weight: bold;
 }
 
 /* MODAL PANEL */
@@ -590,16 +634,16 @@ ATLETA.HTML
 	position: relative;
 	padding: 0;
 	outline: 0;
-	width: 400px
+	width: 400px;
 }
 
 .modal-container:after, .modal-container:before {
 	display: table;
-	clear: both
+	clear: both;
 }
 
 .modal-container {
-	padding: 0.5em 16px
+	padding: 0.5em 16px;
 }
 
 .close-button {
@@ -613,7 +657,7 @@ ATLETA.HTML
 	background-color: inherit;
 	text-align: center;
 	cursor: pointer;
-	white-space: nowrap
+	white-space: nowrap;
 }
 
 .cursor-pointer {
@@ -622,24 +666,24 @@ ATLETA.HTML
 
 .close-button:disabled {
 	cursor: not-allowed;
-	opacity: 0.3
+	opacity: 0.3;
 }
 
 .close-button:hover {
 	color: #000 !important;
-	background-color: #ccc !important
+	background-color: #ccc !important;
 }
 
 .display-top-right {
 	position: absolute;
 	right: 0;
-	top: 0
+	top: 0;
 }
 
 .titulo-modal {
 	position: absolute;
 	right: 50%;
-	top: 10
+	top: 10;
 }
 
 .modal-header {

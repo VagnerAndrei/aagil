@@ -38,16 +38,22 @@ export class View {
 	}
 
 	async getHTML(url) {
+		const retorno = {}
 		const response = await get(url)
+		retorno.status = response.status
 		switch (response.status) {
 			case 200:
 				const html = await response.text()
-				return new DOMParser().parseFromString(html, 'text/html').getElementsByTagName('main')[0].innerHTML
+				retorno.html = new DOMParser().parseFromString(html, 'text/html').getElementsByTagName('main')[0].innerHTML
+				break
 			case 403:
-				return `<h2>Acesso negado!</h2>`
+				retorno.html = `<h2>Acesso negado!</h2>`
+				break
 			case 404:
-				return `<h2>Página não encontrada!</h2>`
+				retorno.html = `<h2>Página não encontrada!</h2>`
+				break
 		}
+		return retorno;
 	}
 
 	update(template) {

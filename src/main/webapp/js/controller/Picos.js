@@ -12,13 +12,15 @@ export class Picos extends View {
 
 	init() {
 		this._buttonRegitrar = document.querySelector('#button-registrar-pico')
-		
+
 		this._buttonRegitrar.addEventListener('click', event => picoRegistro(event))
 	}
-	
-	async update(){
-		super.update(await this.template())
-		this.init()
+
+	async update() {
+		const { status, html } = await this.template()
+		super.update(html)
+		if (status == 200)
+			this.init()
 	}
 
 	async template() {

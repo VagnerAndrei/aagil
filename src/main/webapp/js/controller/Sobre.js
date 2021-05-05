@@ -8,9 +8,10 @@ export class Sobre extends View {
 	constructor() {
 		super('Sobre')
 	}
-	
-	async update(){
-		super.update(await this.template())
+
+	async update() {
+		const { html } = await this.template()
+		super.update(html)
 	}
 
 	async template() {

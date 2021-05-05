@@ -185,6 +185,7 @@ ul {
 .botao-cancelar {
 	background-color: #ccc;
 	color: #000000;
+	display: block;
 }
 
 .conta {
@@ -345,12 +346,11 @@ ul {
 }
 
 .loading {
-	position: absolute;
-	right: 48%;
 	padding-top: 5px;
 	height: 33px;
 	width: 33px;
 	display: block;
+	margin: 10px auto;
 }
 
 .display-block {
@@ -600,6 +600,20 @@ ATLETA.HTML
 .form-item strong{
 	color: red;
 }
+.pico-upload{
+	width: 100%;
+}
+
+.pico-upload progress, .pico-upload label{
+	display: block;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+.pico-upload label{
+	text-align: center;
+}
+
 
 /* ATLETAS */
 .lista-paginas {
@@ -615,7 +629,7 @@ ATLETA.HTML
 
 /* MODAL PANEL */
 .modal {
-	z-index: 3;
+	z-index: 101;
 	display: none;
 	padding-top: 100px;
 	position: fixed;

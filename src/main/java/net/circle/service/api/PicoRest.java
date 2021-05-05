@@ -58,13 +58,24 @@ public class PicoRest {
 
 	public final static String[] fotoFormatos = { "PNG", "JPG", "JPEG", "BMP" };
 
+	
+	/**
+	 * Realiza o registro de pico com upload de imagens
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FORBIDDEN(403, "Forbidden"),<br/>
+	 *          Status.BAD_REQUEST(400, "Bad Request"),<br/>
+	 *          Status.ACCEPTED(202, "Accepted"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
 	@POST
 	@Path("/")
 	@RolesAllowed({ "ADMIN", "USER" })
 	@Consumes({ MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_JSON })
 	public Response adicionarPico(@Context HttpServletRequest request, MultipartFormDataInput input) {
 		try {
-
 			Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 
 			List<InputPart> fotos = uploadForm.get("foto");
@@ -106,9 +117,17 @@ public class PicoRest {
 
 					}
 
-			picoRegistroBusiness.salvar(registro);
-
-			return Response.ok().build();
+			var picoRegistro = picoRegistroBusiness.salvar(registro);
+			String mensagem = "O Registro do pico foi efetuado com sucesso.";
+			switch (picoRegistro.getStatus()) {
+			case PENDENTE:
+				mensagem = "O Registro do pico foi efetuado com sucesso, e será avaliado por um administrador. Obrigado pela colaboração.";
+				break;
+			default:
+				break;
+			}
+			return Response.accepted().entity(mensagem).build();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();

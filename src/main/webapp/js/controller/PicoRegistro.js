@@ -4,6 +4,7 @@
 import { View } from '../components/View.js'
 import { get } from '../fetch.js'
 import { atletaLogado } from '../sessao.js'
+import { PicoRegistroUpload } from '../controller/PicoRegistroUpload.js'
 
 export class PicoRegistro extends View {
 
@@ -40,6 +41,7 @@ export class PicoRegistro extends View {
 
 		this._strongTagMsg = document.querySelector('#strong-tag-msg')
 
+		this._labelErro = document.querySelector('#label-erro')
 		this._buttonEnviar = document.querySelector('#button-enviar')
 
 
@@ -67,7 +69,37 @@ export class PicoRegistro extends View {
 		})
 	}
 
-	enviar(event) {
+	async update() {
+		const { status, html } = await this.template()
+		super.update(html)
+		if (status == 200)
+			this.init()
+	}
+
+	async template() {
+		return this.getHTML('pages/user/pico-registro.html')
+	}
+
+	async consultaCEP(cep) {
+		const result = await get(`https://viacep.com.br/ws/${cep}/json`)
+		const json = await result.json()
+		if (!json.erro) {
+			const { logradouro, complemento, localidade, bairro, uf } = json;
+			this._inputUF.value = uf;
+			this._inputLocalidade.value = localidade;
+			this._inputBairro.value = bairro;
+			this._inputLogradouro.value = logradouro;
+			this._inputComplemento.value = complemento;
+			this._strongCepMsg.textContent = ''
+		}
+		else {
+			this._strongCepMsg.textContent = 'CEP não encontrado'
+
+		}
+	}
+
+
+	enviar() {
 		if (this._formPico.checkValidity()) {
 			const imgs = document.querySelectorAll('.imgFileObject')
 
@@ -119,41 +151,67 @@ export class PicoRegistro extends View {
 
 			this._xhr.open('POST', 'api/picos')
 
-			this._xhr.addEventListener('load', () => {
-				console.log('load')
-			})
+			const upload = imgs.length != 0
+			if (upload) {
+				this._xhr.upload.addEventListener('load', () => {
+				})
 
-			this._xhr.addEventListener('loadstart', () => {
-				console.log('loadstart')
-			})
+				this._xhr.upload.addEventListener('loadstart', () => {
+					this._modalUpload = new PicoRegistroUpload(() => this.cancelarUpload())
+				})
 
-			this._xhr.addEventListener('abort', () => {
-				console.log('abort')
-			})
+				this._xhr.upload.addEventListener('abort', () => {
+					this._labelErro.textContent = 'Upload cancelado'
+					this._modalUpload.fecharModal(false)
+				})
 
-			this._xhr.addEventListener('error', () => {
-				console.log('error')
-			})
+				this._xhr.upload.addEventListener('error', () => {
+					this._labelErro.textContent = 'Upload erro'
+					this._modalUpload.fecharModal(false)
+				})
 
-			this._xhr.addEventListener('progress', () => {
-				console.log('progress')
+				this._xhr.upload.addEventListener('progress', e => {
+					let percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
+					this._modalUpload?.setPercent(percent)
+				})
+			}
 
-			})
 
 			this._xhr.onreadystatechange = () => {
 				if (this._xhr.readyState === 4) {
-					console.log('ready', this._xhr.status)
 					switch (this._xhr.status) {
+						case 403:
+							this._labelErro.textContent = 'Acesso negado!'
+							this._modalUpload.fecharModal(false)
+							break
+						case 400:
+							const json = JSON.parse(this._xhr.response)
+							this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
+							this._modalUpload.fecharModal(false)
+							break
+						case 202:
+							if (!upload) this._modalUpload = new PicoRegistroUpload()
+							this._modalUpload.setResult(this._xhr.responseText)
+							break
+						case 500:
+							this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+							this._modalUpload.fecharModal(false)
 					}
 				}
 			}
 
 			this._xhr.onerror = () => {
-				console.log('onerror')
+				this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+				this._modalUpload.fecharModal(false)
 			}
 
 			this._xhr.send(formData)
+
 		} else this._formPico.reportValidity()
+	}
+
+	cancelarUpload() {
+		this._xhr?.abort()
 	}
 
 	handleInputTags() {
@@ -249,33 +307,6 @@ export class PicoRegistro extends View {
 			else this._strongCepMsg.textContent = 'CEP inválido'
 		else this._strongCepMsg.textContent = ''
 
-	}
-
-	async update() {
-		super.update(await this.template())
-		this.init()
-	}
-
-	async template() {
-		return this.getHTML('pages/user/pico-registro.html')
-	}
-
-	async consultaCEP(cep) {
-		const result = await get(`https://viacep.com.br/ws/${cep}/json`)
-		const json = await result.json()
-		if (!json.erro) {
-			const { logradouro, complemento, localidade, bairro, uf } = json;
-			this._inputUF.value = uf;
-			this._inputLocalidade.value = localidade;
-			this._inputBairro.value = bairro;
-			this._inputLogradouro.value = logradouro;
-			this._inputComplemento.value = complemento;
-			this._strongCepMsg.textContent = ''
-		}
-		else {
-			this._strongCepMsg.textContent = 'CEP não encontrado'
-
-		}
 	}
 
 	resetEndereco() {

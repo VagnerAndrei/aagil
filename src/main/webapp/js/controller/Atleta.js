@@ -31,8 +31,10 @@ export class Atleta extends View {
 	}
 
 	async update() {
-		super.update(await this.template())
-		this.init()
+		const { status, html } = await this.template()
+		super.update(html)
+		if (status == 200)
+			this.init()
 	}
 
 	async template() {

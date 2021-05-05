@@ -11,6 +11,10 @@ export class Atletas extends ListaPaginada {
 		super('Atletas', 'api/atletas')
 	}
 
+	async template() {
+		return this.getHTML('pages/public/atletas.html')
+	}
+
 	adicionarClickEvent() {
 		this._lista?.map(atleta => {
 			document.querySelector(`#li-atleta-${atleta.id}`).addEventListener('click', () => {

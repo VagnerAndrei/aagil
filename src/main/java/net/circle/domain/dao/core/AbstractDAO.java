@@ -24,6 +24,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 		return getClassImplement().getName();
 	}
 
+	@Transactional
 	public Optional<T> findById(Object id) {
 		return Optional.ofNullable(em.find(getClassImplement(), id));
 	}

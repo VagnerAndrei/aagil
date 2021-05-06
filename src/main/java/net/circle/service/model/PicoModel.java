@@ -3,7 +3,9 @@ package net.circle.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PicoModel {
+public class PicoModel extends AbstractModel {
+	
+	private Integer id;
 
 	private String titulo;
 
@@ -12,6 +14,14 @@ public class PicoModel {
 	private List<String> tags = new ArrayList<String>();
 	
 	private List<IDModel> fotos = new ArrayList<IDModel>();
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
 
 	public String getTitulo() {
 		return titulo;

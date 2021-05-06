@@ -7,10 +7,11 @@ import { get } from './../fetch.js'
 export class ListaPaginada extends Lista {
 
 
-	constructor(titulo, url) {
+	constructor(titulo, url, selectedIndexPagination) {
 		super(titulo, url)
 		this._paginaAtual = 1
 		this._indice = 0
+		this._selectedIndexPagination = selectedIndexPagination
 	}
 
 	init() {
@@ -22,6 +23,8 @@ export class ListaPaginada extends Lista {
 		this._buttonPaginaAnterior = document.querySelector('#button-pagina-anterior')
 		this._selectTamanhoDaPagina = document.querySelector('#select-pagina-tamanho')
 		this._labelTotal = document.querySelector('#label-total')
+
+		this._selectTamanhoDaPagina.selectedIndex = this._selectedIndexPagination
 		this._tamanhoDaPagina = document.querySelector('#select-pagina-tamanho').value
 
 		this._selectTamanhoDaPagina.addEventListener('change', event => this.tamanhoDaPagina(event))
@@ -33,15 +36,20 @@ export class ListaPaginada extends Lista {
 	}
 
 	async update() {
-
+		
+		/*//TEMPLATE DO ARQUIVO HTML
 		// ATUALIZA O MAIN COM O HTML DE template()
 		const { status, html } = await this.template()
 		super.update(html)
 
 		// INICIA A LEITURA DOS COMPONENTES
 		if (status == 200)
-			this.init()
-
+			this.init()*/
+		
+		
+		//TEMPLATE DIRETO DO JAVASCRIPT
+		super.update(await this.template())
+		this.init()		
 		// ATUALIZA A LISTA
 		await this.atualizarLista()
 
@@ -51,47 +59,47 @@ export class ListaPaginada extends Lista {
 
 	// RETORNA O TEMPLATE DA LISTA TODA
 	async template() {
-		throw new Error('Not Yet Implemented')
-		//return this.getHTML(this._pagina)
-		//		`
-		//		<div id="div-atletas" class="flex-column">
-		//			<h2>${this._titulo}:</h2>
-		//			<div id="paginacao">
-		//	
-		//				<label>Resultados por página:</label>
-		//				<select id="select-pagina-tamanho">
-		//					<option>10</option>
-		//					<option>20</option>
-		//					<option>30</option>
-		//					<option>40</option>
-		//					<option selected>50</option>
-		//					<option>60</option>
-		//					<option>70</option>
-		//					<option>80</option>
-		//					<option>90</option>
-		//					<option>100</option>
-		//				</select>
-		//				<label>Total:</label>
-		//				<label id="label-total"></label>
-		//			</div>
-		//			
-		//			<div>
-		//				<ul id="ul-lista" class="lista-atletas">
-		//	
-		//				</ul>
-		//			</div>
-		//			<div>
-		//				<ul id="ul-paginas" class="lista-paginas">
-		//				</ul>
-		//			</div>
-		//			<div>
-		//				<button id="button-pagina-primeira" title="Primeira página">&lt;&lt;</button>
-		//				<button id="button-pagina-anterior" title="Página anterior">&lt;</button>
-		//				<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
-		//				<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
-		//			</div>
-		//		</div>
-		//		`
+		/*		throw new Error('Not Yet Implemented')
+		*/		//return this.getHTML(this._pagina)
+		return `
+				<section id="section-header" class="lista-paginada-header">
+					<h2 id="h2-titulo">${this._titulo}</h2>
+				</section>
+				<section id="section-lista-paginada" class="flex-column">
+					<div id="paginacao">
+			
+						<label>Resultados por página:</label> 
+						<select	id="select-pagina-tamanho">
+							<option>10</option>
+							<option>20</option>
+							<option>30</option>
+							<option>40</option>
+							<option>50</option>
+							<option>60</option>
+							<option>70</option>
+							<option>80</option>
+							<option>90</option>
+							<option>100</option>
+						</select> <label>Total:</label> <label id="label-total"></label>
+					</div>
+			
+					<div>
+						<ul id="ul-lista" class="lista-atletas">
+			
+						</ul>
+					</div>
+					<div>
+						<ul id="ul-paginas" class="lista-paginas">
+						</ul>
+					</div>
+					<div>
+						<button id="button-pagina-primeira" title="Primeira página">&lt;&lt;</button>
+						<button id="button-pagina-anterior" title="Página anterior">&lt;</button>
+						<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
+						<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
+					</div>
+				</section>
+				`
 	}
 
 	async atualizarLista() {

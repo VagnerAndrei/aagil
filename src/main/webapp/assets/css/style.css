@@ -569,7 +569,7 @@ ATLETA.HTML
 	
 }
 
-.picos-header{
+.lista-paginada-header{
 	display: flex;
 	justify-content: space-between;
 	flex-direction: row;
@@ -586,6 +586,11 @@ ATLETA.HTML
 	display: inline-block;
 	width: 100px;
 	text-align: right;
+}
+
+.form-item input + label, .form-item button + label{
+	text-align: left;
+	display: inline-block;
 }
 
 .form-item input{

@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.sql.rowset.serial.SerialBlob;
 
 import net.circle.business.exception.AtletaBusinessException;
 import net.circle.business.exception.UsuarioBusinessException;
@@ -74,7 +75,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 	public Atleta findByKey(String key, String valor) throws Exception {
 		return dao.findByKey(key, valor);
 	}
-	
+
 	@Override
 	public Atleta findByKey(String key, Number valor) throws Exception {
 		return dao.findByKey(key, valor);
@@ -85,9 +86,10 @@ public class AtletaBusiness implements IAtletaBusiness {
 		var atleta = dao.findById(id).get();
 		if (atleta.getFoto() == null)
 			atleta.setFoto(new Foto());
-		atleta.getFoto().setOriginal(foto);
-		atleta.getFoto().setArquivo(ImagemUtil.getTratamentoJPG(foto));
-		atleta.getFoto().setThumbnail(ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivo()));
+		atleta.getFoto().setOriginal(new SerialBlob(foto));
+		atleta.getFoto().setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto)));
+		atleta.getFoto()
+				.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivoAsByteArray())));
 		atleta.getFoto().setExtensao(extensao);
 		return dao.merge(atleta);
 	}
@@ -114,7 +116,5 @@ public class AtletaBusiness implements IAtletaBusiness {
 	public int count() {
 		return dao.consultarCount();
 	}
-
-	
 
 }

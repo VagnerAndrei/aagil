@@ -3,14 +3,14 @@
 		<h2>Registro de Pico</h2>
 			<div class="form-item">
 				<label>Título:</label>
-				<input type="text" id="input-titulo" style="width: 50%" required>
+				<input type="text" id="input-titulo" style="width: 50%" maxlength="100" required>
 			</div>
 		<div>
 			<h3>Endereço:</h3>
 			<div class="form-item">
 				<label>CEP:</label>
-				<input type="text" maxlength="9" id="input-cep" style="width: 85px" required>
-				<strong id="strong-cep-msg"></strong>
+				<input type="text" maxlength="9" id="input-cep" style="width: 85px" pattern="^[0-9]{5}[-]?[0-9]{3}$" required>
+				<label class="mensagem-erro" id="label-erro-cep" style="width: 200px"></label>
 			</div>
 
 			<div class="form-item">
@@ -40,12 +40,12 @@
 
 			<div class="form-item">
 				<label>Perímetro:</label>
-				 <input type="text" id="input-perimetro" style="width: 50%" required>
+				 <input type="text" id="input-perimetro" style="width: 50%" maxlength="100" required>
 			</div>
 
 			<div class="form-item">
 				<label>Referência(s):</label>
-				 <input type="text" id="input-referencia" style="width: 50%" required>
+				 <input type="text" id="input-referencia" style="width: 50%" maxlength="100" required>
 			</div>
 
 		</div>
@@ -68,17 +68,17 @@
 					<label>Tags: #</label>
 					<input type="text" id="input-tag">
 					<button id="button-adicionar-tag" type="button" class="botao-adicionar-tag" title="Adicionar">+</button>
-					<strong id="strong-tag-msg"></strong>
+					<label class="mensagem-erro" id="label-erro-tag"></label>
 				</div>
 				<ul id="ul-tags"></ul>
 			</div>
 			<div class="form-item">
 					<label>Observações:</label>
 					 <textarea id="textarea-observacoes" rows="7" cols="50"
-					style="resize: none" maxlength="1000"></textarea>
+					style="resize: none" maxlength="255"></textarea>
 			</div>
 		<label id="label-erro" class="mensagem-erro"></label>
-		<button id="button-enviar" class="botao-form-pico">Enviar</button>
+		<button id="button-enviar" type="button" class="botao-form-pico">Enviar</button>
 	</form>
 	
 </main>

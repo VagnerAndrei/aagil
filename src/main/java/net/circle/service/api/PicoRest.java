@@ -9,10 +9,12 @@ import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.rowset.serial.SerialBlob;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -39,6 +41,7 @@ import net.circle.domain.entity.Tag;
 import net.circle.service.model.EnderecoModel;
 import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
+import net.circle.service.model.PaginacaoModel;
 import net.circle.service.model.PicoModel;
 import net.circle.service.model.PicoRegistroModel;
 
@@ -109,10 +112,10 @@ public class PicoRest {
 						// convert the uploaded file to inputstream
 						InputStream inputStream = inputPart.getBody(InputStream.class, null);
 						var foto = new Foto();
-						foto.setOriginal(inputStream.readAllBytes());
+						foto.setOriginal(new SerialBlob(inputStream.readAllBytes()));
 						foto.setExtensao(extensao);
-						foto.setArquivo(ImagemUtil.getTratamentoJPG(foto.getOriginal()));
-						foto.setThumbnail(ImagemUtil.getThumbnailFromJPG(foto.getArquivo()));
+						foto.setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto.getOriginalAsByteArray())));
+						foto.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(foto.getArquivoAsByteArray())));
 						registro.getPicoNovo().getFotos().add(foto);
 
 					}
@@ -138,6 +141,23 @@ public class PicoRest {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PicoModel> consultarPicos() {
 		return parseModel(picoBusiness.consultarLista());
+	}
+	
+	/**
+	 * Realiza a obtenção da lista de atletas paginada
+	 *
+	 * @param contador
+	 * @param pagina
+	 * 
+	 * 
+	 * @returns PaginacaoModel
+	 */
+	@GET
+	@Path("/{indice}/{tamanho}")
+	public PaginacaoModel getListaPaginada(@PathParam("indice") Integer indice, @PathParam("tamanho") Integer tamanho) {
+		var paginacao = parseModelPaginacao(picoBusiness.consultarPagina(indice, tamanho));
+		paginacao.setTotal(picoBusiness.count());
+		return paginacao;
 	}
 
 	private PicoRegistro parseEntity(PicoRegistroModel model) {
@@ -192,6 +212,7 @@ public class PicoRest {
 
 	private PicoModel parseModel(Pico pico) {
 		PicoModel model = new PicoModel();
+		model.setId(pico.getId());
 		model.setEndereco(new EnderecoModel());
 		model.getEndereco().setBairro(pico.getEndereco().getBairro());
 		model.getEndereco().setCep(pico.getEndereco().getCep());
@@ -205,6 +226,13 @@ public class PicoRest {
 		pico.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
 		model.setTitulo(pico.getTitulo());
 		return model;
+	}
+	
+	private PaginacaoModel parseModelPaginacao(List<Pico> lista) {
+		var paginacao = new PaginacaoModel();
+		paginacao.setPagina(lista.stream().map(pico -> parseModel(pico)).collect(Collectors.toList()));
+		return paginacao;
+
 	}
 
 }

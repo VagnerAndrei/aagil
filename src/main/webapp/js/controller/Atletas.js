@@ -8,12 +8,12 @@ import { getIdade } from '../util.js'
 export class Atletas extends ListaPaginada {
 
 	constructor() {
-		super('Atletas', 'api/atletas')
+		super('Atletas', 'api/atletas', 4)
 	}
 
-	async template() {
+	/*async template() {
 		return this.getHTML('pages/public/atletas.html')
-	}
+	}*/
 
 	adicionarClickEvent() {
 		this._lista?.map(atleta => {

@@ -26,4 +26,14 @@ public class PicoBusiness implements IPicoBusiness {
 		return null;
 	}
 
+	@Override
+	public List<Pico> consultarPagina(int... rowStartIdxAndCount) {
+		return picoDAO.consultarPagina("titulo", rowStartIdxAndCount);
+	}
+
+	@Override
+	public int count() {
+		return picoDAO.consultarCount();
+	}
+
 }

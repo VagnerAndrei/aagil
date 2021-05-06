@@ -10,16 +10,17 @@ export class PicoRegistro extends View {
 
 	constructor() {
 		super('Registro de pico')
-		this._maxFiles = 10;
-		this._maxSize = 10;
+		this._maxFiles = 10
+		this._maxSize = 10
 		this._tags = []
+		this._validCEP = false
 	}
 
 	init() {
 		this._inputTitulo = document.querySelector('#input-titulo')
 
 		this._inputCEP = document.querySelector('#input-cep')
-		this._strongCepMsg = document.querySelector('#strong-cep-msg')
+		this._labelErroCEP = document.querySelector('#label-erro-cep')
 
 		this._inputUF = document.querySelector('#input-estado')
 		this._inputLocalidade = document.querySelector('#input-localidade')
@@ -39,7 +40,7 @@ export class PicoRegistro extends View {
 		this._ulTags = document.querySelector('#ul-tags')
 		this._ulFotos = document.querySelector('#ul-fotos')
 
-		this._strongTagMsg = document.querySelector('#strong-tag-msg')
+		this._labelErroTag = document.querySelector('#label-erro-tag')
 
 		this._labelErro = document.querySelector('#label-erro')
 		this._buttonEnviar = document.querySelector('#button-enviar')
@@ -59,7 +60,7 @@ export class PicoRegistro extends View {
 
 		this._formPico = document.querySelector('#form-pico')
 
-		this._formPico.addEventListener('submit', e => { e.preventDefault() })
+		this._formPico.addEventListener('submit', e => e.preventDefault())
 
 		this._inputTag.addEventListener('keypress', (event) => {
 			if (event.keyCode == 13) {
@@ -67,6 +68,9 @@ export class PicoRegistro extends View {
 				this.handleInputTags()
 			}
 		})
+
+		this.setSpanText()
+
 	}
 
 	async update() {
@@ -90,17 +94,19 @@ export class PicoRegistro extends View {
 			this._inputBairro.value = bairro;
 			this._inputLogradouro.value = logradouro;
 			this._inputComplemento.value = complemento;
-			this._strongCepMsg.textContent = ''
+			this._labelErroCEP.textContent = ''
+			this._validCEP = true
 		}
 		else {
-			this._strongCepMsg.textContent = 'CEP não encontrado'
+			this._labelErroCEP.textContent = 'CEP não encontrado'
+			this._validCEP = false
 
 		}
 	}
 
 
 	enviar() {
-		if (this._formPico.checkValidity()) {
+		if (this._formPico.checkValidity() && this._validCEP) {
 			const imgs = document.querySelectorAll('.imgFileObject')
 
 			const formData = new FormData()
@@ -112,6 +118,10 @@ export class PicoRegistro extends View {
 			for (let i = 0; i < imgs.length; i++) {
 				formData.append('foto', imgs[i].file)
 			}
+
+			if (imgs.length == 0)
+				if (!confirm('Este formulário nao possui nenhuma foto inserida, gostaria de enviá-lo assim mesmo? '))
+					return
 
 
 			/*
@@ -207,7 +217,11 @@ export class PicoRegistro extends View {
 
 			this._xhr.send(formData)
 
-		} else this._formPico.reportValidity()
+		} else {
+			if (!this._validCEP)
+				this._inputCEP.focus()
+			this._formPico.reportValidity()
+		}
 	}
 
 	cancelarUpload() {
@@ -218,7 +232,7 @@ export class PicoRegistro extends View {
 		const value = this._inputTag.value.toLowerCase()
 		const regex = new RegExp('^[a-z0-9]+$')
 		if (regex.test(value)) {
-			this._strongTagMsg.textContent = ''
+			this._labelErroTag.textContent = ''
 			if (!this._tags.some(tag => tag == value)) {
 				this._tags.push(value)
 				const tag = document.createElement('li')
@@ -230,10 +244,10 @@ export class PicoRegistro extends View {
 				})
 				tag.textContent = value;
 				this._ulTags.appendChild(tag)
-			} else this._strongTagMsg.textContent = 'Tag já inserida'
+			} else this._labelErroTag.textContent = 'Tag já inserida'
 			this._inputTag.value = ''
 		} else
-			this._strongTagMsg.textContent = 'Tag inválida'
+			this._labelErroTag.textContent = 'Tag inválida'
 		this._inputTag.focus()
 	}
 
@@ -304,8 +318,11 @@ export class PicoRegistro extends View {
 		this.resetEndereco()
 		if (value)
 			if (regex.test(value)) this.consultaCEP(value)
-			else this._strongCepMsg.textContent = 'CEP inválido'
-		else this._strongCepMsg.textContent = ''
+			else {
+				this._labelErroCEP.textContent = 'CEP inválido'
+				this._validCEP = false
+			}
+		else this._labelErroCEP.textContent = ''
 
 	}
 

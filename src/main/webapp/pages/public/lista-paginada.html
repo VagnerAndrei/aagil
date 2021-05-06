@@ -1,16 +1,16 @@
 <main>
-	<div class="picos-header">
-		<h2>Picos</h2>
+	<section id="section-header" class="picos-header">
+		<h2 id="h2-titulo">Picos</h2>
 		<button type="button" id="button-registrar-pico">Inserir
 			Registro</button>
-	</div>
-	<div class="flex-column">
+	</section>
+	<section id="section-lista-paginada" class="flex-column">
 		<div id="paginacao">
 
-			<label>Resultados por página:</label>
-			<select id="select-pagina-tamanho">
+			<label>Resultados por página:</label> <select
+				id="select-pagina-tamanho">
 				<option>10</option>
-				<option selected>20</option>
+				<option>20</option>
 				<option>30</option>
 				<option>40</option>
 				<option>50</option>
@@ -19,11 +19,9 @@
 				<option>80</option>
 				<option>90</option>
 				<option>100</option>
-			</select>
-			<label>Total:</label>
-			<label id="label-total"></label>
+			</select> <label>Total:</label> <label id="label-total"></label>
 		</div>
-		
+
 		<div>
 			<ul id="ul-lista" class="lista-atletas">
 
@@ -39,6 +37,7 @@
 			<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
 			<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
 		</div>
+	</section>
 
-	</div>
+
 </main>

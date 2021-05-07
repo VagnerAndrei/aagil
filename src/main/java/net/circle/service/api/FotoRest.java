@@ -24,9 +24,7 @@ public class FotoRest {
 	@Path("/{idFoto}")
 	public Response getFoto(@PathParam("idFoto") Integer idFoto) {
 		try {
-			var foto = fotoBusiness.consultar(idFoto).orElseThrow(() -> new Exception());
-
-			ResponseBuilder response = Response.ok(foto.getArquivoAsByteArray()).type("image/jpg");
+			ResponseBuilder response = Response.ok(fotoBusiness.consultar(idFoto).get().getArquivo().getBinaryStream().readAllBytes()).type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + ".jpg");
 			return response.build();
 		} catch (Exception e) {
@@ -39,9 +37,7 @@ public class FotoRest {
 	@Path("/{idFoto}/thumb")
 	public Response getFotoThumb(@PathParam("idFoto") Integer idFoto) {
 		try {
-			var foto = fotoBusiness.consultar(idFoto).orElseThrow(() -> new Exception());
-
-			ResponseBuilder response = Response.ok(foto.getThumbnailAsByteArray()).type("image/jpg");
+			ResponseBuilder response = Response.ok(fotoBusiness.consultar(idFoto).get().getThumbnail().getBinaryStream().readAllBytes()).type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + "-thumbnail.jpg");
 			return response.build();
 		} catch (Exception e) {

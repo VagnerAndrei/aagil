@@ -1,7 +1,6 @@
 package net.circle.domain.entity;
 
 import java.sql.Blob;
-import java.sql.SQLException;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -46,10 +45,6 @@ public class Foto extends AbstractEntity{
 		return original;
 	}
 	
-	public byte[] getOriginalAsByteArray() throws SQLException {
-		return original.getBytes(1, (int) original.length());
-	}
-
 	public void setOriginal(Blob original) {
 		this.original = original;
 	}
@@ -58,19 +53,10 @@ public class Foto extends AbstractEntity{
 		return arquivo;
 	}
 	
-	public byte[] getArquivoAsByteArray() throws SQLException {
-		return arquivo.getBytes(1, (int) arquivo.length());
-	}
-
 	public Blob getThumbnail() {
 		return thumbnail;
 	}
 	
-	public byte[] getThumbnailAsByteArray() throws SQLException {
-		return getThumbnail().getBytes(1, (int) getThumbnail().length());
-	}
-
-
 	public void setThumbnail(Blob thumbnail) {
 		this.thumbnail = thumbnail;
 	}

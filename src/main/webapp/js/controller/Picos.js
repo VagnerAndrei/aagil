@@ -12,7 +12,7 @@ export class Picos extends ListaPaginada {
 
 	init() {
 		super.init()
-		console.log('init0-')
+		this._ulLista.classList.add('lista-picos')
 		const buttonRegister = document.createElement('button')
 		buttonRegister.id = 'button-registrar-pico'
 		buttonRegister.textContent = 'Inserir Registro'
@@ -27,18 +27,29 @@ export class Picos extends ListaPaginada {
 	listTemplate(){
 		let itemsHtml = ''
 		this.lista?.map(pico => {
+			pico.fotos.sort()
+			pico.tags.sort()
+			console.log(pico, `api/fotos/${pico.fotos[0].id}/thumb`)
 			itemsHtml += `	
-						<li class="flex-column lista-atleta cursor-pointer" id="li-pico-${pico.id}">
+						<li id="li-pico-${pico.id}">
 							<strong>${pico.titulo}</strong>
-							<div class="flex-row space-beetween">
-								<div class="container-foto-atleta">
-									<img src="api/atletas/${atleta.id}/foto/thumb?t=${new Date().getTime()}" onerror="this.src='assets/img/usuario.png'">
+							<div class="flex-row">
+								<div>
+									${pico.fotos ? `
+									<img src="api/fotos/${pico.fotos[0].id}/thumb" onerror="this.src='assets/img/usuario.png'">
+									` : ''}
 								</div>
-								<div class="flex-column space-beetween items-right">
-									${atleta.localidade ? `<img src="assets/img/ufs/${atleta.localidade.uf}.png">
-									<strong>${atleta.localidade.nome} - ${atleta.localidade.uf}</strong>` : ''}
-									${atleta.categoria ? `<strong>${atleta.categoria}</strong>` : ''}
-									${atleta.nascimento ? `<strong>${getIdade(atleta.nascimento)}</strong>` : ''}
+								<div class="informacoes-pico">
+								<label>${pico.endereco.cep}</label>
+								<label>${pico.endereco.localidade}-${pico.endereco.uf}</label>
+								<label>${pico.endereco.bairro}</label>
+								<label>${pico.endereco.logradouro}</label>
+								<label>${pico.endereco.complemento}</label>
+								<label>${pico.endereco.perimetro}</label>
+								<label>${pico.endereco.referencia}</label>
+								</div>
+								<div>
+									<img src="assets/img/ufs/${pico.endereco.uf}.png">
 								</div>
 							</div>
 						</li>

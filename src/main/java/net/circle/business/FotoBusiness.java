@@ -26,4 +26,5 @@ public class FotoBusiness implements IFotoBusiness{
 		return fotoDAO.findById(id);
 	}
 
+	
 }

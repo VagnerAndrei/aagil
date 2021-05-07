@@ -84,7 +84,7 @@ export class ListaPaginada extends Lista {
 					</div>
 			
 					<div>
-						<ul id="ul-lista" class="lista-atletas">
+						<ul id="ul-lista">
 			
 						</ul>
 					</div>

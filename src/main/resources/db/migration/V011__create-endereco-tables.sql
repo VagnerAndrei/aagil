@@ -7,7 +7,7 @@ CREATE TABLE geolocalizacao(
 CREATE TABLE endereco(
 	id SERIAL PRIMARY KEY,	
 	cep VARCHAR(8),
-	estado VARCHAR(50) NOT NULL,
+	uf VARCHAR(2) NOT NULL,
 	localidade VARCHAR(50) NOT NULL,
 	bairro VARCHAR(90) NOT NULL,
 	logradouro VARCHAR(80) NOT NULL,

@@ -152,7 +152,7 @@ public class AtletaRest {
 			if (atleta.getFoto() == null)
 				return Response.status(Status.NO_CONTENT).build();
 
-			ResponseBuilder response = Response.ok(atleta.getFoto().getArquivoAsByteArray()).type("image/jpg"); // +
+			ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo().getBinaryStream().readAllBytes()).type("image/jpg"); // +
 			// atleta.getFoto().getExtensao()
 			response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + ".jpg");// +
 			// atleta.getFoto().getExtensao()
@@ -185,7 +185,7 @@ public class AtletaRest {
 			if (atleta.getFoto() == null)
 				return Response.noContent().build();
 
-			ResponseBuilder response = Response.ok(atleta.getFoto().getOriginalAsByteArray())
+			ResponseBuilder response = Response.ok(atleta.getFoto().getOriginal().getBinaryStream().readAllBytes())
 					.type("image/" + atleta.getFoto().getExtensao().toLowerCase());
 			response.header("Content-Disposition",
 					"inline; filename=" + atleta.getNome().trim() + "." + atleta.getFoto().getExtensao().toLowerCase());
@@ -216,7 +216,7 @@ public class AtletaRest {
 
 			if (atleta.getFoto() == null)
 				return Response.status(Status.NO_CONTENT).build();
-			ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnailAsByteArray()).type("image/jpg");
+			ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail().getBinaryStream().readAllBytes()).type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + "-thumbnail.jpg");
 
 			return response.build();

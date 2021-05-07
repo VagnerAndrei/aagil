@@ -10,6 +10,11 @@ export class Atletas extends ListaPaginada {
 	constructor() {
 		super('Atletas', 'api/atletas', 4)
 	}
+	
+	init(){
+		super.init()
+		this._ulLista.classList.add('lista-atletas')
+	}
 
 	/*async template() {
 		return this.getHTML('pages/public/atletas.html')
@@ -27,7 +32,7 @@ export class Atletas extends ListaPaginada {
 		let itemsHtml = ''
 		this.lista?.map(atleta => {
 			itemsHtml += `	
-						<li class="flex-column lista-atleta cursor-pointer" id="li-atleta-${atleta.id}">
+						<li id="li-atleta-${atleta.id}">
 							<strong>${atleta.nome}</strong>
 							<div class="flex-row space-beetween">
 								<div class="container-foto-atleta">

@@ -36,7 +36,7 @@ export class AtletaFotoUpload extends Modal {
 				<label id="label-erro-foto" for="foto" class="mensagem-erro"></label> 
 				<p>
 				<input id="input-foto" type="file" name="foto" required size="10"
-					accept="image/jpg, image/jpeg, image/png, image/bmp" multiple>
+					accept="image/jpg, image/jpeg, image/png, image/bmp">
 					
 				<progress id="progress" value="0" max="100" class="display-none"></progress>
 				<label id="label-progress" for="foto" class="mensagem-progress"></label> 

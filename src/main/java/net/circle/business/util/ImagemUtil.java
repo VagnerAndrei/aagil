@@ -28,7 +28,7 @@ public class ImagemUtil {
 
 	public static byte[] getTratamentoJPG(byte[] img) throws Exception {
 		var start = System.currentTimeMillis();
-		final int ALTURA_MAXIMA = 2400;
+		final int ALTURA_MAXIMA = 1080;
 		Metadata metadata = ImageMetadataReader.readMetadata(new ByteArrayInputStream(img));
 
 		String type = "";
@@ -66,14 +66,18 @@ public class ImagemUtil {
 
 		BufferedImage image = ImageIO.read(new ByteArrayInputStream(img));
 		int imageWidth = image.getWidth(), imageHeight = image.getHeight();
+		if ((rotacao != null ? imageWidth : imageHeight) > ALTURA_MAXIMA) {
+			System.out.println("width: " + imageWidth + ", heigth: " + imageHeight);
+//			while (altura > ALTURA_MAXIMA) {
+//				imageHeight = (int) (imageHeight * 0.95);
+//				imageWidth = (int) (imageWidth * 0.95);
+//				altura = rotacao != null ? imageWidth : imageHeight;
+//			}
+			float percent = (float) ALTURA_MAXIMA / (float) imageHeight;
+			imageWidth = Math.round(imageWidth * percent);
+			imageHeight = ALTURA_MAXIMA;
+			System.out.println("width: " + imageWidth + ", heigth: " + imageHeight);
 
-		int altura = rotacao != null ? imageWidth : imageHeight;
-		if (altura > ALTURA_MAXIMA) {
-			while (altura > ALTURA_MAXIMA) {
-				imageHeight = (int) (imageHeight * 0.95);
-				imageWidth = (int) (imageWidth * 0.95);
-				altura = rotacao != null ? imageWidth : imageHeight;
-			}
 			image = Scalr.resize(image, Scalr.Method.AUTOMATIC, Scalr.Mode.AUTOMATIC, imageWidth, imageHeight);
 		} else if (type.equals("jpg"))
 			return img;
@@ -94,7 +98,8 @@ public class ImagemUtil {
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		ImageIO.write(imgJPG, "jpg", bos);
 
-		System.out.println(System.currentTimeMillis() - start + " ms. getTratamentoJPG(" + String.format("%.2f MB)", (float) img.length / 1024 / 1024));
+		System.out.println(System.currentTimeMillis() - start + " ms. getTratamentoJPG("
+				+ String.format("%.2f MB)", (float) img.length / 1024 / 1024));
 		return bos.toByteArray();
 	}
 

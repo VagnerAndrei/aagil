@@ -136,7 +136,7 @@ export class PicoRegistro extends View {
 					"titulo": this._inputTitulo.value,
 					"endereco": {
 						"cep": this._inputCEP.value,
-						"estado": this._inputUF.value,
+						"uf": this._inputUF.value,
 						"localidade": this._inputLocalidade.value,
 						"bairro": this._inputBairro.value,
 						"logradouro": this._inputLogradouro.value,

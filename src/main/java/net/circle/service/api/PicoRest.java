@@ -114,8 +114,8 @@ public class PicoRest {
 						var foto = new Foto();
 						foto.setOriginal(new SerialBlob(inputStream.readAllBytes()));
 						foto.setExtensao(extensao);
-						foto.setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto.getOriginalAsByteArray())));
-						foto.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(foto.getArquivoAsByteArray())));
+						foto.setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto.getOriginal().getBinaryStream().readAllBytes())));
+						foto.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(foto.getArquivo().getBinaryStream().readAllBytes())));
 						registro.getPicoNovo().getFotos().add(foto);
 
 					}
@@ -178,7 +178,7 @@ public class PicoRest {
 		registro.getPicoNovo().getEndereco().setBairro(model.getPicoNovo().getEndereco().getBairro());
 		registro.getPicoNovo().getEndereco().setCep(model.getPicoNovo().getEndereco().getCep());
 		registro.getPicoNovo().getEndereco().setComplemento(model.getPicoNovo().getEndereco().getComplemento());
-		registro.getPicoNovo().getEndereco().setEstado(model.getPicoNovo().getEndereco().getEstado());
+		registro.getPicoNovo().getEndereco().setUF(model.getPicoNovo().getEndereco().getUF());
 		registro.getPicoNovo().getEndereco().setLocalidade(model.getPicoNovo().getEndereco().getLocalidade());
 		registro.getPicoNovo().getEndereco().setLogradouro(model.getPicoNovo().getEndereco().getLogradouro());
 		registro.getPicoNovo().getEndereco().setPerimetro(model.getPicoNovo().getEndereco().getPerimetro());
@@ -217,7 +217,7 @@ public class PicoRest {
 		model.getEndereco().setBairro(pico.getEndereco().getBairro());
 		model.getEndereco().setCep(pico.getEndereco().getCep());
 		model.getEndereco().setComplemento(pico.getEndereco().getComplemento());
-		model.getEndereco().setEstado(pico.getEndereco().getEstado());
+		model.getEndereco().setUF(pico.getEndereco().getUF());
 		model.getEndereco().setLocalidade(pico.getEndereco().getLocalidade());
 		model.getEndereco().setLogradouro(pico.getEndereco().getLogradouro());
 		model.getEndereco().setPerimetro(pico.getEndereco().getPerimetro());

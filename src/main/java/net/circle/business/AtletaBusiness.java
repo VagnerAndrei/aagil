@@ -89,7 +89,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 		atleta.getFoto().setOriginal(new SerialBlob(foto));
 		atleta.getFoto().setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto)));
 		atleta.getFoto()
-				.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivoAsByteArray())));
+				.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivo().getBinaryStream().readAllBytes())));
 		atleta.getFoto().setExtensao(extensao);
 		return dao.merge(atleta);
 	}

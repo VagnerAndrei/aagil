@@ -16,7 +16,7 @@ import net.circle.domain.entity.core.AbstractEntity;
 public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 
 	@PersistenceContext
-	private EntityManager em;
+	protected EntityManager em;
 
 	public abstract Class<T> getClassImplement();
 
@@ -87,6 +87,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 	 */
 
 	@SuppressWarnings("unchecked")
+	@Transactional
 	public List<T> findByProperty(String propertyName, final Object value, final int... rowStartIdxAndCount) {
 		final String queryString = "select model from " + getName() + " model where model." + propertyName
 				+ "= :propertyValue";

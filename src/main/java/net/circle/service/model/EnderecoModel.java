@@ -4,7 +4,7 @@ public class EnderecoModel {
 
 	private String cep;
 
-	private String estado;
+	private String uf;
 
 	private String localidade;
 
@@ -26,12 +26,12 @@ public class EnderecoModel {
 		this.cep = cep;
 	}
 
-	public String getEstado() {
-		return estado;
+	public String getUF() {
+		return uf;
 	}
 
-	public void setEstado(String estado) {
-		this.estado = estado;
+	public void setUF(String uf) {
+		this.uf = uf;
 	}
 
 	public String getLocalidade() {

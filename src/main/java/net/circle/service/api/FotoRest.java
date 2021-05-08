@@ -1,5 +1,6 @@
 package net.circle.service.api;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -23,43 +24,18 @@ public class FotoRest {
 	@Inject
 	private IFotoBusiness fotoBusiness;
 
-	/*
-	 * @GET
-	 * 
-	 * @Path("/{idFoto}") public Response getFoto(@PathParam("idFoto") Integer
-	 * idFoto) { try { ResponseBuilder response = Response
-	 * .ok(fotoBusiness.consultar(idFoto).get().getArquivo().getBinaryStream().
-	 * readAllBytes()) .type("image/jpg"); response.header("Content-Disposition",
-	 * "inline; filename=" + UUID.randomUUID() + ".jpg"); return response.build(); }
-	 * catch (NoSuchElementException e) { System.err.println("Foto não encontrada ["
-	 * + idFoto + "]"); return Response.status(Status.NOT_FOUND).build(); } catch
-	 * (Exception e) { e.printStackTrace(); return
-	 * Response.status(Status.NOT_FOUND).build(); } }
-	 * 
-	 * @GET
-	 * 
-	 * @Path("/{idFoto}/thumb") public Response getFotoThumb(@PathParam("idFoto")
-	 * Integer idFoto) { try { ResponseBuilder response = Response
-	 * .ok(fotoBusiness.consultar(idFoto).get().getThumbnail().getBinaryStream().
-	 * readAllBytes()) .type("image/jpg"); response.header("Content-Disposition",
-	 * "inline; filename=" + UUID.randomUUID() + "-thumbnail.jpg"); return
-	 * response.build(); } catch (NoSuchElementException e) {
-	 * System.err.println("Thumbnail não encontrado [" + idFoto + "]"); return
-	 * Response.status(Status.NOT_FOUND).build(); } catch (Exception e) {
-	 * e.printStackTrace(); return Response.status(Status.NOT_FOUND).build(); } }
-	 */
-
 	@GET
+
 	@Path("/{idFoto}")
-	public Response getFoto(@PathParam("idFoto") Integer idFoto) {
+	public Response getFoto2(@PathParam("idFoto") Integer idFoto) {
 		try {
 			ResponseBuilder response = Response
-					.ok(fotoBusiness.getFoto(idFoto))
+					.ok(fotoBusiness.consultar(idFoto).get().getArquivo().getBinaryStream().readAllBytes())
 					.type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + ".jpg");
 			return response.build();
-		} catch (NoResultException e) {
-			System.err.println("Foto não encontrada [" + idFoto+"]") ;
+		} catch (NoSuchElementException e) {
+			System.err.println("Foto não encontrada [" + idFoto + "]");
 			return Response.status(Status.NOT_FOUND).build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -68,7 +44,42 @@ public class FotoRest {
 	}
 
 	@GET
+
 	@Path("/{idFoto}/thumb")
+	public Response getFotoThumb(@PathParam("idFoto") Integer idFoto) {
+		try {
+			ResponseBuilder response = Response
+					.ok(fotoBusiness.consultar(idFoto).get().getThumbnail().getBinaryStream().readAllBytes())
+					.type("image/jpg");
+			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + "-thumbnail.jpg");
+			return response.build();
+		} catch (NoSuchElementException e) {
+			System.err.println("Thumbnail não encontrado [" + idFoto + "]");
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+
+	@GET
+	@Path("/{idFoto}/direct")
+	public Response getFoto(@PathParam("idFoto") Integer idFoto) {
+		try {
+			ResponseBuilder response = Response.ok(fotoBusiness.getFoto(idFoto)).type("image/jpg");
+			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + ".jpg");
+			return response.build();
+		} catch (NoResultException e) {
+			System.err.println("Foto não encontrada [" + idFoto + "]");
+			return Response.status(Status.NOT_FOUND).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.status(Status.NOT_FOUND).build();
+		}
+	}
+
+	@GET
+	@Path("/{idFoto}/thumb/direct")
 	public Response getFotoThumb2(@PathParam("idFoto") Integer idFoto) {
 		try {
 			ResponseBuilder response = Response.ok(fotoBusiness.getThumb(idFoto)).type("image/jpg");

@@ -28,6 +28,15 @@ public class FotoBusiness implements IFotoBusiness{
 	public Optional<Foto> consultar(Integer id) throws Exception {
 		return fotoDAO.findById(id);
 	}
+	
+	 public  byte[] getThumb(Integer id) {
+		 return fotoDAO.getThumb(id);
+	 }
+
+
+	public byte[] getFoto(Integer id) {
+		return fotoDAO.getFoto(id);
+	}
 
 
 	

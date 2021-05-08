@@ -3,6 +3,9 @@ package net.circle.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class PicoModel extends AbstractModel {
 	
 	private Integer id;
@@ -11,8 +14,10 @@ public class PicoModel extends AbstractModel {
 
 	private EnderecoModel endereco;
 
+	@JsonInclude(value = Include.NON_EMPTY)
 	private List<String> tags = new ArrayList<String>();
 	
+	@JsonInclude(value = Include.NON_EMPTY)
 	private List<IDModel> fotos = new ArrayList<IDModel>();
 
 	public Integer getId() {

@@ -24,7 +24,6 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 		return getClassImplement().getName();
 	}
 
-	@Transactional
 	public Optional<T> findById(Object id) {
 		return Optional.ofNullable(em.find(getClassImplement(), id));
 	}
@@ -74,6 +73,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 
 		return query.getResultList();
 	}
+	
 
 	/*
 	 * @SuppressWarnings("unchecked") public List<T>
@@ -87,10 +87,13 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 	 */
 
 	@SuppressWarnings("unchecked")
-	@Transactional
-	public List<T> findByProperty(String propertyName, final Object value, final int... rowStartIdxAndCount) {
-		final String queryString = "select model from " + getName() + " model where model." + propertyName
+	public List<T> findByProperty(String propertyName, final Object value, final String orderBy, final int... rowStartIdxAndCount) {
+		String queryString = "select model from " + getName() + " model where model." + propertyName
 				+ "= :propertyValue";
+		
+		if (orderBy != null)
+			queryString += " ORDER BY " + orderBy;
+		
 		Query query = em.createQuery(queryString);
 		query.setParameter("propertyValue", value);
 		if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
@@ -110,7 +113,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> findByPropertys(List<String> propertyNames, final List<Object> values,
+	public List<T> findByPropertys(List<String> propertyNames, final List<Object> values, final String orderBy,
 			final int... rowStartIdxAndCount) {
 		String queryString = "select model from " + getName() + " model";
 
@@ -126,6 +129,9 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 			else
 				queryString += values.get(propertyNames.indexOf(string));
 		}
+		
+		if (orderBy != null)
+			queryString += " ORDER BY " + orderBy;
 
 		Query query = em.createQuery(queryString);
 

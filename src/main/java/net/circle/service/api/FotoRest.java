@@ -1,8 +1,10 @@
 package net.circle.service.api;
 
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -15,6 +17,7 @@ import net.circle.business.interfaces.IFotoBusiness;
 
 @Path("/fotos")
 @Produces("image/jpg")
+@Transactional
 public class FotoRest {
 
 	@Inject
@@ -24,9 +27,14 @@ public class FotoRest {
 	@Path("/{idFoto}")
 	public Response getFoto(@PathParam("idFoto") Integer idFoto) {
 		try {
-			ResponseBuilder response = Response.ok(fotoBusiness.consultar(idFoto).get().getArquivo().getBinaryStream().readAllBytes()).type("image/jpg");
+			ResponseBuilder response = Response
+					.ok(fotoBusiness.consultar(idFoto).get().getArquivo().getBinaryStream().readAllBytes())
+					.type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + ".jpg");
 			return response.build();
+		} catch (NoSuchElementException e) {
+			System.err.println("Foto não encontrada [" + idFoto+"]") ;
+			return Response.status(Status.NOT_FOUND).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Status.NOT_FOUND).build();
@@ -37,10 +45,15 @@ public class FotoRest {
 	@Path("/{idFoto}/thumb")
 	public Response getFotoThumb(@PathParam("idFoto") Integer idFoto) {
 		try {
-			ResponseBuilder response = Response.ok(fotoBusiness.consultar(idFoto).get().getThumbnail().getBinaryStream().readAllBytes()).type("image/jpg");
+			ResponseBuilder response = Response
+					.ok(fotoBusiness.consultar(idFoto).get().getThumbnail().getBinaryStream().readAllBytes())
+					.type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + UUID.randomUUID() + "-thumbnail.jpg");
 			return response.build();
-		} catch (Exception e) {
+		}  catch (NoSuchElementException e) {
+			System.err.println("Thumbnail não encontrado [" + idFoto+"]") ;
+			return Response.status(Status.NOT_FOUND).build();
+		}catch (Exception e) {
 			e.printStackTrace();
 			return Response.status(Status.NOT_FOUND).build();
 		}

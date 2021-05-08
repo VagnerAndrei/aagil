@@ -10,7 +10,7 @@ import { Picos } from './controller/Picos.js';
 import { PicoRegistro } from './controller/PicoRegistro.js';
 import { View } from './components/View.js';
 
-const instances = { current: undefined, atletas: undefined }
+const instances = { current: undefined, atletas: undefined, picos: undefined }
 
 const views = {
 	home: "home",
@@ -83,7 +83,9 @@ function manobras(e) {
 
 function picos(e) {
 	current_verify()
-	instances.current = new Picos()
+	if (!instances.picos) instances.picos = new Picos()
+	else instances.picos.display(true)
+	instances.current = instances.picos
 	if (e) changeState(views.picos)
 }
 
@@ -111,10 +113,8 @@ async function perfil(event, idAtleta) {
 
 function atletas(clickEvent) {
 	current_verify()
-	if (!instances.atletas)
-		instances.atletas = new Atletas()
-	else
-		instances.atletas.display(true)
+	if (!instances.atletas) instances.atletas = new Atletas()
+	else instances.atletas.display(true)
 	instances.current = instances.atletas
 	if (clickEvent) changeState(views.atletas)
 }
@@ -142,6 +142,7 @@ function current_verify() {
 	if (instances.current) {
 		switch (instances.current.constructor) {
 			case Atletas:
+			case Picos:
 			case Atleta:
 				instances.current.display(false)
 				break

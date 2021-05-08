@@ -27,7 +27,7 @@ public class LocalizacaoBusiness implements ILocalizacaoBusiness {
 
 	@Override
 	public List<Localidade> listarLocalidadesPorEstado(Integer idEstado) {
-		return localidadeDAO.findByProperty("estado.id", idEstado);
+		return localidadeDAO.findByProperty("estado.id", idEstado, null);
 	}
 
 }

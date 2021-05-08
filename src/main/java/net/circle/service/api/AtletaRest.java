@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -145,6 +146,7 @@ public class AtletaRest {
 	@GET
 	@Path("/{idAtleta}/foto")
 	@Produces("image/jpg")
+	@Transactional
 	public Response getFoto(@PathParam("idAtleta") Integer idAtleta) {
 		try {
 			var atleta = servicoAtleta.consultar(idAtleta).get();
@@ -210,6 +212,7 @@ public class AtletaRest {
 	@GET
 	@Path("/{idAtleta}/foto/thumb")
 	@Produces({ "image/jpg", "image/gif" })
+	@Transactional
 	public Response getThumb(@PathParam("idAtleta") Integer idAtleta) {
 		try {
 			var atleta = servicoAtleta.consultar(idAtleta).get();

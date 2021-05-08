@@ -38,8 +38,10 @@ export class PicoRegistroUpload extends Modal {
 	}
 
 	fecharModal(redirect) {
-		if (redirect)
+		if (redirect){
 			picos('picoRegistroEvent')
+			window.scroll(0,500)
+		}
 		super.fecharModal()
 	}
 

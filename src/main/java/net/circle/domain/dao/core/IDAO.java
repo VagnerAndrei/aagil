@@ -11,9 +11,9 @@ public interface IDAO<T extends AbstractEntity> {
 
 	List<T> findAll() throws Exception;
 
-	List<T> findByProperty(String propertyName, final Object value, final int... rowStartIdxAndCount);
+	List<T> findByProperty(String propertyName, final Object value, final String orderBy, final int... rowStartIdxAndCount);
 
-	List<T> findByPropertys(List<String> propertyNames, final List<Object> values, final int... rowStartIdxAndCount);
+	List<T> findByPropertys(List<String> propertyNames, final List<Object> values,final String orderBy, final int... rowStartIdxAndCount);
 	
 	T findByKey(String nome, String valor) throws Exception;
 

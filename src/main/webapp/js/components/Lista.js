@@ -12,7 +12,7 @@ export class Lista extends View {
 	}
 	
 	init(){
-		this._ulLista = document.querySelector('#ul-lista')
+		this._ulLista = document.querySelector(`#ul-lista-${this._viewName}`)
 	}
 
 	async atualizarLista() {

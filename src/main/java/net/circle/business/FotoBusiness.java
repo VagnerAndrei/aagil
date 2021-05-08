@@ -16,15 +16,19 @@ public class FotoBusiness implements IFotoBusiness{
 	@Inject
 	private FotoDAO fotoDAO;
 
+
+
 	@Override
 	public List<Foto> consultarLista() {
-		return fotoDAO.findAll();
+		return null;
 	}
+
 
 	@Override
 	public Optional<Foto> consultar(Integer id) throws Exception {
 		return fotoDAO.findById(id);
 	}
+
 
 	
 }

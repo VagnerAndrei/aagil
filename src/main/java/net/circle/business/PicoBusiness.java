@@ -18,7 +18,7 @@ public class PicoBusiness implements IPicoBusiness {
 
 	@Override
 	public List<Pico> consultarLista() {
-		return picoDAO.findByProperty("ativo", true);
+		return picoDAO.findByProperty("ativo", true, "titulo");
 	}
 
 	@Override
@@ -28,7 +28,7 @@ public class PicoBusiness implements IPicoBusiness {
 
 	@Override
 	public List<Pico> consultarPagina(int... rowStartIdxAndCount) {
-		return picoDAO.consultarPagina("titulo", rowStartIdxAndCount);
+		return picoDAO.findByProperty("ativo", true, "titulo", rowStartIdxAndCount);
 	}
 
 	@Override

@@ -16,17 +16,19 @@ export class ListaPaginada extends Lista {
 
 	init() {
 		super.init()
-		this._ulPaginas = document.querySelector('#ul-paginas')
-		this._buttonProximaPagina = document.querySelector('#button-pagina-proxima')
-		this._buttonUltimaPagina = document.querySelector('#button-pagina-ultima')
-		this._buttonPrimeiraPagina = document.querySelector('#button-pagina-primeira')
-		this._buttonPaginaAnterior = document.querySelector('#button-pagina-anterior')
-		this._selectTamanhoDaPagina = document.querySelector('#select-pagina-tamanho')
-		this._labelTotal = document.querySelector('#label-total')
+		this._ulPaginas = document.querySelector(`#ul-paginas-${this._viewName}`)
+		this._buttonProximaPagina = document.querySelector(`#button-pagina-proxima-${this._viewName}`)
+		this._buttonUltimaPagina = document.querySelector(`#button-pagina-ultima-${this._viewName}`)
+		this._buttonPrimeiraPagina = document.querySelector(`#button-pagina-primeira-${this._viewName}`)
+		this._buttonPaginaAnterior = document.querySelector(`#button-pagina-anterior-${this._viewName}`)
+		this._selectTamanhoDaPagina = document.querySelector(`#select-pagina-tamanho-${this._viewName}`)
+		this._sectionHeader = document.querySelector(`#section-header-${this._viewName}`)
+		this._labelTotal = document.querySelector(`#label-total-${this._viewName}`)
+		this._labelPaginas = document.querySelector(`#label-paginas-${this._viewName}`)
 
 		this._selectTamanhoDaPagina.selectedIndex = this._selectedIndexPagination
-		this._tamanhoDaPagina = document.querySelector('#select-pagina-tamanho').value
-
+		this._tamanhoDaPagina = document.querySelector(`#select-pagina-tamanho-${this._viewName}`).value
+		
 		this._selectTamanhoDaPagina.addEventListener('change', event => this.tamanhoDaPagina(event))
 		this._buttonProximaPagina.addEventListener('click', event => this.proximaPagina(event))
 		this._buttonPaginaAnterior.addEventListener('click', event => this.paginaAnterior(event))
@@ -62,43 +64,46 @@ export class ListaPaginada extends Lista {
 		/*		throw new Error('Not Yet Implemented')
 		*/		//return this.getHTML(this._pagina)
 		return `
-				<section id="section-header" class="lista-paginada-header">
-					<h2 id="h2-titulo">${this._titulo}</h2>
-				</section>
-				<section id="section-lista-paginada" class="flex-column">
-					<div id="paginacao">
-			
-						<label>Resultados por página:</label> 
-						<select	id="select-pagina-tamanho">
-							<option>10</option>
-							<option>20</option>
-							<option>30</option>
-							<option>40</option>
-							<option>50</option>
-							<option>60</option>
-							<option>70</option>
-							<option>80</option>
-							<option>90</option>
-							<option>100</option>
-						</select> <label>Total:</label> <label id="label-total"></label>
-					</div>
-			
-					<div>
-						<ul id="ul-lista">
+				<div class="lista-paginada">
+					<section id="section-header-${this._viewName}" class="lista-paginada-header">
+						<h2>${this._titulo}</h2>
+					</section>
+					<section id="section-lista-paginada-${this._viewName}" class="flex-column">
+						<div id="paginacao-${this._viewName}">
+							<label>Resultados por página:</label> 
+							<select	id="select-pagina-tamanho-${this._viewName}">
+								<option>10</option>
+								<option>20</option>
+								<option>30</option>
+								<option>40</option>
+								<option>50</option>
+								<option>60</option>
+								<option>70</option>
+								<option>80</option>
+								<option>90</option>
+								<option>100</option>
+							</select> 	
+							<label>Total:</label> <label id="label-total-${this._viewName}"></label>
+							<div class="contador-paginas">
+								<label>Página:</label> <label id="label-paginas-${this._viewName}"></label>
+							</div>
+						</div>
+				
+						<ul id="ul-lista-${this._viewName}">
 			
 						</ul>
-					</div>
-					<div>
-						<ul id="ul-paginas" class="lista-paginas">
-						</ul>
-					</div>
-					<div>
-						<button id="button-pagina-primeira" title="Primeira página">&lt;&lt;</button>
-						<button id="button-pagina-anterior" title="Página anterior">&lt;</button>
-						<button id="button-pagina-proxima" title="Próxima página">&gt;</button>
-						<button id="button-pagina-ultima" title="Última página">&gt;&gt;</button>
-					</div>
-				</section>
+						<div class="lista-paginada-controle">
+							<ul id="ul-paginas-${this._viewName}" class="lista-paginas">
+							</ul>
+						</div>
+						<div  class="lista-paginada-controle">
+							<button id="button-pagina-primeira-${this._viewName}" title="Primeira página">&lt;&lt;</button>
+							<button id="button-pagina-anterior-${this._viewName}" title="Página anterior">&lt;</button>
+							<button id="button-pagina-proxima-${this._viewName}" title="Próxima página">&gt;</button>
+							<button id="button-pagina-ultima-${this._viewName}" title="Última página">&gt;&gt;</button>
+						</div>
+					</section>
+				</div>
 				`
 	}
 
@@ -112,9 +117,9 @@ export class ListaPaginada extends Lista {
 				super._lista = json.pagina
 				this._totalResult = json.total
 				this._labelTotal.textContent = this._totalResult
+				this.updateTemplate()
 				break
 			case 500:
-				console.log(responseAtletas)
 				break
 		}
 	}
@@ -149,6 +154,7 @@ export class ListaPaginada extends Lista {
 		this._buttonPaginaAnterior.disabled = this._paginaAtual === 1
 		this._buttonPrimeiraPagina.disabled = this._paginaAtual < 3
 		this._buttonUltimaPagina.disabled = this._numeroDePaginas < 3 || this._indice > this._numeroDePaginas - 2
+		this._labelPaginas.textContent = `${this._paginaAtual}/${this._numeroDePaginas}`
 
 		// ADICIONA OS EVENTOS NOS ITEMS DA LISTA
 		this.adicionarClickEvent()
@@ -159,16 +165,17 @@ export class ListaPaginada extends Lista {
 	}
 
 	tamanhoDaPagina() {
+		console.log('tamanhodapag')
 		this._indice = 0
 		this._tamanhoDaPagina = this._selectTamanhoDaPagina.value
 		this.atualizarLista()
 	}
 
 	pagina(numero) {
+		console.log(numero, 'pagina')
 		this._indice = this._tamanhoDaPagina * (numero - 1)
 		this.atualizarLista()
-		document.body.scrollTop = 0
-		document.documentElement.scrollTop = 0
+		window.scroll(0,500)
 	}
 
 	primeiraPagina() {
@@ -186,5 +193,5 @@ export class ListaPaginada extends Lista {
 	paginaAnterior() {
 		this.pagina(this._paginaAtual - 1)
 	}
-
+	
 }

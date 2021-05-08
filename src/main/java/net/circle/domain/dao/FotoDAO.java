@@ -10,5 +10,4 @@ public class FotoDAO extends AbstractDAO<Foto> {
 		return Foto.class;
 	}
 
-
 }

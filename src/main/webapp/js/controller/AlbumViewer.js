@@ -47,18 +47,15 @@ export class AlbumViewer extends Modal {
 	template() {
 		return `
 			<div class="album-viewer-container">
-			
 				<ul id="ul-av-thumbnails">
 				</ul>
 				
-				<div id="div-av-container-navigation">
-					<div id="div-av-navigation">
-						<span title="Anterior" id="button-av-anterior" class="navigation-button">&lt;</span>
-						
-						<img id="img-album-viewer">
-						
-						<span title="Próxima" id="button-av-proxima" class="navigation-button">&gt;</span>
-					</div>
+				<div id="div-av-navigation">
+					<span title="Anterior" id="button-av-anterior" class="navigation-button">&lt;</span>
+					
+					<img id="img-album-viewer">
+					
+					<span title="Próxima" id="button-av-proxima" class="navigation-button">&gt;</span>
 				</div>
 				
 			</div>

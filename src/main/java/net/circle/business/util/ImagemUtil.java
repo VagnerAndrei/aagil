@@ -183,8 +183,8 @@ public class ImagemUtil {
 			var start = System.currentTimeMillis();
 			BufferedImage imagem = ImageIO.read(new ByteArrayInputStream(img));
 
-			int largura = 200;
-			int altura = 110;
+			int largura = 150;
+			int altura = 150;
 
 			double thumbRatio = (double) largura / (double) altura;
 			double imageRatio = (double) imagem.getWidth() / (double) imagem.getHeight();

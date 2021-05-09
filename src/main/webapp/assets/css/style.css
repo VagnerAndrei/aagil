@@ -409,13 +409,6 @@ ul {
 	flex-direction: row;
 }
 
-.lista-atletas {
-	display: grid;
-	grid-template-columns: repeat(4, 1fr);
-	gap: 10px;
-	list-style: none;
-}
-
 .flex-column {
 	display: flex;
 	flex-direction: column;
@@ -437,9 +430,18 @@ ul {
 	align-items: flex-end;
 }
 
-/*	
-ATLETA.HTML			
-*/
+/* ATLETAS */
+.lista-atletas {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 10px;
+	list-style: none;
+}
+
+.lista-atletas li{
+	cursor: pointer;
+}
+
 #img-atleta {
 	max-height: 200px;
 	max-width: 200px;
@@ -449,12 +451,6 @@ ATLETA.HTML
 	border: solid;
 	border-width: 2;
 	width: 40%;
-}
-
-.lista-atletas li {
-	border: solid;
-	border-width: 2;
-	width: 100%;
 }
 
 .manobras {
@@ -623,9 +619,10 @@ ATLETA.HTML
 .lista-picos li{
 	cursor: pointer;
 	margin: 5px 0 5px -40px;
-	border: 1.5px solid;
-	border-radius: 5px;
-	padding: 5px;
+}
+
+.lista-picos label{
+	cursor: pointer;
 }
 
 .lista-picos li img{
@@ -652,16 +649,26 @@ ATLETA.HTML
 
 
 
-/* ATLETAS */
+
+
 
 /* LISTA PAGINADA */
+.lista-items li{
+	border: 1.5px solid;
+	border-radius: 5px;
+	padding: 5px;
+}
+.lista-items li:hover{
+	transition: 0.5s;
+	background-color: var(--yellow-300);
+}
 
-.lista-paginada section{
+.lista-paginada-container section{
 	padding: 5px;
 	clear: right;
 }
 
-.lista-paginada select{
+.lista-paginada-container select{
 	margin-right: 20px;
 }
 
@@ -702,6 +709,82 @@ ATLETA.HTML
 	text-align: center;
 }
 
+/* ALBUM VIEWER*/
+
+.album-viewer-container{
+	text-align: center;
+}
+
+.album-viewer-container #ul-av-thumbnails{
+	display:inline-block;
+	width: 240px;
+	height: 85vh;
+	overflow-y: scroll;
+}
+
+.album-viewer-container #ul-av-thumbnails li{
+	cursor: pointer;
+}
+
+.album-viewer-container #div-av-container-navigation{
+	display: inline-block;
+	height: 100%;
+	width: auto;
+	margin: 0 auto;
+}
+
+.album-viewer-container #div-av-navigation{
+	position: relative;
+	height: 100%;
+	width: auto;
+	margin: 0 20px;
+}
+
+.album-viewer-container #img-album-viewer{
+	height: calc(100vh - 5rem);
+	margin: 0 auto;
+	width: auto;
+}
+
+.album-viewer-container #button-av-anterior{
+	position: absolute;
+	top: 50%;
+	left: 0;
+}
+
+.album-viewer-container #button-av-proxima{
+	position: absolute;
+	top: 50%;
+	right: 0;
+}
+
+.navigation-button {
+	border: none;
+	display: inline-block;
+	padding-top: 5px;
+	vertical-align: middle;
+	overflow: hidden;
+	text-decoration: none;
+	color: inherit;
+	background-color: inherit;
+	text-align: center;
+	cursor: pointer;
+	white-space: nowrap;
+	width: 28px;
+	height: 28px;
+	border-radius: 14px;
+	opacity: 0.5;
+	background-color: var(--yellow-100);
+}
+
+.navigation-button:hover {
+	transition: 0.3s;
+	color: #000 !important;
+	border-radius: 14px;
+	opacity: 1;
+	background-color: var(--yellow-200) !important;
+}
+
 /* MODAL PANEL */
 .modal {
 	z-index: 101;
@@ -714,15 +797,24 @@ ATLETA.HTML
 	height: 100%;
 	overflow: auto;
 	background-color: rgb(0, 0, 0);
-	background-color: rgba(0, 0, 0, 0.4)
+	background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-fullscreen{
+	padding-top: 10px;
+	
+}
+
+.modal-fullscreen .modal-content{
+	width: 95%;
+	height: 99%;
 }
 
 .modal-content {
 	margin: auto;
-	background-color: #fff;
+	background-color: rgba(254, 252, 211 , 0.95);
 	position: relative;
 	padding: 0;
-	outline: 0;
 	width: 400px;
 }
 
@@ -738,7 +830,8 @@ ATLETA.HTML
 .close-button {
 	border: none;
 	display: inline-block;
-	padding: 8px 16px;
+	margin: 3px 3px 0 0;
+	padding-top: 5px;
 	vertical-align: middle;
 	overflow: hidden;
 	text-decoration: none;
@@ -747,20 +840,19 @@ ATLETA.HTML
 	text-align: center;
 	cursor: pointer;
 	white-space: nowrap;
+	width: 28px;
+	height: 28px;
 }
 
 .cursor-pointer {
 	cursor: pointer;
 }
 
-.close-button:disabled {
-	cursor: not-allowed;
-	opacity: 0.3;
-}
-
 .close-button:hover {
+	transition: 0.3s;
 	color: #000 !important;
-	background-color: #ccc !important;
+	border-radius: 14px;
+	background-color: var(--yellow-200) !important;
 }
 
 .display-top-right {
@@ -776,6 +868,6 @@ ATLETA.HTML
 }
 
 .modal-header {
-	color: #fff !important;
-	background-color: #660066 !important;
+	color: var(--blue-200) !important;
+	background-color: var(--yellow) !important;
 }

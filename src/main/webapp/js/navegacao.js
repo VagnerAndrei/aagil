@@ -84,7 +84,11 @@ function manobras(e) {
 function picos(e) {
 	current_verify()
 	if (!instances.picos) instances.picos = new Picos()
-	else instances.picos.display(true)
+	else 
+	{
+	instances.picos.display(true)
+	instances.picos.applyRole()		
+	}
 	instances.current = instances.picos
 	if (e) changeState(views.picos)
 }

@@ -89,7 +89,7 @@ export class ListaPaginada extends Lista {
 							</div>
 						</div>
 				
-						<ul id="ul-lista-${this._viewName}">
+						<ul id="ul-lista-${this._viewName}" class="lista-items">
 			
 						</ul>
 						<div class="lista-paginada-controle">

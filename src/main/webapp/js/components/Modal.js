@@ -3,20 +3,23 @@
  */
 export class Modal {
 
-	constructor(titulo, displayCloseButton = true) {
+	constructor(titulo, displayCloseButton = true, fullscreen = false) {
 		this._divModal = document.querySelector('#div-modal')
 		this._divModal.innerHTML = this.modal()
 		if (!displayCloseButton) document.querySelector('#span-botao-fechar-modal').style.display = 'none'
 		document.querySelector('#label-titulo').textContent = titulo
-		document.querySelector('#div-bg-modal').style.display = 'block'
+		this._divBGModal = document.querySelector('#div-bg-modal')
 		document.querySelector('#span-botao-fechar-modal').addEventListener('click', event => this.fecharModal(event))
 		document.querySelector('#div-conteudo-modal').innerHTML = this.template()
+		if (fullscreen) this._divBGModal.classList.add('modal-fullscreen')
+		document.body.style.overflow = 'hidden'
+		this._divBGModal.style.display = 'block'
 	}
-	
+
 	template() {
 		throw new Error('Not Yet Implemented')
 	}
-	
+
 	modal() {
 		return `<div id="div-bg-modal" class="modal">
 					<div class="modal-content">
@@ -25,14 +28,14 @@ export class Modal {
 									class="close-button display-top-right">&times;</span> <strong
 									id="label-titulo">Atualizar</strong>
 						</header>
-						<div class="modal-container">
-							<div id="div-conteudo-modal"></div>
+						<div id="div-conteudo-modal" class="modal-container">
 						</div>
 					</div>
 				</div>`
 	}
 
 	fecharModal() {
+		document.body.style.overflow = 'auto'
 		this._divModal.innerHTML = '';
 	}
 

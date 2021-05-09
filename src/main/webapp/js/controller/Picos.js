@@ -4,6 +4,7 @@
 import { ListaPaginada } from '../components/ListaPaginada.js'
 import { picoRegistro } from '../navegacao.js'
 import { atletaLogado } from '../sessao.js'
+import { AlbumViewer } from '../controller/AlbumViewer.js'
 
 export class Picos extends ListaPaginada {
 
@@ -31,7 +32,7 @@ export class Picos extends ListaPaginada {
 	applyRole() {
 		if (atletaLogado) {
 			if (!this._buttonRegister)
-				addButtonRegister()
+				this.addButtonRegister()
 		}
 		else {
 			this._sectionHeader.removeChild(this._buttonRegister)
@@ -40,7 +41,15 @@ export class Picos extends ListaPaginada {
 	}
 
 	adicionarClickEvent() {
+		this._lista?.map(pico => {
+			document.querySelector(`#li-pico-${pico.id}`).
+				addEventListener('click', () => this.albumViewer(pico))
+		})
+	}
 
+	albumViewer(pico) {
+		if (pico.fotos)
+			new AlbumViewer(pico.titulo, pico.fotos)
 	}
 
 	listTemplate() {
@@ -54,13 +63,12 @@ export class Picos extends ListaPaginada {
 									<img src="${pico.fotos ? `api/fotos/${pico.fotos[0].id}/thumb` : 'assets/img/no-image.png'}" onerror="this.src='assets/img/no-image.png'">
 								</div>
 								<div class="informacoes-pico">
-								<label>${pico.endereco.logradouro}</label>
-								<label>${pico.endereco.complemento}</label>
-								<label>${pico.endereco.perimetro}</label>
+								<label>${pico.endereco.logradouro} ${pico.endereco.complemento}</label>
 								<label>${pico.endereco.bairro}</label>
-								<label>${pico.endereco.referencia}</label>
 								<label>${pico.endereco.localidade}-${pico.endereco.uf}</label>
-								<label>${pico.endereco.cep.substring(0,5)}-${pico.endereco.cep.substring(5)}</label>
+								<label>${pico.endereco.cep.substring(0, 5)}-${pico.endereco.cep.substring(5)}</label>
+								<label>Referência: ${pico.endereco.referencia}</label>
+								<label>Perimêtro: ${pico.endereco.perimetro}</label>
 								</div>
 								<div>
 									<img src="assets/img/ufs/${pico.endereco.uf}.png">

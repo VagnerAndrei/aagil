@@ -13,9 +13,12 @@ export class AlbumViewer extends Modal {
 		this._img = document.querySelector('#img-album-viewer')
 
 
-		this._listFotos = listFotos;
-		this._listFotos.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0)
+		this._buttonAnterior.addEventListener('click', () => this.anterior())
+		this._buttonProxima.addEventListener('click', () => this.proxima())
+		
+		this._listFotos = listFotos.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
 		this.thumbnailPopulate()
+
 	}
 
 	thumbnailPopulate() {
@@ -23,25 +26,33 @@ export class AlbumViewer extends Modal {
 			const img = document.createElement('img')
 			img.src = `api/fotos/${foto.id}/thumb`
 			img.fotoID = foto.id
-			img.addEventListener('click', event => this.thumbnailClickHandler(event))
+			img.title = foto.id
+			img.addEventListener('click', event => this.thumbnailClickHandler(event.target.fotoID))
 			const li = document.createElement('li')
 			li.appendChild(img)
 			this._ulThumbnails.appendChild(li)
 		})
 		this._img.src = `api/fotos/${this._listFotos[0].id}`
+		this._currentIndex = 0;
 	}
 
-	thumbnailClickHandler(event) {
-		console.log(event.target, event.currentTarget)
-		this._img.src = `api/fotos/${event.target.fotoID}`
+	thumbnailClickHandler(fotoID) {
+		this._img.src = `api/fotos/${fotoID}`
+		this._currentIndex = this._listFotos.findIndex(foto => foto.id == fotoID)
 	}
 
 	proxima() {
-
+		if (this._listFotos.length > this._currentIndex + 1) {
+			this._currentIndex++
+			this.thumbnailClickHandler(this._listFotos[this._currentIndex].id)
+		}
 	}
 
 	anterior() {
-
+		if (this._currentIndex > 0) {
+			this._currentIndex--
+			this.thumbnailClickHandler(this._listFotos[this._currentIndex].id)
+		}
 	}
 
 	template() {

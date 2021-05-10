@@ -33,7 +33,7 @@ public class PicoBusiness implements IPicoBusiness {
 
 	@Override
 	public int count() {
-		return picoDAO.consultarCount();
+		return picoDAO.consultarCount("ativo", true);
 	}
 
 }

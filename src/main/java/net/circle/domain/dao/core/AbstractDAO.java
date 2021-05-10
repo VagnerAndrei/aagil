@@ -73,7 +73,6 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 
 		return query.getResultList();
 	}
-	
 
 	/*
 	 * @SuppressWarnings("unchecked") public List<T>
@@ -87,13 +86,14 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public List<T> findByProperty(String propertyName, final Object value, final String orderBy, final int... rowStartIdxAndCount) {
+	public List<T> findByProperty(String propertyName, final Object value, final String orderBy,
+			final int... rowStartIdxAndCount) {
 		String queryString = "select model from " + getName() + " model where model." + propertyName
 				+ "= :propertyValue";
-		
+
 		if (orderBy != null)
 			queryString += " ORDER BY " + orderBy;
-		
+
 		Query query = em.createQuery(queryString);
 		query.setParameter("propertyValue", value);
 		if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
@@ -129,7 +129,7 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 			else
 				queryString += values.get(propertyNames.indexOf(string));
 		}
-		
+
 		if (orderBy != null)
 			queryString += " ORDER BY " + orderBy;
 
@@ -177,6 +177,15 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 	public int consultarCount() {
 		return ((Long) (em.createQuery("select count(model) from " + getClassImplement().getName() + " model")
 				.getSingleResult())).intValue();
+
+	}
+
+	public int consultarCount(String propertyName, final Object value) {
+		final String queryString = "select count(model) from " + getClassImplement().getName() + " model WHERE "
+				+ propertyName + "= :propertyValue";
+		Query query = em.createQuery(queryString);
+		query.setParameter("propertyValue", value);
+		return ((Long) (query.getSingleResult())).intValue();
 
 	}
 

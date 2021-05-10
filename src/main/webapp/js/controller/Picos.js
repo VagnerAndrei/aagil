@@ -35,8 +35,10 @@ export class Picos extends ListaPaginada {
 				this.addButtonRegister()
 		}
 		else {
-			this._sectionHeader.removeChild(this._buttonRegister)
-			this._buttonRegister = undefined
+			if (this._buttonRegister) {
+				this._sectionHeader.removeChild(this._buttonRegister)
+				this._buttonRegister = undefined
+			}
 		}
 	}
 

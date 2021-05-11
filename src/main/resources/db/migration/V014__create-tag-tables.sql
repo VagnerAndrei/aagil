@@ -4,11 +4,13 @@ CREATE TABLE tag(
 );
 
 CREATE TABLE tags_picos(
-	pico_id INTEGER REFERENCES pico(id),
-	tag_id INTEGER REFERENCES tag(id)
+	tag_id INTEGER NOT NULL REFERENCES tag(id),
+	pico_id INTEGER NOT NULL REFERENCES pico(id),
+	PRIMARY KEY(tag_id, pico_id)
 );
 
 CREATE TABLE tags_postagens(
-	postagem_id INTEGER REFERENCES postagem(id),
-	tag_id INTEGER REFERENCES tag(id)
+	tag_id INTEGER NOT NULL REFERENCES tag(id),
+	postagem_id INTEGER NOT NULL REFERENCES postagem(id),
+	PRIMARY KEY(tag_id, postagem_id)
 );

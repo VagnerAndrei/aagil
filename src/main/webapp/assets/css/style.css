@@ -679,7 +679,7 @@ ul {
 	width: 100vh;
 }
 
-.lista-paginada-header button{
+.lista-paginada-header button, .semi-button{
 	background-color: var(--blue-400);
 	height: var(--semi-button-heigth);
 }

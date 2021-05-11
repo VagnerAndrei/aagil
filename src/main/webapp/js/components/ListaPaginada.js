@@ -9,7 +9,7 @@ export class ListaPaginada extends Lista {
 
 	constructor(titulo, url, selectedIndexPagination) {
 		super(titulo, url)
-		this._paginaAtual = 1
+		this._paginaAtual = 0
 		this._indice = 0
 		this._selectedIndexPagination = selectedIndexPagination
 	}
@@ -85,7 +85,7 @@ export class ListaPaginada extends Lista {
 							</select> 	
 							<label>Total:</label> <label id="label-total-${this._viewName}"></label>
 							<div class="contador-paginas">
-								<label>Página:</label> <label id="label-paginas-${this._viewName}"></label>
+								<label id="label-paginas-${this._viewName}"></label>
 							</div>
 						</div>
 				
@@ -150,11 +150,12 @@ export class ListaPaginada extends Lista {
 			this._ulPaginas.appendChild(li)
 		}
 
-		this._buttonProximaPagina.disabled = this._numeroDePaginas === this._paginaAtual
-		this._buttonPaginaAnterior.disabled = this._paginaAtual === 1
+		this._buttonProximaPagina.disabled = this._numeroDePaginas == 0 || this._numeroDePaginas === this._paginaAtual
+		this._buttonPaginaAnterior.disabled = this._numeroDePaginas == 0 || this._paginaAtual === 1
 		this._buttonPrimeiraPagina.disabled = this._paginaAtual < 3
 		this._buttonUltimaPagina.disabled = this._numeroDePaginas < 3 || this._indice > this._numeroDePaginas - 2
-		this._labelPaginas.textContent = `${this._paginaAtual}/${this._numeroDePaginas}`
+		
+		this._labelPaginas.textContent = this._numeroDePaginas > 0 ? `Página: ${this._paginaAtual}/${this._numeroDePaginas}` : ''
 
 		// ADICIONA OS EVENTOS NOS ITEMS DA LISTA
 		this.adicionarClickEvent()

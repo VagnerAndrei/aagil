@@ -1,7 +1,7 @@
 package net.circle.domain.entity;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -29,11 +29,11 @@ public class Pico extends AbstractEntity {
 
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
 	@JoinTable(name = "tags_picos", joinColumns = @JoinColumn(name = "pico_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
-	private Set<Tag> tags = new HashSet<Tag>();
+	private List<Tag> tags = new ArrayList<Tag>();
 
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable(name = "fotos_picos", joinColumns = @JoinColumn(name = "pico_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
-	private Set<Foto> fotos = new HashSet<Foto>();
+	private List<Foto> fotos = new ArrayList<Foto>();
 
 	private Boolean ativo;
 
@@ -61,19 +61,19 @@ public class Pico extends AbstractEntity {
 		this.endereco = endereco;
 	}
 
-	public Set<Tag> getTags() {
+	public List<Tag> getTags() {
 		return tags;
 	}
 
-	public void setTags(Set<Tag> tags) {
+	public void setTags(List<Tag> tags) {
 		this.tags = tags;
 	}
 
-	public Set<Foto> getFotos() {
+	public List<Foto> getFotos() {
 		return fotos;
 	}
 
-	public void setFotos(Set<Foto> fotos) {
+	public void setFotos(List<Foto> fotos) {
 		this.fotos = fotos;
 	}
 

@@ -13,16 +13,16 @@ import javax.persistence.Lob;
 import net.circle.domain.entity.core.AbstractEntity;
 
 @Entity
-public class Foto extends AbstractEntity{
+public class Foto extends AbstractEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	
+
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private Blob original;
-	
+
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private Blob arquivo;
@@ -33,6 +33,13 @@ public class Foto extends AbstractEntity{
 
 	private String extensao;
 
+	public Foto() {
+	}
+
+	public Foto(Integer id) {
+		this.id = id;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -40,11 +47,11 @@ public class Foto extends AbstractEntity{
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	
+
 	public Blob getOriginal() {
 		return original;
 	}
-	
+
 	public void setOriginal(Blob original) {
 		this.original = original;
 	}
@@ -52,11 +59,11 @@ public class Foto extends AbstractEntity{
 	public Blob getArquivo() {
 		return arquivo;
 	}
-	
+
 	public Blob getThumbnail() {
 		return thumbnail;
 	}
-	
+
 	public void setThumbnail(Blob thumbnail) {
 		this.thumbnail = thumbnail;
 	}

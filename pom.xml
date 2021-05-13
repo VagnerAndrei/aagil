@@ -273,6 +273,9 @@
 			            <command>/subsystem=elytron/http-authentication-factory=${project.artifactId}-db-http-auth:add(http-server-mechanism-factory=global,security-domain=${project.artifactId}-security-domain,mechanism-configurations=[{mechanism-name=FORM,mechanism-realm-configurations=[{realm-name=${project.artifactId}-jdbc-realm}]}])</command>
 			            <command>/subsystem=undertow/application-security-domain=${project.artifactId}-application-domain:add(http-authentication-factory=${project.artifactId}-db-http-auth)</command>
 					    <command>/subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)</command>
+					    <!-- 
+					    <command>/subsystem=web/connector=http:write-attribute(name=max-post-size, value=0)</command>
+					     -->
 					    <command>/subsystem=undertow/server=default-server/http-listener=default/:write-attribute(name=max-post-size,value=104857600)</command>
 					</commands>
 				</configuration>

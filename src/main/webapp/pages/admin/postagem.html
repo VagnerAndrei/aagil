@@ -1,72 +1,40 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/ckeditor.js"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/27.1.0/classic/translations/pt-br.js"></script>
-<script>
 
-</script>
-<title>Insert title here</title>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
 </head>
+
 <body>
 	<main>
-		<h2>Postagem</h2>
-		
-		<div class="form-item-radio">
-				<input type="radio" name="midia">
-				<label>Foto:</label>
-		</div>
-		<div class="form-item-radio">
-				<input type="radio" name="midia">
-				<label>Vídeo:</label>
-		</div>
-		<div class="form-item">
-			<label>URL:</label>
-			<input type="text" id="input-midia-url">
-			<label class="mensagem-erro" id="label-erro-midia-url"></label>
-		</div>
-		
-		<div>
-			<div class="form-item">
-				<label>Fotos:</label>
-				<input type="file" id="input-fotos" accept="image/jpg, image/jpeg, image/png, image/bmp" multiple style="display:none">
-				<button id="button-selecionar-fotos" type="button" class="botao-selecionar-fotos">Selecionar...</button>
-				<span id="span-limite-fotos"></span>
+		<form id="form-postagem">
+			<h2>Postagem</h2>
+			<div class="form-item form-item-radio">
+					<label>Mídia:</label> 
+					<input id="input-radio-fotos" type="radio" name="midia" value="Fotos" checked> 
+					<label for="input-radio-fotos">Fotos</label> 
+					<input id="input-radio-video" type="radio" name="midia" value="Video"> 
+					<label for="input-radio-video">Vídeo</label>
 			</div>
-			<ul id="ul-fotos">
-			</ul>
-		</div>
-		
-		
-		<div>
-			<label>Texto:</label>
-			 <div id="editor" style="overflow-y: scroll; height: 200px">
-		        <p>This is some sample content.</p>
-		    </div>
-		</div>
-		<div>
-			<div class="form-item">
-				<label>Tags: #</label>
-				<input type="text" id="input-tag">
-				<button id="button-adicionar-tag" type="button" class="botao-adicionar-tag" title="Adicionar">+</button>
-				<label class="mensagem-erro" id="label-erro-tag"></label>
+			
+			<div id="div-midia-url" class="form-item display-none">
+				<label>URL:</label> 
+				<input type="text" id="input-midia-url" style="width: 85vh">
+				<label class="mensagem-erro" id="label-erro-midia-url"></label>
 			</div>
-			<ul id="ul-tags"></ul>
-		</div>
-	</main>
-	 <script>
-        ClassicEditor
-            .create( document.querySelector( '#editor' ),{
-            	language : 'pt-br',
-            	removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed']
-            })
-            .catch( error => {
-                console.error( error );
-            } );
-        
-        ClassicEditor.builtinPlugins.map( plugin => console.log(plugin.pluginName) );
+			
+			<div id="div-fotos"></div>
+			
+			<div id="div-tags"></div>
 
-    </script>
+			<div>
+				<div id="editor">
+					<p>Conteúdo aqui.</p>
+				</div>
+			</div>
+		</form>
+	</main>
 </body>
+
 </html>

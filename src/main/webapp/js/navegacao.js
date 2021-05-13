@@ -1,5 +1,6 @@
 import { atletaLogado, isUser } from './sessao.js';
 import { Home } from './controller/Home.js';
+import { Postagem } from './controller/Postagem.js';
 import { Sobre } from './controller/Sobre.js';
 import { Atletas } from './controller/Atletas.js';
 import { Atleta } from './controller/Atleta.js';
@@ -14,6 +15,7 @@ const instances = { current: undefined, atletas: undefined, picos: undefined }
 
 const views = {
 	home: "home",
+	postagem: "postagem",
 	manobras: "manobras",
 	picos: "picos",
 	pico_registro: "pico-registro",
@@ -51,6 +53,8 @@ function verificaURL(event) {
 			if (atletaLogado) perfil('authEvent', atletaLogado.id)
 			else acessar()
 			break
+		case views.postagem: postagem()
+			break
 		case views.manobras: manobras()
 			break;
 		case views.atletas: atletas()
@@ -81,13 +85,18 @@ function manobras(e) {
 	if (e) changeState(views.manobras)
 }
 
+function postagem(e) {
+	current_verify()
+	instances.current = new Postagem()
+	if (e) changeState(views.postagem)
+}
+
 function picos(e) {
 	current_verify()
 	if (!instances.picos) instances.picos = new Picos()
-	else 
-	{
-	instances.picos.display(true)
-	instances.picos.applyRole()		
+	else {
+		instances.picos.display(true)
+		instances.picos.applyRole()
 	}
 	instances.current = instances.picos
 	if (e) changeState(views.picos)
@@ -214,4 +223,4 @@ function debounce(fn) {
 	timer = setTimeout(fn, 1);
 }
 
-export { views, verificaURL, registrar, acessar, home, manobras, picos, picoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }
+export { views, verificaURL, registrar, acessar, home, postagem, manobras, picos, picoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }

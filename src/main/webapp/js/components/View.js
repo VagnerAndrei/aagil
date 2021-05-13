@@ -38,6 +38,7 @@ export class View {
 	}
 
 	async getHTML(url) {
+		//{ status , html}
 		const retorno = {}
 		const response = await get(url)
 		retorno.status = response.status

@@ -25,7 +25,7 @@ public class Postagem extends AbstractEntity {
 
 	private String titulo;
 
-	private String texto;
+	private String conteudo;
 
 	private String midia;
 
@@ -58,12 +58,12 @@ public class Postagem extends AbstractEntity {
 		this.titulo = titulo;
 	}
 
-	public String getTexto() {
-		return texto;
+	public String getConteudo() {
+		return conteudo;
 	}
 
-	public void setTexto(String texto) {
-		this.texto = texto;
+	public void setConteudo(String conteudo) {
+		this.conteudo = conteudo;
 	}
 
 	public String getMidia() {

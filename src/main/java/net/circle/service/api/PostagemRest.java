@@ -131,7 +131,7 @@ public class PostagemRest {
 		PostagemModel model = new PostagemModel();
 		model.setId(postagem.getId());
 		model.setMidia(postagem.getMidia());
-		model.setTexto(postagem.getTexto());
+		model.setConteudo(postagem.getConteudo());
 		model.setTitulo(postagem.getTitulo());
 		model.setTags(postagem.getTags().stream().map(tag -> tag.getNome()).collect(Collectors.toList()));
 		model.setFotos(
@@ -143,7 +143,7 @@ public class PostagemRest {
 		Postagem postagem = new Postagem();
 		postagem.setId(model.getId());
 		postagem.setMidia(model.getMidia());
-		postagem.setTexto(model.getTexto());
+		postagem.setConteudo(model.getConteudo());
 		postagem.setTitulo(model.getTitulo());
 		postagem.setTags(model.getTags().stream().map(tag -> new Tag(tag)).collect(Collectors.toList()));
 		postagem.setFotos(model.getFotos().stream().map(foto -> new Foto(foto.getId())).collect(Collectors.toList()));

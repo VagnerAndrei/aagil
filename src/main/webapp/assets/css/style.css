@@ -136,8 +136,7 @@ form button {
 }
 
 form div {
-	margin: 0 0 10px 0;
-	padding: 0 7px 0 3px;
+	margin: 5px 0;
 }
 
 form font {
@@ -262,7 +261,7 @@ ul {
 #img-topo {
 	width: 100%;
 	height: 100%;
-	content: url("../img/bg/magno-marex.jpg");
+	content: url("../img/bg/tony-elevado.jpg");
 	position: relative;
 	margin: auto;
 }
@@ -278,10 +277,19 @@ ul {
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat;
-	background-image: url("../img/bg/magno-marex.jpg");
+	background-image: url("../img/bg/tony-elevado.jpg");
 }
 
 /* 		HOME.HTML */
+#button-registrar-postagem{
+	position: relative;
+	right: 0;
+}
+
+.admin-panel{
+	display: flex;
+	justify-content: flex-end;
+}
 .semi-titulo {
 	display: block;
 	color: gray;
@@ -488,15 +496,6 @@ ul {
 }
 /* PICOS */
 
-.botao-selecionar-fotos{
-	width: 100px;
-}
-
-.botao-adicionar-tag{
-	width: 25px;
-	font-weight: bold;
-}
-
 .form-item button{
 	height: var(--select-button-heigth);
 	background-color: var(--blue-400);
@@ -508,65 +507,6 @@ ul {
 	width: 250px;
 }
 
-
-#ul-fotos{
-	display: flex;
-	margin-left: 75px;
-	flex-wrap: wrap;
-	flex-direction: column;
-}
-
-
-#ul-tags{
-	display: flex;
-	margin-left: 60px;
-	flex-wrap: wrap;
-	flex-direction: row;
-}
-
-#ul-fotos li{
-	margin: 5px auto 0 5px;
-}
-
-#form-pico ul li{
-	padding: 10px;
-	border-radius: 10px;
-	background-color: var(--yellow-300);
-}
-
-#ul-tags li{
-	margin: 5px 5px;
-}
-
-#ul-tags li:before{
-	content: "#";
-}
-
-#ul-fotos li{
-	margin-right: 0 50px;
-	border: 1px;
-	display: inline-block;
-	text-align: left;
-}
-
-#ul-fotos li:hover, #ul-tags li:hover{
-	cursor: pointer;
-	opacity: 65%;
-}
-
-#ul-fotos li img, #ul-fotos li span{
-	display: inline-block;
-	margin: auto auto auto 0;
-}
-
-#ul-fotos li img:hover:after{
-	
-	position: relative;
-	bottom: 50px;
-	left: 0;
-	content: "\274c";
-	
-}
 
 #form-pico{
 	width: 100vh;
@@ -644,10 +584,97 @@ ul {
 	margin: 0;
 }
 
+/* UL FOTOS E TAGS DINAMICOS */
+.botao-selecionar-fotos{
+	width: 100px;
+}
+
+.botao-adicionar-tag{
+	width: 25px;
+	font-weight: bold;
+}
+
+#ul-fotos{
+	display: flex;
+	margin-left: 75px;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
 
 
+#ul-tags{
+	display: flex;
+	margin-left: 50px;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+#ul-fotos li{
+	margin: 5px auto 0 5px;
+}
+
+#form-pico ul li, #form-postagem ul li{
+	padding: 10px;
+	border-radius: 10px;
+	background-color: var(--yellow-300);
+}
+
+#ul-tags li{
+	margin: 5px 5px;
+}
+
+#ul-tags li:before{
+	content: "#";
+}
+
+#ul-fotos li{
+	margin-right: 0 50px;
+	border: 1px;
+	display: inline-block;
+	text-align: left;
+}
+
+#ul-fotos li:hover, #ul-tags li:hover{
+	cursor: pointer;
+	opacity: 65%;
+}
+
+#ul-fotos li img, #ul-fotos li span{
+	display: inline-block;
+	margin: auto auto auto 0;
+}
+
+#ul-fotos li img:hover:after{
+	
+	position: relative;
+	bottom: 50px;
+	left: 0;
+	content: "\274c";
+	
+}
+
+/* POSTAGEM */
+
+#form-postagem{
+	width: 100vh;
+}
+
+#form-postagem .form-item{
+	vertical-align: center;
+}
+
+#form-postagem .form-item label{
+	width: 50px
+}
+
+#form-postagem .form-item label:not(:first-child){
+	width: auto
+}
 
 
+#form-postagem .form-item-radio{
+	vertical-align: center;
+}
 
 
 
@@ -874,4 +901,9 @@ ul {
 .modal-header {
 	color: var(--blue-200) !important;
 	background-color: var(--yellow) !important;
+}
+
+/* CKEDITOR */
+.ck-editor__editable {
+    height: 500px;
 }

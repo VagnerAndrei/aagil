@@ -2,6 +2,7 @@
  * 
  */
 import { View } from '../components/View.js'
+import { postagem } from '../navegacao.js'
 
 export class Home extends View {
 
@@ -9,9 +10,14 @@ export class Home extends View {
 		super('Página Inicial')
 	}
 
+	init() {
+		document.querySelector('#button-registrar-postagem').addEventListener('click', postagem)
+	}
+
 	async update() {
 		const { html } = await this.template()
 		super.update(html)
+		this.init()
 	}
 
 	async template() {

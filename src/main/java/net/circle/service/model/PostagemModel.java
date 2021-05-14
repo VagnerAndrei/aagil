@@ -15,7 +15,7 @@ public class PostagemModel {
 
 	private String conteudo;
 
-	private String midia;
+	private MidiaModel midia;
 
 	private List<IDModel> fotos = new ArrayList<IDModel>();
 
@@ -47,11 +47,11 @@ public class PostagemModel {
 		this.conteudo = conteudo;
 	}
 
-	public String getMidia() {
+	public MidiaModel getMidia() {
 		return midia;
 	}
 
-	public void setMidia(String midia) {
+	public void setMidia(MidiaModel midia) {
 		this.midia = midia;
 	}
 

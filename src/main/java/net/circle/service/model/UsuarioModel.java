@@ -1,5 +1,7 @@
 package net.circle.service.model;
 
+import java.util.Set;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -7,17 +9,11 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 public class UsuarioModel {
 
 	private String email;
-	private String perfil;
-	
-	public UsuarioModel(String email) {
-		super();
+	private Set<String> perfis;
+
+	public UsuarioModel(String email, Set<String> perfis) {
 		this.email = email;
-	}
-	
-	public UsuarioModel(String email, String perfil) {
-		super();
-		this.email = email;
-		this.perfil = perfil;
+		this.perfis = perfis;
 	}
 
 	public String getEmail() {
@@ -28,12 +24,12 @@ public class UsuarioModel {
 		this.email = email;
 	}
 
-	public String getPerfil() {
-		return perfil;
+	public Set<String> getPerfis() {
+		return perfis;
 	}
 
-	public void setPerfil(String perfil) {
-		this.perfil = perfil;
+	public void setPerfis(Set<String> perfis) {
+		this.perfis = perfis;
 	}
 
 }

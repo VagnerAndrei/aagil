@@ -28,16 +28,18 @@ export class Postagem extends View {
 
 		this._radioFotos.addEventListener('change', e => this.inputRadioChangeHandler(e.target))
 		this._radioVideo.addEventListener('change', e => this.inputRadioChangeHandler(e.target))
-		
+
 		this._inputMidiaURL = document.getElementById('input-midia-url')
-		
+
 		this._divMidiaURL = document.getElementById('div-midia-url')
+		this._labelErroMidiaURL = document.getElementById('label-erro-midia-url')
 		this._divFotos = document.getElementById('div-fotos')
-		
+
 		this._tagsFormItem = new TagsFormItem('div-tags')
 		this._fotosFormItem = new FotosFormItem('div-fotos')
-		
+
 		this._inputMidiaURL.addEventListener('change', event => this.inputMidiaURLChangeHandler(event))
+		this._iframMidia = document.getElementsByTagName('iframe')[0]
 	}
 
 	inputRadioChangeHandler(target) {
@@ -45,20 +47,48 @@ export class Postagem extends View {
 			case 'Fotos':
 				this._divMidiaURL.classList.add('display-none')
 				this._divFotos.classList.remove('display-none')
+				this.setIFrameSrc()
+				this._inputMidiaURL.value = ''
+				this._labelErroMidiaURL.textContent = ''
 				break
 			case 'Video':
 				this._divMidiaURL.classList.remove('display-none')
 				this._divFotos.classList.add('display-none')
+				this._fotosFormItem.limparLista()
 				break
 		}
 	}
-	
-	inputMidiaURLChangeHandler(event){
-		const regex = new RegExp('^((http)?(s)?\:\/\/)?((www|m)\.)?(youtube\.com|youtu\.be)(\/([\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$')
-		console.log(event.target.value)
-		console.log(regex.test(event.target.value))
+
+	inputMidiaURLChangeHandler(event) {
+		console.log('a')
+		const youtubeRegex = /^((http)?(s)?\:\/\/)?((www|m)\.)?(youtube\.com|youtu\.be)(\/([\w\-]+\?v=|embed\/|v\/)?)(?<id>[\w\-]+)(\S)*$/
+		const vimeoRegex = /^((http)?(s)?\:\/\/)?((www)\.)?(vimeo\.com)(\/)(?<id>[\d\-]+)*$/
+		let videoType
+		let match = youtubeRegex.exec(event.target.value)
+		if (match) {
+			videoType = 'Youtube'
+			this.setIFrameSrc(`https://www.youtube.com/embed/${match.groups.id}?rel=0`)
+		} else {
+			match = vimeoRegex.exec(event.target.value)
+			if (match) {
+				videoType = 'Vimeo'
+				this.setIFrameSrc(`https://player.vimeo.com/video/${match.groups.id}`)
+			}
+		}
+		if (!match) {
+			this._labelErroMidiaURL.textContent = 'URL Inválida'
+			this.setIFrameSrc()
+		}
+		else
+			this._labelErroMidiaURL.textContent = ''
 	}
-	
+
+	setIFrameSrc(src) {
+		this._iframMidia.src = src
+		if (!src || src == '') this._iframMidia.classList.add('display-none')
+		else this._iframMidia.classList.remove('display-none')
+	}
+
 	loadConfigCKEditor() {
 		ClassicEditor.create(document.querySelector('#editor'), {
 			language: 'pt-br',

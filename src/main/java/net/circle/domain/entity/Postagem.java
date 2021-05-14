@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import net.circle.domain.entity.core.AbstractEntity;
 
@@ -27,7 +28,8 @@ public class Postagem extends AbstractEntity {
 
 	private String conteudo;
 
-	private String midia;
+	@OneToOne(cascade = { CascadeType.REMOVE, CascadeType.MERGE }, orphanRemoval = true)
+	private Midia midia;
 
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST })
 	@JoinTable(name = "fotos_postagens", joinColumns = @JoinColumn(name = "postagem_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
@@ -66,11 +68,11 @@ public class Postagem extends AbstractEntity {
 		this.conteudo = conteudo;
 	}
 
-	public String getMidia() {
+	public Midia getMidia() {
 		return midia;
 	}
 
-	public void setMidia(String midia) {
+	public void setMidia(Midia midia) {
 		this.midia = midia;
 	}
 

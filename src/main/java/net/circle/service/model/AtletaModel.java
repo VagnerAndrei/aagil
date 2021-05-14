@@ -1,6 +1,7 @@
 package net.circle.service.model;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
@@ -26,11 +27,11 @@ public class AtletaModel extends AbstractModel{
 	
 	private UsuarioModel usuario;
 	
-	public AtletaModel(Integer id, String nome, String email) {
+	public AtletaModel(Integer id, String nome, String email, Set<String> perfis) {
 		super();
 		this.id = id;
 		this.nome = nome;
-		this.usuario = new UsuarioModel(email);
+		this.usuario = new UsuarioModel(email, perfis);
 	}
 
 	public AtletaModel(Integer id, String nome, String biografia,LocalDate nascimento, LocalidadeModel localidade, String categoria, IDModel foto) {

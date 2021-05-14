@@ -36,10 +36,13 @@ import net.circle.business.interfaces.IPostagemBusiness;
 import net.circle.business.util.ImagemUtil;
 import net.circle.domain.entity.Atleta;
 import net.circle.domain.entity.Foto;
+import net.circle.domain.entity.Midia;
+import net.circle.domain.entity.MidiaTipo;
 import net.circle.domain.entity.Postagem;
 import net.circle.domain.entity.Tag;
 import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
+import net.circle.service.model.MidiaModel;
 import net.circle.service.model.PostagemModel;
 
 @Path("/postagens")
@@ -130,7 +133,7 @@ public class PostagemRest {
 	private PostagemModel parseModel(Postagem postagem) {
 		PostagemModel model = new PostagemModel();
 		model.setId(postagem.getId());
-		model.setMidia(postagem.getMidia());
+		model.setMidia(new MidiaModel(postagem.getMidia().getCodigo(), postagem.getMidia().getTipo().toString()));
 		model.setConteudo(postagem.getConteudo());
 		model.setTitulo(postagem.getTitulo());
 		model.setTags(postagem.getTags().stream().map(tag -> tag.getNome()).collect(Collectors.toList()));
@@ -142,7 +145,7 @@ public class PostagemRest {
 	private Postagem parseModel(PostagemModel model) {
 		Postagem postagem = new Postagem();
 		postagem.setId(model.getId());
-		postagem.setMidia(model.getMidia());
+		postagem.setMidia(new Midia(model.getMidia().getCodigo(), model.getMidia().getTipo().equals(MidiaTipo.Youtube.toString()) ? MidiaTipo.Youtube: MidiaTipo.Vimeo));
 		postagem.setConteudo(model.getConteudo());
 		postagem.setTitulo(model.getTitulo());
 		postagem.setTags(model.getTags().stream().map(tag -> new Tag(tag)).collect(Collectors.toList()));

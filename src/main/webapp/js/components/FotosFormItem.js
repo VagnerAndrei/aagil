@@ -4,7 +4,7 @@
 export class FotosFormItem {
 
 	constructor(elementID, maxFiles=10, maxSize=10) {
-		this._maxSize = maxFiles;
+		this._maxSize = maxSize;
 		this._maxFiles = maxFiles
 		this._elementID = elementID;
 		this._init()
@@ -20,8 +20,11 @@ export class FotosFormItem {
 
 		this._inputFotos.addEventListener('change', event => this._handleFiles(event))
 		this._buttonSelecionarFotos.addEventListener('click', event => this._selecionarFotos(event), false)
-
-
+	}
+	
+	limparLista(){
+		this._ulFotos.innerHTML = ''
+		this._setSpanText()
 	}
 
 	_handleFiles(event) {

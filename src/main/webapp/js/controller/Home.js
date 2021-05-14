@@ -3,6 +3,7 @@
  */
 import { View } from '../components/View.js'
 import { postagem } from '../navegacao.js'
+import { isAdmin } from '../sessao.js'
 
 export class Home extends View {
 
@@ -11,7 +12,14 @@ export class Home extends View {
 	}
 
 	init() {
-		document.querySelector('#button-registrar-postagem').addEventListener('click', postagem)
+		this._buttonPostar = document.getElementById('button-registrar-postagem')
+		this._buttonPostar.addEventListener('click', postagem)
+		this.applyRole()
+	}
+	
+	applyRole(){
+		if (isAdmin()) this._buttonPostar.classList.remove('display-none')
+		else this._buttonPostar.classList.add('display-none')
 	}
 
 	async update() {

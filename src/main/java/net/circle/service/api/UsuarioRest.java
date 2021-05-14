@@ -5,6 +5,7 @@
 package net.circle.service.api;
 
 import java.net.URI;
+import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
@@ -178,7 +179,7 @@ public class UsuarioRest {
 	}
 
 	private AtletaModel parseModel(Atleta pessoa) {
-		return new AtletaModel(pessoa.getId(), pessoa.getNome(), pessoa.getUsuario().getEmail());
+		return new AtletaModel(pessoa.getId(), pessoa.getNome(), pessoa.getUsuario().getEmail(), pessoa.getUsuario().getPerfis().stream().map(perfil -> perfil.toString()).collect(Collectors.toSet()));
 	}
 
 }

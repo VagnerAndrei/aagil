@@ -79,3 +79,8 @@ export function loginHandler(value, event) {
 	}
 }
 
+export function isAdmin() {
+	if (!atletaLogado) return false
+	return atletaLogado.usuario.perfis.includes('ADMIN')
+}
+

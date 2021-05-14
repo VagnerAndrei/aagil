@@ -36,6 +36,8 @@ export class Postagem extends View {
 		
 		this._tagsFormItem = new TagsFormItem('div-tags')
 		this._fotosFormItem = new FotosFormItem('div-fotos')
+		
+		this._inputMidiaURL.addEventListener('change', event => this.inputMidiaURLChangeHandler(event))
 	}
 
 	inputRadioChangeHandler(target) {
@@ -49,6 +51,12 @@ export class Postagem extends View {
 				this._divFotos.classList.add('display-none')
 				break
 		}
+	}
+	
+	inputMidiaURLChangeHandler(event){
+		const regex = new RegExp('^((http)?(s)?\:\/\/)?((www|m)\.)?(youtube\.com|youtu\.be)(\/([\w\-]+\?v=|embed\/|v\/)?)([\w\-]+)(\S+)?$')
+		console.log(event.target.value)
+		console.log(regex.test(event.target.value))
 	}
 	
 	loadConfigCKEditor() {

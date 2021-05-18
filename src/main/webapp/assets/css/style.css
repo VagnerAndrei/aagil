@@ -183,6 +183,10 @@ ul {
 	width: 65%;
 }
 
+iframe{
+	border: none;
+}
+
 /* 				Class Names 			*/
 .botao-cancelar {
 	background-color: #ccc;

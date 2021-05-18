@@ -7,8 +7,10 @@ CREATE TABLE midia(
 CREATE TABLE postagem(
 	id SERIAL PRIMARY KEY,	
 	titulo VARCHAR(100) NOT NULL,
-	texto TEXT NOT NULL,
-	midia_id INTEGER REFERENCES midia(id)
+	conteudo TEXT NOT NULL,
+	data TIMESTAMP NOT NULL,
+	midia_id INTEGER REFERENCES midia(id),
+	atleta_id INTEGER REFERENCES atleta(id)
 );
 
 

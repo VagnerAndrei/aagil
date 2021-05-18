@@ -1,10 +1,15 @@
 package net.circle.service.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
 @JsonInclude(value = Include.NON_EMPTY)
 public class PostagemModel {
@@ -20,6 +25,10 @@ public class PostagemModel {
 	private List<IDModel> fotos = new ArrayList<IDModel>();
 
 	private List<String> tags = new ArrayList<String>();
+	
+	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+	@JsonSerialize(using = LocalDateTimeSerializer.class)
+	private LocalDateTime data;
 	
 	private IDModel atleta;
 
@@ -69,6 +78,14 @@ public class PostagemModel {
 
 	public void setTags(List<String> tags) {
 		this.tags = tags;
+	}
+	
+	public LocalDateTime getData() {
+		return data;
+	}
+
+	public void setData(LocalDateTime data) {
+		this.data = data;
 	}
 
 	public IDModel getAtleta() {

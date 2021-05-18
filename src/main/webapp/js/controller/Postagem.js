@@ -1,6 +1,9 @@
 import { View } from '../components/View.js'
 import { TagsFormItem } from '../components/TagsFormItem.js'
 import { FotosFormItem } from '../components/FotosFormItem.js'
+import { atletaLogado } from '../sessao.js'
+import { FotosUpload } from '../controller/FotosUpload.js'
+import { home } from '../navegacao.js'
 
 export class Postagem extends View {
 
@@ -29,6 +32,7 @@ export class Postagem extends View {
 		this._radioFotos.addEventListener('change', e => this.inputRadioChangeHandler(e.target))
 		this._radioVideo.addEventListener('change', e => this.inputRadioChangeHandler(e.target))
 
+		this._inputTitulo = document.getElementById('input-titulo')
 		this._inputMidiaURL = document.getElementById('input-midia-url')
 
 		this._divMidiaURL = document.getElementById('div-midia-url')
@@ -40,6 +44,135 @@ export class Postagem extends View {
 
 		this._inputMidiaURL.addEventListener('change', event => this.inputMidiaURLChangeHandler(event))
 		this._iframMidia = document.getElementsByTagName('iframe')[0]
+
+		this._labelErro = document.getElementById('label-erro')
+		this._buttonEnviar = document.getElementById('button-enviar')
+		this._buttonEnviar.addEventListener('click', event => this.enviar(event))
+
+		this._formPostagem = document.getElementById('form-postagem')
+
+	}
+	enviar() {
+		if (this._formPostagem.checkValidity()) {
+			const imgs = this._fotosFormItem.getListFiles()
+			
+			if ((imgs.length == 0 && this._radioFotos.checked) || (this._radioVideo.checked && !this._codigo ) || (!this._radioVideo.checked && !this._radioFotos.checked))
+				if (!confirm('Este formulário nao possui nenhuma foto ou vídeo inserido, gostaria de enviá-lo assim mesmo? '))
+					return
+
+			
+
+			const formData = new FormData()
+
+			/*
+							FOTOS ATTACHMENT
+			*/
+
+			for (let i = 0; i < imgs.length; i++) {
+				formData.append('foto', imgs[i])
+			}
+
+			console.log(this._radioFotos.checked)
+			console.log(this._editor)
+			console.log(this._editor.getData())
+
+			/*
+							JSON OBJECT
+			*/
+
+			const json = {
+				"atleta": {
+					"id": atletaLogado.id
+				},
+				"titulo": this._inputTitulo.value,
+				"conteudo": this._editor.getData(),
+				"tags": this._tagsFormItem.getTagsList()
+			}
+
+			if (this._radioVideo.checked && this._codigo) {
+				json.midia = {
+					"codigo": this._codigo,
+					"tipo": this._videoType
+				}
+			}
+			console.log(json)
+			const blobJSON = new Blob([JSON.stringify(json)], { type: 'application/json' })
+			formData.append('json', blobJSON)
+
+			/*
+							XML HTTP REQUEST
+					
+			*/
+
+			this._xhr = new XMLHttpRequest();
+
+			this._xhr.open('POST', 'api/postagens')
+
+			const upload = imgs.length != 0
+			if (upload) {
+				this._xhr.upload.addEventListener('load', () => {
+				})
+
+				this._xhr.upload.addEventListener('loadstart', () => {
+					this._modalUpload = new FotosUpload('Postagem - Upload', () => this.uploadedHandler(), () => this.cancelarUpload())
+				})
+
+				this._xhr.upload.addEventListener('abort', () => {
+					this._labelErro.textContent = 'Upload cancelado'
+					this._modalUpload.fecharModal()
+				})
+
+				this._xhr.upload.addEventListener('error', () => {
+					this._labelErro.textContent = 'Upload erro'
+					this._modalUpload.fecharModal()
+				})
+
+				this._xhr.upload.addEventListener('progress', e => {
+					let percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
+					this._modalUpload?.setPercent(percent)
+				})
+			}
+
+
+			this._xhr.onreadystatechange = () => {
+				if (this._xhr.readyState === 4) {
+					switch (this._xhr.status) {
+						case 403:
+							this._labelErro.textContent = 'Acesso negado!'
+							this._modalUpload.fecharModal()
+							break
+						case 400:
+							const json = JSON.parse(this._xhr.response)
+							this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
+							this._modalUpload.fecharModal()
+							break
+						case 202:
+							if (!upload) this._modalUpload = new FotosUpload('Postagem', () => this.uploadedHandler())
+							this._modalUpload.setResult('Postagem realizada com sucesso!')
+							break
+						case 500:
+							this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+							this._modalUpload?.fecharModal()
+					}
+				}
+			}
+
+			this._xhr.onerror = () => {
+				this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+				this._modalUpload.fecharModal()
+			}
+
+			this._xhr.send(formData)
+		}else this._formPostagem.reportValidity()
+	}
+
+	uploadedHandler() {
+		home('postagemRegistroEvent')
+		window.scroll(0, 500)
+	}
+
+	cancelarUpload() {
+		this._xhr?.abort()
 	}
 
 	inputRadioChangeHandler(target) {
@@ -76,15 +209,19 @@ export class Postagem extends View {
 			}
 		}
 		if (!match) {
-			this._labelErroMidiaURL.textContent = 'URL Inválida'
+			this._labelErroMidiaURL.textContent = event.target.value != '' ? 'URL Inválida' : ''
 			this.setIFrameSrc()
+			this._codigo = undefined
 		}
-		else
+		else {
 			this._labelErroMidiaURL.textContent = ''
+			this._codigo = match.groups.id
+			this._videoType = videoType
+		}
 	}
 
 	setIFrameSrc(src) {
-		this._iframMidia.src = src
+		this._iframMidia.src = src ? src : ''
 		if (!src || src == '') this._iframMidia.classList.add('display-none')
 		else this._iframMidia.classList.remove('display-none')
 	}
@@ -94,7 +231,10 @@ export class Postagem extends View {
 			language: 'pt-br',
 			removePlugins: ['ImageUpload', 'EasyImage', 'MediaEmbed'],
 
-		}).catch(error => {
+		}).then(newEditor => {
+			this._editor = newEditor
+		}
+		).catch(error => {
 			console.error(error);
 		})
 	}

@@ -4,6 +4,7 @@
 import { View } from '../components/View.js'
 import { postagem } from '../navegacao.js'
 import { isAdmin } from '../sessao.js'
+import { Postagens } from '../controller/Postagens.js'
 
 export class Home extends View {
 
@@ -14,10 +15,12 @@ export class Home extends View {
 	init() {
 		this._buttonPostar = document.getElementById('button-registrar-postagem')
 		this._buttonPostar.addEventListener('click', postagem)
+
+		const postagens = new Postagens('section-postagens')
 		this.applyRole()
 	}
-	
-	applyRole(){
+
+	applyRole() {
 		if (isAdmin()) this._buttonPostar.classList.remove('display-none')
 		else this._buttonPostar.classList.add('display-none')
 	}

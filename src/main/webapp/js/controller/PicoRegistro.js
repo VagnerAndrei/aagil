@@ -4,7 +4,8 @@
 import { View } from '../components/View.js'
 import { get } from '../fetch.js'
 import { atletaLogado } from '../sessao.js'
-import { PicoRegistroUpload } from '../controller/PicoRegistroUpload.js'
+import { FotosUpload } from '../controller/FotosUpload.js'
+import { picos } from '../navegacao.js'
 
 export class PicoRegistro extends View {
 
@@ -167,17 +168,17 @@ export class PicoRegistro extends View {
 				})
 
 				this._xhr.upload.addEventListener('loadstart', () => {
-					this._modalUpload = new PicoRegistroUpload(() => this.cancelarUpload())
+					this._modalUpload = new FotosUpload('Registro de Pico - Upload', () => this.uploadedHandler(), () => this.cancelarUpload())
 				})
 
 				this._xhr.upload.addEventListener('abort', () => {
 					this._labelErro.textContent = 'Upload cancelado'
-					this._modalUpload.fecharModal(false)
+					this._modalUpload.fecharModal()
 				})
 
 				this._xhr.upload.addEventListener('error', () => {
 					this._labelErro.textContent = 'Upload erro'
-					this._modalUpload.fecharModal(false)
+					this._modalUpload.fecharModal()
 				})
 
 				this._xhr.upload.addEventListener('progress', e => {
@@ -192,27 +193,27 @@ export class PicoRegistro extends View {
 					switch (this._xhr.status) {
 						case 403:
 							this._labelErro.textContent = 'Acesso negado!'
-							this._modalUpload.fecharModal(false)
+							this._modalUpload.fecharModal()
 							break
 						case 400:
 							const json = JSON.parse(this._xhr.response)
 							this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
-							this._modalUpload.fecharModal(false)
+							this._modalUpload.fecharModal()
 							break
 						case 202:
-							if (!upload) this._modalUpload = new PicoRegistroUpload()
+							if (!upload) this._modalUpload = new FotosUpload('Registro de Pico', () => this.uploadedHandler())
 							this._modalUpload.setResult(this._xhr.responseText)
 							break
 						case 500:
 							this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
-							this._modalUpload.fecharModal(false)
+							this._modalUpload?.fecharModal()
 					}
 				}
 			}
 
 			this._xhr.onerror = () => {
 				this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
-				this._modalUpload.fecharModal(false)
+				this._modalUpload.fecharModal()
 			}
 
 			this._xhr.send(formData)
@@ -222,6 +223,11 @@ export class PicoRegistro extends View {
 				this._inputCEP.focus()
 			this._formPico.reportValidity()
 		}
+	}
+
+	uploadedHandler() {
+		picos('picoRegistroEvent')
+		window.scroll(0, 500)
 	}
 
 	cancelarUpload() {

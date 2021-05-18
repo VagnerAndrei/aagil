@@ -26,8 +26,8 @@ export function getUser(event) {
 	})
 }
 
-export async function isUser(event) {
-	console.log('isUser()')
+export async function isLogged(event) {
+	console.log('isLogged()')
 	const response = await get('api/usuarios/autenticado')
 	const value = await response.text()
 	if (value !== 'false') {
@@ -84,3 +84,7 @@ export function isAdmin() {
 	return atletaLogado.usuario.perfis.includes('ADMIN')
 }
 
+export function isUser(){
+	if (!atletaLogado) return false
+	return atletaLogado.usuario.perfis.includes('USER')
+}

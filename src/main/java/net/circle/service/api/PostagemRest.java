@@ -133,19 +133,24 @@ public class PostagemRest {
 	private PostagemModel parseModel(Postagem postagem) {
 		PostagemModel model = new PostagemModel();
 		model.setId(postagem.getId());
-		model.setMidia(new MidiaModel(postagem.getMidia().getCodigo(), postagem.getMidia().getTipo().toString()));
+		if (postagem.getMidia() != null)
+			model.setMidia(new MidiaModel(postagem.getMidia().getCodigo(), postagem.getMidia().getTipo().toString()));
 		model.setConteudo(postagem.getConteudo());
 		model.setTitulo(postagem.getTitulo());
 		model.setTags(postagem.getTags().stream().map(tag -> tag.getNome()).collect(Collectors.toList()));
 		model.setFotos(
 				postagem.getFotos().stream().map(foto -> new IDModel(foto.getId())).collect(Collectors.toList()));
+		model.setData(postagem.getData());
 		return model;
 	}
 
 	private Postagem parseModel(PostagemModel model) {
 		Postagem postagem = new Postagem();
 		postagem.setId(model.getId());
-		postagem.setMidia(new Midia(model.getMidia().getCodigo(), model.getMidia().getTipo().equals(MidiaTipo.Youtube.toString()) ? MidiaTipo.Youtube: MidiaTipo.Vimeo));
+		if (model.getMidia() != null)
+			postagem.setMidia(new Midia(model.getMidia().getCodigo(),
+					model.getMidia().getTipo().equals(MidiaTipo.Youtube.toString()) ? MidiaTipo.Youtube
+							: MidiaTipo.Vimeo));
 		postagem.setConteudo(model.getConteudo());
 		postagem.setTitulo(model.getTitulo());
 		postagem.setTags(model.getTags().stream().map(tag -> new Tag(tag)).collect(Collectors.toList()));

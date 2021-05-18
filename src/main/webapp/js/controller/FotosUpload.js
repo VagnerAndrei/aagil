@@ -2,19 +2,21 @@
  * 
  */
 import { Modal } from '../components/Modal.js'
-import { picos } from '../navegacao.js'
 
-export class PicoRegistroUpload extends Modal {
+export class FotosUpload extends Modal {
 
-	constructor(cancelarUploadHandler) {
-		super('Registro de Pico - Upload', false)
+	constructor(title, uploadedHandler, cancelarUploadHandler ) {
+		super(title, false)
 		this._progressBar = document.querySelector('#progress');
 		this._labelProgress = document.querySelector('#label-progress');
 		this._labelSuccess = document.querySelector('#label-success');
 		this._botaoCancelar = document.querySelector('#botao-cancelar');
 		this._botaoFechar = document.querySelector('#botao-fechar');
 		this._imgLoading = document.querySelector('#img-loading');
-		this._botaoFechar.addEventListener('click', () => this.fecharModal(true))
+		this._botaoFechar.addEventListener('click', () => {
+			uploadedHandler()
+			this.fecharModal()
+		})
 		document.querySelector('#botao-cancelar').addEventListener('click', e => cancelarUploadHandler(e))
 	}
 
@@ -35,14 +37,6 @@ export class PicoRegistroUpload extends Modal {
 		this._labelSuccess.classList.remove('display-none')
 		this._botaoFechar.classList.remove('display-none')
 		this._labelSuccess.textContent = msg
-	}
-
-	fecharModal(redirect) {
-		if (redirect){
-			picos('picoRegistroEvent')
-			window.scroll(0,500)
-		}
-		super.fecharModal()
 	}
 
 	template() {

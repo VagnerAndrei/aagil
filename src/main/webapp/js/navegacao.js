@@ -1,4 +1,4 @@
-import { atletaLogado, isUser } from './sessao.js';
+import { atletaLogado, isLogged } from './sessao.js';
 import { Home } from './controller/Home.js';
 import { Postagem } from './controller/Postagem.js';
 import { Sobre } from './controller/Sobre.js';
@@ -151,7 +151,7 @@ async function registrar(clickEvent) {
 }
 
 function current_verify() {
-	//isUser('navigationEvent')
+	//isLogged('navigationEvent')
 	if (instances.current) {
 		switch (instances.current.constructor) {
 			case Atletas:
@@ -208,13 +208,13 @@ function applyRole(role) {
 
 // Verifica usuário quando o foco da app retorna, podendo haver caso de window.focus ou apenas tab visibilityChange
 document.addEventListener("DOMContentLoaded", () => {
-	document.addEventListener("visibilitychange", isUserOnFocus)
+	document.addEventListener("visibilitychange", isLoggedOnFocus)
 })
 
-window.addEventListener('focus', isUserOnFocus)
+window.addEventListener('focus', isLoggedOnFocus)
 
-function isUserOnFocus() {
-	if (document.visibilityState === 'visible') debounce(() => isUser('navigationEvent'))
+function isLoggedOnFocus() {
+	if (document.visibilityState === 'visible') debounce(() => isLogged('navigationEvent'))
 }
 
 let timer = 0;

@@ -16,6 +16,7 @@ export class Lista extends View {
 	}
 
 	async atualizarLista() {
+		console.log(this._url)
 		const responseAtletas = await get(this._url)
 
 		switch (responseAtletas.status) {

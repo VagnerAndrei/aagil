@@ -10,9 +10,13 @@
 	<main>
 		<form id="form-postagem">
 			<h2>Postagem</h2>
+			<div class="form-item">
+				<label>Título:</label>
+				<input type="text" id="input-titulo" style="width: 50%" maxlength="100" required>
+			</div>
 			<div class="form-item form-item-radio">
 					<label>Mídia:</label> 
-					<input id="input-radio-fotos" type="radio" name="midia" value="Fotos" checked> 
+					<input id="input-radio-fotos" type="radio" name="midia" value="Fotos"> 
 					<label for="input-radio-fotos">Fotos</label> 
 					<input id="input-radio-video" type="radio" name="midia" value="Video"> 
 					<label for="input-radio-video">Vídeo</label>
@@ -24,10 +28,10 @@
 				<input type="text" id="input-midia-url" style="width: 85vh">
 				<label class="mensagem-erro" id="label-erro-midia-url"></label>
 			</div>
-			<iframe width="100%" height="420" allowfullscreen="true" frameborder=0 class="display-none"></iframe>
+			<iframe width="100%" height="420" allowfullscreen  class="display-none"></iframe>
 			</div>
 			
-			<div id="div-fotos"></div>
+			<div id="div-fotos" class="display-none"></div>
 			
 
 			<div>
@@ -36,6 +40,8 @@
 				</div>
 			</div>
 			<div id="div-tags"></div>
+			<label id="label-erro" class="mensagem-erro"></label>
+			<button id="button-enviar" type="button" class="botao-form-pico">Enviar</button>
 		</form>
 	</main>
 </body>

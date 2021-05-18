@@ -5,6 +5,9 @@ public class MidiaModel {
 	private String codigo;
 
 	private String tipo;
+	
+	public MidiaModel() {
+	}
 
 	public MidiaModel(String codigo, String tipo) {
 		this.codigo = codigo;

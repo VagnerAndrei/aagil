@@ -16,9 +16,7 @@ export class Picos extends ListaPaginada {
 		super.init()
 		console.log('init')
 		this._ulLista.classList.add('lista-picos')
-		if (atletaLogado) {
-			this.addButtonRegister()
-		}
+		applyRole()
 	}
 
 	addButtonRegister() {

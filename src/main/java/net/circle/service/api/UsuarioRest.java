@@ -179,7 +179,8 @@ public class UsuarioRest {
 	}
 
 	private AtletaModel parseModel(Atleta pessoa) {
-		return new AtletaModel(pessoa.getId(), pessoa.getNome(), pessoa.getUsuario().getEmail(), pessoa.getUsuario().getPerfis().stream().map(perfil -> perfil.toString()).collect(Collectors.toSet()));
+		return new AtletaModel(pessoa.getId(), pessoa.getNome(), pessoa.getUsuario().getEmail(),
+				pessoa.getUsuario().getPerfis().stream().map(perfil -> perfil.toString()).collect(Collectors.toSet()));
 	}
 
 }

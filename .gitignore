@@ -23,5 +23,7 @@
 hs_err_pid*
 #/target
 /target/m2e-wtp
+/target/classes
+/target/teste-classes
 /.settings
 /bin/

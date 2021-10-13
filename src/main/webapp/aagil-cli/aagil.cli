@@ -1,0 +1,7 @@
+deploy postgresql-42.2.19.jar
+data-source add --name=aagil-data-source --jndi-name=java:jboss/aagil-data-source --driver-name=postgresql-42.2.19.jar  --connection-url=jdbc:postgresql://localhost:5432/df1feav4akpt62 --user-name=vikhewshdztcks --password=cbfed320724920504157f386364a1b9e72057dbbc645a314a3d021748fbd5c0b
+/subsystem=elytron/jdbc-realm=aagil-jdbc-realm:add(principal-query=[{data-source=aagil-data-source, sql="SELECT perfil, senha FROM usuario WHERE email =?", attribute-mapping=[{index=1, to=groups}],  simple-digest-mapper={algorithm=simple-digest-md5,password-index=2}}])
+/subsystem=elytron/security-domain=aagil-security-domain:add(realms=[{realm=aagil-jdbc-realm,role-decoder=groups-to-roles}],default-realm=aagil-jdbc-realm,permission-mapper=default-permission-mapper)
+/subsystem=elytron/http-authentication-factory=aagil-db-http-auth:add(http-server-mechanism-factory=global,security-domain=aagil-security-domain,mechanism-configurations=[{mechanism-name=FORM,mechanism-realm-configurations=[{realm-name=aagil-jdbc-realm}]}])
+/subsystem=undertow/application-security-domain=aagil-application-domain:add(http-authentication-factory=aagil-db-http-auth)
+/subsystem=microprofile-opentracing-smallrye/jaeger-tracer=jaeger:write-attribute(name=sampler-param, value=0)

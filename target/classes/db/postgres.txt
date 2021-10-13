@@ -1,1 +1,0 @@
-select octet_length(lo_get(file)) from your_table

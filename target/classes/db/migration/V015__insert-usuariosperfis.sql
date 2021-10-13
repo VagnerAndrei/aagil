@@ -1,1 +1,0 @@
-insert into usuarios_perfis values('vagnermachado87@gmail.com', 'ADMIN')

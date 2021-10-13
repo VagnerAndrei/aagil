@@ -159,6 +159,14 @@
                         <password>sa</password>
                     </security>
                 </datasource>
+                <datasource jndi-name="java:jboss/aagil-data-source" pool-name="aagil-data-source">
+                    <connection-url>jdbc:postgresql://localhost:5432/df1feav4akpt62</connection-url>
+                    <driver>postgresql-42.2.19.jar</driver>
+                    <security>
+                        <user-name>vikhewshdztcks</user-name>
+                        <password>cbfed320724920504157f386364a1b9e72057dbbc645a314a3d021748fbd5c0b</password>
+                    </security>
+                </datasource>
                 <drivers>
                     <driver name="h2" module="com.h2database.h2">
                         <xa-datasource-class>org.h2.jdbcx.JdbcDataSource</xa-datasource-class>
@@ -260,9 +268,20 @@
                     <realm name="ManagementRealm" role-decoder="groups-to-roles"/>
                     <realm name="local" role-mapper="super-user-mapper"/>
                 </security-domain>
+                <security-domain name="aagil-security-domain" default-realm="aagil-jdbc-realm" permission-mapper="default-permission-mapper">
+                    <realm name="aagil-jdbc-realm" role-decoder="groups-to-roles"/>
+                </security-domain>
             </security-domains>
             <security-realms>
                 <identity-realm name="local" identity="$local"/>
+                <jdbc-realm name="aagil-jdbc-realm">
+                    <principal-query sql="SELECT perfil, senha FROM usuario, usuarios_perfis where usuario.email = usuarios_perfis.email and usuario.email =?" data-source="aagil-data-source">
+                        <attribute-mapping>
+                            <attribute to="groups" index="1"/>
+                        </attribute-mapping>
+                        <simple-digest-mapper password-index="2"/>
+                    </principal-query>
+                </jdbc-realm>
                 <properties-realm name="ApplicationRealm">
                     <users-properties path="application-users.properties" relative-to="jboss.server.config.dir" digest-realm-name="ApplicationRealm"/>
                     <groups-properties path="application-roles.properties" relative-to="jboss.server.config.dir"/>
@@ -304,6 +323,13 @@
                     <mechanism-configuration>
                         <mechanism mechanism-name="DIGEST">
                             <mechanism-realm realm-name="ManagementRealm"/>
+                        </mechanism>
+                    </mechanism-configuration>
+                </http-authentication-factory>
+                <http-authentication-factory name="aagil-db-http-auth" security-domain="aagil-security-domain" http-server-mechanism-factory="global">
+                    <mechanism-configuration>
+                        <mechanism mechanism-name="FORM">
+                            <mechanism-realm realm-name="aagil-jdbc-realm"/>
                         </mechanism>
                     </mechanism-configuration>
                 </http-authentication-factory>
@@ -431,7 +457,7 @@
         <subsystem xmlns="urn:wildfly:microprofile-jwt-smallrye:1.0"/>
         <subsystem xmlns="urn:wildfly:microprofile-opentracing-smallrye:3.0" default-tracer="jaeger">
             <jaeger-tracer name="jaeger">
-                <sampler-configuration sampler-type="const" sampler-param="1.0"/>
+                <sampler-configuration sampler-type="const" sampler-param="0.0"/>
             </jaeger-tracer>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:naming:2.0">
@@ -496,7 +522,7 @@
         <subsystem xmlns="urn:jboss:domain:undertow:12.0" default-server="default-server" default-virtual-host="default-host" default-servlet-container="default" default-security-domain="other" statistics-enabled="${wildfly.undertow.statistics-enabled:${wildfly.statistics-enabled:false}}">
             <buffer-cache name="default"/>
             <server name="default-server">
-                <http-listener name="default" socket-binding="http" redirect-socket="https" enable-http2="true"/>
+                <http-listener name="default" socket-binding="http" max-post-size="104857600" redirect-socket="https" enable-http2="true"/>
                 <https-listener name="https" socket-binding="https" security-realm="ApplicationRealm" enable-http2="true"/>
                 <host name="default-host" alias="localhost">
                     <location name="/" handler="welcome-content"/>
@@ -510,6 +536,9 @@
             <handlers>
                 <file name="welcome-content" path="${jboss.home.dir}/welcome-content"/>
             </handlers>
+            <application-security-domains>
+                <application-security-domain name="aagil-application-domain" http-authentication-factory="aagil-db-http-auth"/>
+            </application-security-domains>
         </subsystem>
         <subsystem xmlns="urn:jboss:domain:webservices:2.0" statistics-enabled="${wildfly.webservices.statistics-enabled:${wildfly.statistics-enabled:false}}">
             <wsdl-host>${jboss.bind.address:127.0.0.1}</wsdl-host>
@@ -543,4 +572,9 @@
             <remote-destination host="${jboss.mail.server.host:localhost}" port="${jboss.mail.server.port:25}"/>
         </outbound-socket-binding>
     </socket-binding-group>
+    <deployments>
+        <deployment name="postgresql-42.2.19.jar" runtime-name="postgresql-42.2.19.jar">
+            <content sha1="85cb20fe8151b6d90900d5ae5cfe0ad7c3e8f921"/>
+        </deployment>
+    </deployments>
 </server>

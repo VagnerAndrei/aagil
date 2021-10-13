@@ -46,7 +46,7 @@ public class PostagemBusiness implements IPostagemBusiness {
 
 	@Override
 	public List<Postagem> consultarLista() {
-		return dao.findAll();
+		return dao.consultarPagina("data DESC", 0, 10);
 	}
 
 	@Override

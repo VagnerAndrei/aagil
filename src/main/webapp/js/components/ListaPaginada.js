@@ -161,10 +161,6 @@ export class ListaPaginada extends Lista {
 		this.adicionarClickEvent()
 	}
 
-	adicionarClickEvent() {
-		throw new Error('Not Yet Implemented')
-	}
-
 	tamanhoDaPagina() {
 		console.log('tamanhodapag')
 		this._indice = 0

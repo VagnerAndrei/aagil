@@ -44,6 +44,10 @@ export class Lista extends View {
 	template() {
 		throw new Error('Not Yet Implemented')
 	}
+	
+	adicionarClickEvent() {
+		throw new Error('Not Yet Implemented')
+	}
 
 
 }

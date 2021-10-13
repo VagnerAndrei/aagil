@@ -26,7 +26,7 @@ public class PostagemModel {
 
 	private List<String> tags = new ArrayList<String>();
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm")
+	@JsonFormat(shape = Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime data;
 	

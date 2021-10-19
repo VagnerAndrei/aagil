@@ -47,6 +47,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 		var entity = dao.findById(atleta.getId()).get();
 
 		entity.setNome(atleta.getNome());
+		entity.setApelido(atleta.getApelido());
 		entity.setBiografia(atleta.getBiografia());
 		entity.setNascimento(atleta.getNascimento());
 		entity.setLocalidade(

@@ -1,0 +1,1 @@
+ALTER TABLE atleta	ADD COLUMN apelido VARCHAR(50);

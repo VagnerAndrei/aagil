@@ -35,6 +35,8 @@ public class Atleta extends AbstractEntity {
 	@NotBlank
 	@Size(max = 100)
 	private String nome;
+	
+	private String apelido;
 
 	@Column(length = 5000)
 	private String biografia;
@@ -71,6 +73,14 @@ public class Atleta extends AbstractEntity {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+	
+	public String getApelido() {
+		return apelido;
+	}
+
+	public void setApelido(String apelido) {
+		this.apelido = apelido;
 	}
 
 	public String getBiografia() {

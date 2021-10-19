@@ -341,6 +341,8 @@ public class AtletaRest {
 				pessoa.getId(),
 
 				pessoa.getNome(),
+				
+				pessoa.getApelido(),
 
 				pessoa.getBiografia(),
 

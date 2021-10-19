@@ -14,6 +14,7 @@ export class AtletaForm extends Modal {
 		
 		this._labelErro = document.querySelector('#label-erro');
 		this._inputNome = document.querySelector('#input-nome');
+		this._inputApelido = document.querySelector('#input-apelido');
 		this._textareaBiografia = document.querySelector('#textarea-biografia');
 		this._inputNascimento = document.querySelector('#input-nascimento');
 		this._radioCategoria = document.getElementsByName('radio-categoria');
@@ -33,6 +34,10 @@ export class AtletaForm extends Modal {
 			<div>
 				<label for="nome">Nome:</label> <input id="input-nome" type="text"
 					required="required">
+			</div>
+			
+			<div>
+				<label for="apelido">Apelido:</label> <input id="input-apelido" type="text">
 			</div>
 	
 			<div>
@@ -77,6 +82,7 @@ export class AtletaForm extends Modal {
 
 	setAtleta() {
 		if (this._atleta.nome) this._inputNome.value = this._atleta.nome;
+		if (this._atleta.apelido) this._inputApelido.value = this._atleta.apelido;
 		if (this._atleta.biografia) this._textareaBiografia.value = this._atleta.biografia;
 		if (this._atleta.nascimento) this._inputNascimento.value = this._atleta.nascimento;
 		if (this._atleta.categoria) Array.from(this._radioCategoria).find(radio => radio.value == this._atleta.categoria).checked = true;
@@ -146,6 +152,7 @@ export class AtletaForm extends Modal {
 		const response = await put('api/atletas', {
 			id: this._atleta.id,
 			nome: this._inputNome.value,
+			apelido: this._inputApelido.value,
 			biografia: this._textareaBiografia.value,
 			nascimento: this._inputNascimento.value,
 			categoria: Array.from(this._radioCategoria).find(radio => radio.checked).value,

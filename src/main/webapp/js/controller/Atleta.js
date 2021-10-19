@@ -18,6 +18,7 @@ export class Atleta extends View {
 		this._imgAtleta = document.querySelector('#img-atleta');
 		this._imgEstado = document.querySelector('#img-estado');
 		this._labelNome = document.querySelector('#label-nome');
+		this._labelApelido = document.querySelector('#label-apelido');
 		this._textoBiografia = document.querySelector('#p-biografia');
 		this._labelIdade = document.querySelector('#label-idade');
 		this._labelCategoria = document.querySelector('#label-categoria');
@@ -130,6 +131,7 @@ async atualizarAtleta() {
 setAtleta(atleta) {
 	this._atleta = atleta;
 	this._labelNome.textContent = this._atleta.nome
+	this._labelApelido.textContent = `(${this._atleta.apelido})`
 	this._textoBiografia.textContent = this._atleta.biografia
 	this._textoBiografia.innerHTML = this._textoBiografia.innerHTML.replace(/\n/g, '<br>\n')
 

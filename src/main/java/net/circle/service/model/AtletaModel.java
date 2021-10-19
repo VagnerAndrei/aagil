@@ -15,6 +15,7 @@ public class AtletaModel extends AbstractModel{
 
 	private Integer id;
 	private String nome;
+	private String apelido;
 	private String biografia;
 
 	@JsonFormat(shape = Shape.STRING, pattern = "yyyy-MM-dd")
@@ -34,10 +35,11 @@ public class AtletaModel extends AbstractModel{
 		this.usuario = new UsuarioModel(email, perfis);
 	}
 
-	public AtletaModel(Integer id, String nome, String biografia,LocalDate nascimento, LocalidadeModel localidade, String categoria, IDModel foto) {
+	public AtletaModel(Integer id, String nome, String apelido, String biografia,LocalDate nascimento, LocalidadeModel localidade, String categoria, IDModel foto) {
 		super();
 		this.id = id;
 		this.nome = nome;
+		this.apelido = apelido;
 		this.biografia = biografia;
 		this.nascimento = nascimento;
 		this.localidade = localidade;
@@ -61,6 +63,14 @@ public class AtletaModel extends AbstractModel{
 		this.nome = nome;
 	}
 	
+	public String getApelido() {
+		return apelido;
+	}
+
+	public void setApelido(String apelido) {
+		this.apelido = apelido;
+	}
+
 	public String getBiografia() {
 		return biografia;
 	}

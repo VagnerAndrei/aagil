@@ -33,16 +33,17 @@ export class Atletas extends ListaPaginada {
 		this.lista?.map(atleta => {
 			itemsHtml += `	
 						<li id="li-atleta-${atleta.id}">
-							<strong>${atleta.nome}</strong>
+							<strong>${atleta.nome}</strong> 
+									${atleta.apelido ? `<label>(${atleta.apelido})</label>` : ''}
 							<div class="flex-row space-beetween">
 								<div class="container-foto-atleta">
 									<img src="api/atletas/${atleta.id}/foto/thumb?t=${new Date().getTime()}" onerror="this.src='assets/img/usuario.png'">
 								</div>
 								<div class="flex-column space-beetween items-right">
 									${atleta.localidade ? `<img src="assets/img/ufs/${atleta.localidade.uf}.png">
-									<strong>${atleta.localidade.nome} - ${atleta.localidade.uf}</strong>` : ''}
-									${atleta.categoria ? `<strong>${atleta.categoria}</strong>` : ''}
-									${atleta.nascimento ? `<strong>${getIdade(atleta.nascimento)}</strong>` : ''}
+									<small>${atleta.localidade.nome} - ${atleta.localidade.uf}</small>` : ''}
+									${atleta.categoria ? `<small>${atleta.categoria}</small>` : ''}
+									${atleta.nascimento ? `<small>${getIdade(atleta.nascimento)}</small>` : ''}
 								</div>
 							</div>
 						</li>

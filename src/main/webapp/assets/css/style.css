@@ -445,12 +445,13 @@ iframe{
 /* ATLETAS */
 .lista-atletas {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
+	grid-template-columns: repeat(3, 1fr);
 	gap: 10px;
 	list-style: none;
 }
 
 .lista-atletas li{
+	width: 250px;
 	cursor: pointer;
 }
 
@@ -461,11 +462,19 @@ iframe{
 
 .atleta {
 	border: solid;
-	border-width: 2;
-	width: 40%;
+	border-width: 1px;
+	padding: 5px 10px;
+	width: 50%;
+	display: inline-block;
+	align-self: center;
+}
+
+.atleta *{
+	padding: 2px 0;
 }
 
 .manobras {
+	display: none;
 	border: solid;
 	border-width: 2;
 	width: 60%;
@@ -480,9 +489,11 @@ iframe{
 	width: 800px;
 	display: flex;
 	flex-direction: row;
+	justify-content: center;
 }
 
 .botao-foto {
+	display: block;
 	opacity: 75%;
 	width: 24px;
 	height: 24px;

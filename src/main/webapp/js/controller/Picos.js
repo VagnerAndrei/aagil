@@ -56,7 +56,7 @@ export class Picos extends ListaPaginada {
 		let itemsHtml = ''
 		this.lista?.map(pico => {
 			itemsHtml += `	
-						<li id="li-pico-${pico.id}">
+						<li id="li-pico-${pico.id}" class="li-pico">
 							<strong>${pico.titulo}</strong>
 							<div class="flex-row">
 								<div>

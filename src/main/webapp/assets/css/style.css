@@ -96,12 +96,12 @@ header img+div {
 
 main {
 	display: flex;
+	flex-direction:column;
 	width: 100vh;
 	height: 100%;
 	min-height: 600px;
 	max-width: 1024px;
-	justify-content: center;
-	margin: 26px auto auto auto;
+	margin: auto;
 	position: relative;
 	background-color: var(--yellow-200);
 }
@@ -223,7 +223,7 @@ iframe{
 }
 
 .header-index-fixed {
-	width: 100%;
+	width: 100vw;
 	height: 65px;
 	margin: auto;
 	background-color: var(--yellow);
@@ -308,7 +308,7 @@ iframe{
 	text-align: right;
 	margin-bottom: 5px;
 	display: block;
-	width: 100vh;
+	width: 100vw;
 }
 
 .acess-panel{
@@ -537,6 +537,7 @@ iframe{
 
 .form-item input + label, .form-item button + label{
 	text-align: left;
+	width: auto;
 	display: inline-block;
 }
 
@@ -545,8 +546,15 @@ iframe{
 }
 
 .form-item textarea{
-	margin-left: 3px;
 	display: inline-block;
+}
+
+.form-item input[type=date]{
+	width: 150px;
+}
+
+.form-item input[type=number]{
+	width: 45px;
 }
 
 .form-item strong{
@@ -628,7 +636,7 @@ iframe{
 	margin: 5px auto 0 5px;
 }
 
-#form-pico ul li, #form-postagem ul li{
+#form-pico ul li, #form-postagem ul li, .pico-campeonato{
 	padding: 10px;
 	border-radius: 10px;
 	background-color: var(--yellow-300);
@@ -674,7 +682,8 @@ iframe{
 	width: 100vh;
 }
 
-#form-postagem .form-item{
+.form-item{
+	display: flex;
 	vertical-align: center;
 }
 
@@ -752,8 +761,8 @@ iframe{
 
 .li-postagem label{
 	float: right;
-	margin-top: -35px;
-	font-size: 14px;
+	margin-top: -25px;
+	font-size: 12px;
 	font-style: italic;
 }
 
@@ -994,4 +1003,60 @@ iframe{
 /* CKEDITOR */
 .ck-editor__editable {
     height: 350px;
+}
+
+
+.botao-pesquisar{
+	background: url(../img/icons/search_white_24dp.svg) no-repeat;
+}
+
+.icon-botao-inserir{
+	background: url(../img/icons/add_white_24dp.svg) no-repeat;
+}
+
+.icon-podium{
+	width: 26px;
+	height: 26px;
+	content: url(../img/icons/podium_yellow_24dp.svg);
+}
+
+.icon-double-arrow{
+	width: 26px;
+	height: 26px;
+	content: url(../img/icons/double_arrow_black_24dp.svg);
+}
+
+.icon-descricao{
+	width: 26px;
+	height: 26px;
+	content: url(../img/icons/description_black_24dp.svg);
+}
+
+.icon-editar{
+	width: 16px;
+	height: 16px;
+	opacity: 50%;
+	content: url(../img/icon-editar.png);
+}
+
+.icon-editar:hover, .icon-remover:hover {
+	opacity: 100%;
+}
+
+
+.icon-remover{
+	width: 16px;
+	height: 16px;
+	opacity: 50%;
+	content: url(../img/icon-remover-16.png);
+}
+
+.icon-categoria{
+	width: 26px;
+	height: 26px;
+	content: url(../img/icons/category_black_24dp.svg);
+}
+.botao-inserir{
+	height: var(--semi-button-heigth);
+	background-color: var(--blue-400);
 }

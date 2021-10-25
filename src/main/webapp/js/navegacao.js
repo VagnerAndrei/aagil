@@ -132,6 +132,14 @@ function atletas(clickEvent) {
 	if (clickEvent) changeState(views.atletas)
 }
 
+function campeonatos(clickEvent){
+	current_verify()
+	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
+	else instances.atletas.display(true)
+	instances.current = instances.atletas
+	if (clickEvent) changeState(views.atletas)
+}
+
 function sobre(clickEvent) {
 	current_verify()
 	instances.current = new Sobre()

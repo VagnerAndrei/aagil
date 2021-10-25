@@ -12,7 +12,7 @@
 
 # Package Files #
 # *.jar
-#*.war
+*.war
 *.nar
 *.ear
 *.zip
@@ -21,10 +21,6 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
-#/target
-/target/m2e-wtp
-/target/classes
-/target/teste-classes
+/target
 /.settings
 /bin/
-/target/

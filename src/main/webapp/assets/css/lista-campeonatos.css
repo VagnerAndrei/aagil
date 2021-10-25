@@ -1,0 +1,38 @@
+@charset "UTF-8";
+
+#button-criar-campeonato{
+	width: 150px;
+	align-self: flex-end;
+	margin: 30px 0 60px 0;
+}
+
+#ul-campeonatos{
+	align-self: center;
+}
+
+#ul-campeonatos li {
+	padding: 20px 0;
+	font-size: 35px;
+	font-weight: bold;
+	font-family: sans-serif;
+}
+
+#ul-campeonatos li a:link {
+	color: var(--blue-300);
+	text-decoration: none;
+}
+
+#ul-campeonatos li a:visited {
+	color: var(--blue-300);
+	text-decoration: none;
+}
+
+#ul-campeonatos li a:hover {
+	color: var(--blue-200);
+	text-decoration: none;
+}
+
+#ul-campeonatos li a:active {
+	color: var(--blue-300);
+	text-decoration: none;
+}

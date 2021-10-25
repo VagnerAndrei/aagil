@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<title>Campeonatos</title>
+<link rel="shortcut icon" href="../../src/main/webapp/assets/img/logo.png" />
+<link href="../../src/main/webapp/assets/css/style.css" rel="stylesheet">
+<link href="../../src/main/webapp/assets/css/lista-campeonatos.css" rel="stylesheet">
+</head>
+
+<body>
+	<header class="header-index">
+		<div class="header-index-fixed">
+			<div class="header-index-fixed-max-width">
+				<img id="img-logo" src="../../src/main/webapp/assets/img/svg/aagil.svg"
+					alt="Associação Paraense de Aggressive Inline" />
+				<div class="acess-panel">
+					<label id="label-usuario-logado" for="usuario" class="nome-usuario">
+					</label>
+					<nav class="navigation-user">
+						<button type="button" id="botao-perfil" class="display-none">Perfil</button>
+						<button type="button" id="botao-acessar" class="display-none">Acessar</button>
+						<button type="button" id="botao-registrar" class="display-none">Registrar-se</button>
+						<button type="button" id="botao-logout" class="display-none">Sair</button>
+					</nav>
+				</div>
+			</div>
+		</div>
+		<br />
+		<br />
+		<div class="header-index-img"></div>
+		<br />
+		<br />
+		<nav class="display-inline">
+			<button type="button" id="botao-campeonatos" >Campeonatos</button>
+		</nav>
+	</header>
+	<main>
+		
+		<button id="button-criar-campeonato" class="botao-inserir" onclick="location.href = '../formCampeonato/index.html'">Criar campeonato</button>
+		
+		<ul id="ul-campeonatos">
+			<li>
+				<a href="index.html">CPPS/AAGIL Etapa Castanhal</a>
+			</li>
+			<li>
+				<a href="">CPPS/AAGIL Etapa Dinos</a>
+			</li>
+		</ul>
+	
+	
+	</main>
+	<footer>
+		<a id="botao-sobre">Circle</a>
+	</footer>
+	<div id="div-modal"></div>
+</body>
+
+</html>

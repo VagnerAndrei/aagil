@@ -8,6 +8,7 @@ document.getElementById('botao-manobras').addEventListener('click', manobras);
 document.getElementById('botao-picos').addEventListener('click', picos);
 document.getElementById('botao-perfil').addEventListener('click', perfil);
 document.getElementById('botao-atletas').addEventListener('click', atletas);
+//document.getElementById('botao-campeonatos').addEventListener('click', campeonatos);
 document.getElementById('botao-sobre').addEventListener('click', sobre);
 document.getElementById('botao-logout').addEventListener('click', logout);
 

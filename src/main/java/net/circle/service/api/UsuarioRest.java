@@ -173,9 +173,9 @@ public class UsuarioRest {
 	}
 
 	@GET
-	@Path("/atleta")
+	@Path("/redirect")
 	public Response redirect() {
-		return Response.temporaryRedirect(URI.create("../?atleta")).build();
+		return Response.temporaryRedirect(URI.create("http://www.aagil.com.br/aagil/")).build();
 	}
 
 	private AtletaModel parseModel(Atleta pessoa) {

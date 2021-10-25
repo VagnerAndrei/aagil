@@ -1,0 +1,106 @@
+@charset "UTF-8";
+
+#form-campeonato{
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+}
+
+#form-campeonato input[type=text]{
+	width: 70%;
+}
+
+#form-campeonato textarea{
+	width: 70%;
+	height: 60px;
+}
+
+#button-pesquisar-pista, #button-pesquisar-atleta-arbitro, #button-adicionar-arbitro{
+	width: 26px;
+	display: inline-block;
+}
+
+#button-adicionar-categoria{
+	width: 200px;
+	margin-left: 100px;
+}
+
+#ul-categorias li{
+	display: flex;
+	flex-direction: column;
+	border-radius: 25px;
+	padding-left: 25px;
+	margin: 5px 0;
+	background-color: var(--yellow-300)
+}
+
+#ul-categorias li p{
+	margin: 0;
+}
+.icon-label{
+	display: flex;
+	align-items: center;
+}
+
+.icon-editar-categoria{
+	cursor: pointer;
+	position: relative;
+	margin-left: auto;
+	right: 25px;
+	bottom: -30px;
+	
+}
+
+.icon-remover-categoria{
+	cursor: pointer;
+	position: relative;
+	margin-left: auto;
+	right: 25px;
+	top: -20px;
+}
+
+.icon-remover-arbitro{
+	position: relative;
+	right: 0;
+	cursor: pointer;
+	margin-left: 50px;
+}
+
+.titulo-categoria-label{
+	align-self: center;
+}
+
+#ul-arbitros{
+	
+	list-style: circle;
+}
+
+#ul-arbitros li{
+	justify-content: space-between;
+	margin: 3px 30px 3px 90px;
+}
+
+#ul-fotos{
+	max-width: 700px;
+	width: 70vw;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: flex-start;
+}
+
+#label-erro-campeonato{
+	margin: 10px 0 10px 90px;
+	
+}
+
+#button-enviar-campeonato{
+	width: 300px;
+	display: inline-block;
+	align-self: center;
+}
+
+#label-anexo-regulamento{
+	margin-left: 5px;
+	align-self: center;
+}

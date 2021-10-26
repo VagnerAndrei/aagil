@@ -42,8 +42,8 @@ export class Postagens extends Lista {
 			itensHTML +=
 				`
 			<li class="li-postagem">
-				<h1>${postagem.titulo}</h1>
 				<label>${postagem.data}</label>
+				<h1>${postagem.titulo}</h1>
 				${postagem.midia ?
 					`<iframe src="
 				${postagem.midia.tipo == 'Youtube' ?

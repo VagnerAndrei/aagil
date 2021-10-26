@@ -178,6 +178,7 @@ input[type=checkbox]:checked {
 
 ul {
 	list-style-type: none;
+	margin-left: -40px;
 }
 
 /* 				IDS 			*/
@@ -759,7 +760,7 @@ iframe{
 
 .li-postagem label{
 	float: right;
-	margin-top: -25px;
+	margin-top: -15px;
 	font-size: 12px;
 	font-style: italic;
 }

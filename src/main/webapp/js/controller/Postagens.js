@@ -7,7 +7,7 @@ import { Postagem } from '../model/Postagem.js'
 export class Postagens extends Lista {
 
 	constructor(element) {
-		super('Postagens', 'api/postagens')
+		super('AAGIL', 'api/postagens')
 		this._element = document.getElementById(element)
 		this.init()
 	}

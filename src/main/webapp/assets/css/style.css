@@ -95,9 +95,11 @@ header img+div {
 }
 
 main {
+	margin-top: 10px;
 	display: flex;
 	flex-direction:column;
-	width: 100vh;
+	align-items: stretch;
+	width: 100vw;
 	height: 100%;
 	min-height: 600px;
 	max-width: 1024px;
@@ -236,11 +238,10 @@ iframe{
 
 .header-index-fixed-max-width{
 	align-items:stretch;
-	width: 100%;
+	width: 100vw;
 	height: 65px;
 	padding: 0 ;
 	margin: auto;
-	width: 1024px;
 	max-width: 1024px;
 }
 
@@ -305,10 +306,10 @@ iframe{
 }
 
 .navigation-user{
-	text-align: right;
+	align-items: flex-end;
 	margin-bottom: 5px;
-	display: block;
-	width: 100vw;
+	display: flex;
+	align-self: stretch;
 }
 
 .acess-panel{
@@ -461,8 +462,6 @@ iframe{
 }
 
 .atleta {
-	border: solid;
-	border-width: 1px;
 	padding: 5px 10px;
 	width: 50%;
 	display: inline-block;
@@ -485,15 +484,14 @@ iframe{
 	width: 33%;
 }
 
-.container-atleta {
-	width: 800px;
+.container-view {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: center;
+	align-items: center;
 }
 
 .botao-foto {
-	display: block;
 	opacity: 75%;
 	width: 24px;
 	height: 24px;
@@ -701,6 +699,10 @@ iframe{
 }
 
 /* POSTAGENS */
+.section-postagens{
+	align-self: stretch;
+}
+
 .li-postagem{
 	background-color: RGBA(255, 255, 255, 0.9);
 	padding: 20px;
@@ -713,7 +715,7 @@ iframe{
 .album-postagens{
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
+	align-items: stretch;
 }
 
 .album-postagens-thumbnails{
@@ -738,11 +740,7 @@ iframe{
 }
 
 .img-postagem{
-	display: block;
-	margin: auto;
-	width: auto;
-	max-width: 75vh;
-	max-height: 50vh;
+	align-self: stretch;
 }
 
 .album-postagens span{
@@ -786,6 +784,10 @@ iframe{
 	background-color: var(--yellow-300);
 }
 
+.lista-paginada{
+	align-self: stretch;
+}
+
 .lista-paginada-container section{
 	padding: 5px;
 	clear: right;
@@ -799,7 +801,7 @@ iframe{
 	display: flex;
 	justify-content: space-between;
 	flex-direction: row;
-	width: 100vh;
+	width: 100vw;
 }
 
 .lista-paginada-header button, .semi-button{

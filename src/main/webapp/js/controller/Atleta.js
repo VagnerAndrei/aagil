@@ -23,7 +23,6 @@ export class Atleta extends View {
 		this._labelIdade = document.querySelector('#label-idade');
 		this._labelCategoria = document.querySelector('#label-categoria');
 		this._labelLocalidadeUf = document.querySelector('#label-localidade-uf');
-		this._container = document.querySelector('#div-atleta');
 		this._imgAtualizarAtleta = document.querySelector('#img-atualizar-atleta');
 		this._imgAtualizarFoto = document.querySelector('#img-atualizar-foto');
 		this._imgAtualizarFoto.addEventListener('click', event => this.atualizarFoto(event))
@@ -100,9 +99,6 @@ async consultarAtleta(idAtleta) {
 		const atleta = await response.json();
 
 		this.setAtleta(atleta);
-
-		this._container.classList.add('container-atleta');
-		this._container.classList.remove('display-none');
 
 		this.confereFoto(this._atleta.foto)
 	}

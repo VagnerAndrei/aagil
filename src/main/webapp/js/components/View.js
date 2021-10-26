@@ -61,6 +61,7 @@ export class View {
 		const div = document.createElement('div')
 		div.id = this._viewName
 		div.innerHTML = !template ? this.template() : template
+		div.classList.add('container-view')
 		this._main.append(div)
 	}
 

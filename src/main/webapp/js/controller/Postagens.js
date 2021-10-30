@@ -54,7 +54,9 @@ export class Postagens extends Lista {
 				
 				${postagem.fotos ? `
 				<div class="album-postagens">
-					<img class="img-postagem" id="img-postagem-${postagem.id}" src="api/fotos/${postagem.fotos[0].id}">
+					<div class="container-img-postagem">
+						<img class="img-postagem" id="img-postagem-${postagem.id}" src="api/fotos/${postagem.fotos[0].id}">
+					</div>
 				
 				<ul id="ul-thumbnail-postagem" class="album-postagens-thumbnails ${postagem.fotos.length > 1 ? '' : 'display-none'}">
 				

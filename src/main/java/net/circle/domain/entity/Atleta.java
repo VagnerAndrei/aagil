@@ -58,6 +58,14 @@ public class Atleta extends AbstractEntity {
 
 	@Enumerated(EnumType.STRING)
 	private Categoria categoria;
+	
+	public Atleta() {
+	}
+
+
+	public Atleta(Integer id) {
+		this.id = id;
+	}
 
 	public Integer getId() {
 		return id;

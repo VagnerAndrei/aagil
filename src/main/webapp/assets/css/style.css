@@ -705,12 +705,11 @@ iframe{
 }
 
 .li-postagem{
-	background-color: RGBA(255, 255, 255, 0.9);
+	background-color: RGBA(255, 255, 255, 0.5);
 	padding: 20px;
 	margin: 30px 0;
 	border-radius: 10px;
 	border: 2px solid;
-	
 }
 
 .album-postagens{
@@ -740,8 +739,15 @@ iframe{
 	cursor: pointer;
 }
 
-.img-postagem{
+.container-img-postagem{
+	display: flex;
 	align-self: stretch;
+}
+
+.img-postagem{
+	align-self: center;
+	max-height: 80vh;
+	max-width: 95vw;
 }
 
 .album-postagens span{

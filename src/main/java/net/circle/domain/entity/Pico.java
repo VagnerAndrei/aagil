@@ -31,6 +31,7 @@ public class Pico extends AbstractEntity {
 	@JoinTable(name = "tags_picos", joinColumns = @JoinColumn(name = "pico_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))
 	private List<Tag> tags = new ArrayList<Tag>();
 
+	//TODO: @OneToMany
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REMOVE})
 	@JoinTable(name = "fotos_picos", joinColumns = @JoinColumn(name = "pico_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
 	private List<Foto> fotos = new ArrayList<Foto>();

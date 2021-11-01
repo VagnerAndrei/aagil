@@ -28,6 +28,14 @@ public class AtletaModel extends AbstractModel{
 	
 	private UsuarioModel usuario;
 	
+	
+	
+	public AtletaModel(Integer id, String nome) {
+		super();
+		this.id = id;
+		this.nome = nome;
+	}
+
 	public AtletaModel(Integer id, String nome, String email, Set<String> perfis) {
 		super();
 		this.id = id;

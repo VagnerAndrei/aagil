@@ -3,6 +3,9 @@ package net.circle.service.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 public class CategoriaCampeonatoModel {
 
 	private Integer id;
@@ -17,8 +20,10 @@ public class CategoriaCampeonatoModel {
 
 	private Float valorInscricao;
 
+	@JsonInclude(value = Include.NON_EMPTY)
 	private List<PremiacaoCampeonatoModel> premiacoes = new ArrayList<PremiacaoCampeonatoModel>();
 
+	@JsonInclude(value = Include.NON_EMPTY)
 	private List<InscricaoCampeonatoModel> inscricoes = new ArrayList<InscricaoCampeonatoModel>();
 
 	private Boolean permitirInscricoes;

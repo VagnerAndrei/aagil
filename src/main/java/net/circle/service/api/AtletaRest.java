@@ -19,7 +19,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
@@ -37,6 +36,7 @@ import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.LocalidadeModel;
 import net.circle.service.model.PaginacaoModel;
+import net.circle.service.util.InputPartUtil;
 
 @Path("/atletas")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -296,7 +296,7 @@ public class AtletaRest {
 			int idFoto = 0;
 			for (InputPart inputPart : inputParts) {
 
-				String fileName = getFileName(inputPart.getHeaders());
+				String fileName = InputPartUtil.getFileName(inputPart.getHeaders());
 
 				var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
 
@@ -317,22 +317,6 @@ public class AtletaRest {
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 
-	}
-
-	private String getFileName(MultivaluedMap<String, String> header) {
-
-		String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-		System.out.println(Arrays.asList(contentDisposition));
-		for (String filename : contentDisposition) {
-			if ((filename.trim().startsWith("filename"))) {
-
-				String[] name = filename.split("=");
-
-				String finalFileName = name[1].trim().replaceAll("\"", "");
-				return finalFileName;
-			}
-		}
-		return "unknown";
 	}
 
 	private AtletaModel parseModel(Atleta pessoa) {

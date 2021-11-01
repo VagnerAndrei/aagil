@@ -18,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -49,7 +50,7 @@ public class Campeonato extends AbstractEntity {
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime data;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="campeonato_id", referencedColumnName = "id", nullable = false)
 	private List<CategoriaCampeonato> categorias = new ArrayList<CategoriaCampeonato>();
 
@@ -57,17 +58,20 @@ public class Campeonato extends AbstractEntity {
 	@JoinTable(name = "arbitros_campeonato", joinColumns = @JoinColumn(name = "campeonato_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "atleta_id", referencedColumnName = "id"))
 	private List<Atleta> arbitros = new ArrayList<Atleta>();
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(name = "midias_divulgacao_campeonato", joinColumns = @JoinColumn(name = "campeonato_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
 	private List<Foto> midiasDivulgacao = new ArrayList<Foto>();
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(name = "fotos_campeonato", joinColumns = @JoinColumn(name = "campeonato_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
 	private List<Foto> fotos = new ArrayList<Foto>();
 
 	@Lob
 	@Basic(fetch = FetchType.LAZY)
 	private Blob regulamento;
+	
+	@Transient
+	private Boolean regulamentoModificado=false;
 
 	public Integer getId() {
 		return id;
@@ -149,4 +153,12 @@ public class Campeonato extends AbstractEntity {
 		this.regulamento = regulamento;
 	}
 
+	public Boolean getRegulamentoModificado() {
+		return regulamentoModificado;
+	}
+
+	public void setRegulamentoModificado(Boolean regulamentoModificado) {
+		this.regulamentoModificado = regulamentoModificado;
+	}
+	
 }

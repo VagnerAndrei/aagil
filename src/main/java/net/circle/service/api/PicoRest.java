@@ -18,7 +18,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -44,6 +43,7 @@ import net.circle.service.model.IDModel;
 import net.circle.service.model.PaginacaoModel;
 import net.circle.service.model.PicoModel;
 import net.circle.service.model.PicoRegistroModel;
+import net.circle.service.util.InputPartUtil;
 
 @Path("/picos")
 @Consumes(MediaType.APPLICATION_JSON)
@@ -101,7 +101,7 @@ public class PicoRest {
 				else
 					for (InputPart inputPart : fotos) {
 
-						String fileName = getFileName(inputPart.getHeaders());
+						String fileName = InputPartUtil.getFileName(inputPart.getHeaders());
 
 						var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
 
@@ -188,22 +188,6 @@ public class PicoRest {
 		model.getPicoNovo().getTags().forEach(tag -> registro.getPicoNovo().getTags().add(new Tag(tag)));
 
 		return registro;
-	}
-
-	private String getFileName(MultivaluedMap<String, String> header) {
-
-		String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-		System.out.println(Arrays.asList(contentDisposition));
-		for (String filename : contentDisposition) {
-			if ((filename.trim().startsWith("filename"))) {
-
-				String[] name = filename.split("=");
-
-				String finalFileName = name[1].trim().replaceAll("\"", "");
-				return finalFileName;
-			}
-		}
-		return "unknown";
 	}
 
 	private List<PicoModel> parseModel(List<Pico> consultarLista) {

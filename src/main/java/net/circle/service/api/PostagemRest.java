@@ -20,7 +20,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -44,6 +43,7 @@ import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.MidiaModel;
 import net.circle.service.model.PostagemModel;
+import net.circle.service.util.InputPartUtil;
 
 @Path("/postagens")
 @Produces(MediaType.APPLICATION_JSON)
@@ -86,7 +86,7 @@ public class PostagemRest {
 
 			if (fotos != null)
 				for (InputPart inputPart : fotos) {
-					String fileName = getFileName(inputPart.getHeaders());
+					String fileName = InputPartUtil.getFileName(inputPart.getHeaders());
 
 					var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
 
@@ -160,20 +160,5 @@ public class PostagemRest {
 		return postagem;
 	}
 
-	private String getFileName(MultivaluedMap<String, String> header) {
-
-		String[] contentDisposition = header.getFirst("Content-Disposition").split(";");
-		System.out.println(Arrays.asList(contentDisposition));
-		for (String filename : contentDisposition) {
-			if ((filename.trim().startsWith("filename"))) {
-
-				String[] name = filename.split("=");
-
-				String finalFileName = name[1].trim().replaceAll("\"", "");
-				return finalFileName;
-			}
-		}
-		return "unknown";
-	}
 
 }

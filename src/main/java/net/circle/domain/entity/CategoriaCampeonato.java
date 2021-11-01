@@ -36,11 +36,11 @@ public class CategoriaCampeonato extends AbstractEntity {
 	@Column(name = "valor_inscricao")
 	private Float valorInscricao;
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="categoria_campeonato_id", referencedColumnName = "id", nullable = false)
 	private List<PremiacaoCampeonato> premiacoes = new ArrayList<PremiacaoCampeonato>();
 
-	@OneToMany
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="categoria_campeonato_id", referencedColumnName = "id", nullable = false)
 	private List<InscricaoCampeonato> inscricoes = new ArrayList<InscricaoCampeonato>();
 

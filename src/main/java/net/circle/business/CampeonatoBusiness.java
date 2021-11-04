@@ -5,7 +5,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 
+import net.circle.business.exception.BusinessException;
 import net.circle.business.interfaces.ICampeonatoBusiness;
 import net.circle.domain.dao.AtletaDAO;
 import net.circle.domain.dao.CampeonatoDAO;
@@ -149,7 +151,8 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 
 	@Override
 	public void setNota(NotaCampeonato notaEntity, Integer idInscricao) throws Exception {
-		var nota = notaEntity.getId() != null ? notaCampeonatoDAO.findById(notaEntity.getId()).get() : new NotaCampeonato();
+		var nota = notaEntity.getId() != null ? notaCampeonatoDAO.findById(notaEntity.getId()).get()
+				: new NotaCampeonato();
 
 		if (nota.getId() == null) {
 			nota.setInscricao(inscricaoCampeonatoDAO.findById(idInscricao).get());
@@ -158,7 +161,11 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 		}
 		nota.setNota(notaEntity.getNota());
 
+		if (nota.getInscricao().getCategoria().getVoltas() < nota.getVolta())
+			throw new Exception("Número da volta inválida");
+		
 		notaCampeonatoDAO.merge(nota);
+
 	}
 
 	@Override
@@ -171,6 +178,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 	}
 
 	@Override
+	@Transactional
 	public void deleteInscricao(Integer idInscricao) throws Exception {
 		var inscricao = inscricaoCampeonatoDAO.findById(idInscricao).get();
 		inscricaoCampeonatoDAO.remove(inscricao);

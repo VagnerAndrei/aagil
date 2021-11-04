@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import javax.annotation.security.RolesAllowed;
@@ -30,6 +31,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.circle.business.exception.BusinessException;
 import net.circle.business.exception.enums.CampeonatoExcecao;
 import net.circle.business.exception.enums.NegocioExcecao;
 import net.circle.business.interfaces.ICampeonatoBusiness;
@@ -263,19 +265,28 @@ public class CampeonatoRest {
 	 *          Status.OK(200, "OK"),<br/>
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 */
-	@PUT
+	@POST
 	@RolesAllowed("ADMIN")
-	@Path("/nota/{idInscricao}")
+	@Path("/notas/{idInscricao}")
 	public Response setNota(NotaCampeonatoModel notaModel, @PathParam("idInscricao") Integer idInscricao) {
 		try {
 			servicoCampeonato.setNota(parseEntity(notaModel), idInscricao);
 			return Response.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();
+			
+			if(e.getMessage().equals("Número da volta inválida"))
+				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NUMERO_DA_VOLTA_INVALIDA))
+						.build();
+			
+			if (e.getCause().getCause().getMessage().contains("ERROR: duplicate key value violates unique constraint"))
+				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NOTA_JA_LANCADA_NESTA_VOLTA))
+						.build();
+
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
-	
+
 	/**
 	 * Realiza a inscrição de um atleta em uma categoria
 	 *
@@ -284,31 +295,32 @@ public class CampeonatoRest {
 	 * 
 	 * @returns Response: <br/>
 	 *          Status.OK(200, "OK"),<br/>
-	 *          Status.FORBIDDEN(403, "Forbidden")
-	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 *          Status.FORBIDDEN(403, "Forbidden") Status.INTERNAL_SERVER_ERROR(500,
+	 *          "Internal Server Error")
 	 */
 	@POST
 	@RolesAllowed("USER")
-	@Path("/inscricao/{idCategoria}")
-	public Response setInscricao(@Context HttpServletRequest request, AtletaModel atleta, @PathParam("idCategoria")Integer idCategoria) {
+	@Path("/inscricoes/{idCategoria}")
+	public Response setInscricao(@Context HttpServletRequest request, AtletaModel atleta,
+			@PathParam("idCategoria") Integer idCategoria) {
 		try {
-			if(!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
+			if (!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
 				return Response.status(Status.FORBIDDEN).build();
-			
+
 			servicoCampeonato.setInscricao(idCategoria, atleta.getId());
-			
+
 			return Response.ok().build();
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			
-			if(e.getCause().getCause().getMessage().contains(" duplicate key value violates unique constraint \"unique\""))
+
+			if (e.getCause().getCause().getMessage()
+					.contains(" duplicate key value violates unique constraint \"unique\""))
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
-			
+
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
-	
+
 	/**
 	 * Realiza a inscrição de um atleta em uma categoria
 	 *
@@ -317,30 +329,32 @@ public class CampeonatoRest {
 	 * 
 	 * @returns Response: <br/>
 	 *          Status.OK(200, "OK"),<br/>
-	 *          Status.FORBIDDEN(403, "Forbidden")
-	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 *          Status.FORBIDDEN(403, "Forbidden") Status.INTERNAL_SERVER_ERROR(500,
+	 *          "Internal Server Error")
 	 */
 	@POST
 	@RolesAllowed("ADMIN")
-	@Path("/inscricao/{idCategoria}/{idAtleta}")
-	public Response setInscricaoAdmin(@Context HttpServletRequest request, AtletaModel atleta, @PathParam("idCategoria")Integer idCategoria,  @PathParam("idAtleta")Integer idAtleta) {
+	@Path("/inscricoes/{idCategoria}/{idAtleta}")
+	public Response setInscricaoAdmin(@Context HttpServletRequest request, AtletaModel atleta,
+			@PathParam("idCategoria") Integer idCategoria, @PathParam("idAtleta") Integer idAtleta) {
 		try {
-			if(!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
+			if (!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
 				return Response.status(Status.FORBIDDEN).build();
-			
+
 			servicoCampeonato.setInscricao(idCategoria, idAtleta);
-			
+
 			return Response.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			
-			if(e.getCause().getCause().getMessage().contains(" duplicate key value violates unique constraint \"unique\""))
+
+			if (e.getCause().getCause().getMessage()
+					.contains(" duplicate key value violates unique constraint \"unique\""))
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
-			
+
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
-	
+
 	/**
 	 * Realiza a remoção da inscrição de um atleta em uma categoria
 	 *
@@ -349,27 +363,29 @@ public class CampeonatoRest {
 	 * 
 	 * @returns Response: <br/>
 	 *          Status.NO_CONTENT(204, "No Content"),<br/>
-	 *          Status.FORBIDDEN(403, "Forbidden")
-	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 *          Status.FORBIDDEN(403, "Forbidden") Status.INTERNAL_SERVER_ERROR(500,
+	 *          "Internal Server Error")
 	 */
 	@DELETE
 	@RolesAllowed("ADMIN")
-	@Path("/inscricao/{idInscricao}")
-	public Response deleteInscricaoAdmin(@Context HttpServletRequest request, AtletaModel atleta, @PathParam("idInscricao")Integer idInscricao) {
+	@Path("/inscricoes/{idInscricao}")
+	public Response deleteInscricaoAdmin(@Context HttpServletRequest request, AtletaModel atleta,
+			@PathParam("idInscricao") Integer idInscricao) {
 		try {
-			if(!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
+			if (!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
 				return Response.status(Status.FORBIDDEN).build();
-			
+
 			servicoCampeonato.deleteInscricao(idInscricao);
-			
+
 			return Response.status(Status.NO_CONTENT).build();
+		} catch (NoSuchElementException e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(CampeonatoExcecao.INSCRICAO_NAO_EXISTE)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
-	
-	
 
 	private List<CampeonatoModel> parseModel(List<Campeonato> lista) {
 		return lista.stream().map(campeonato -> new CampeonatoModel(campeonato.getId(), campeonato.getTitulo()))

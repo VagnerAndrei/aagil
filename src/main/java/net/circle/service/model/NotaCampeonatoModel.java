@@ -9,7 +9,7 @@ public class NotaCampeonatoModel {
 	private AtletaModel arbitro;
 
 	private Float nota;
-
+	
 	public Integer getId() {
 		return id;
 	}
@@ -41,7 +41,5 @@ public class NotaCampeonatoModel {
 	public void setNota(Float nota) {
 		this.nota = nota;
 	}
-	
-	
 
 }

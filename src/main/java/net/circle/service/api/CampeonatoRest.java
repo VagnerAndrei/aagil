@@ -24,6 +24,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
 
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -31,7 +32,6 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import net.circle.business.exception.BusinessException;
 import net.circle.business.exception.enums.CampeonatoExcecao;
 import net.circle.business.exception.enums.NegocioExcecao;
 import net.circle.business.interfaces.ICampeonatoBusiness;
@@ -381,6 +381,41 @@ public class CampeonatoRest {
 		} catch (NoSuchElementException e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(CampeonatoExcecao.INSCRICAO_NAO_EXISTE)).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+
+	/**
+	 * Realiza a obtenção do regulamento do campeonato
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.NO_CONTENT(204, "No Content"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@GET
+	@Path("/{idCampeonato}/regulamento")
+	@Produces("application/pdf")
+	@Transactional
+	public Response getRegulamento(@PathParam("idCampeonato") Integer idCampeonato) {
+		try {
+			var campeonato = servicoCampeonato.consultar(idCampeonato).get();
+
+			var regulamento = campeonato.getRegulamento().getBinaryStream().readAllBytes();
+			
+			if (regulamento.length == 0)
+				return Response.status(Status.NO_CONTENT).build();
+
+			ResponseBuilder response = Response.ok(regulamento).type("application/pdf"); // +
+			// atleta.getFoto().getExtensao()
+			response.header("Content-Disposition", "inline; filename=" + campeonato.getTitulo().trim() + "-regulamento.pdf");// +
+			// atleta.getFoto().getExtensao()
+
+			return response.build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();

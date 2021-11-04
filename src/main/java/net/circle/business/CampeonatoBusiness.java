@@ -184,4 +184,5 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 		inscricaoCampeonatoDAO.remove(inscricao);
 	}
 
+	
 }

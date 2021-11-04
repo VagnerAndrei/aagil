@@ -5,9 +5,9 @@ import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.PostPersist;
 
 import net.circle.business.interfaces.ICampeonatoBusiness;
+import net.circle.domain.dao.AtletaDAO;
 import net.circle.domain.dao.CampeonatoDAO;
 import net.circle.domain.dao.CategoriaCampeonatoDAO;
 import net.circle.domain.dao.FotoDAO;
@@ -15,10 +15,14 @@ import net.circle.domain.dao.InscricaoCampeonatoDAO;
 import net.circle.domain.dao.NotaCampeonatoDAO;
 import net.circle.domain.dao.PicoDAO;
 import net.circle.domain.dao.PremiacaoCampeonatoDAO;
+import net.circle.domain.entity.Atleta;
 import net.circle.domain.entity.Campeonato;
 import net.circle.domain.entity.CategoriaCampeonato;
 import net.circle.domain.entity.Foto;
+import net.circle.domain.entity.InscricaoCampeonato;
+import net.circle.domain.entity.NotaCampeonato;
 import net.circle.domain.entity.PremiacaoCampeonato;
+import net.circle.domain.entity.StatusPagamento;
 
 @Named
 public class CampeonatoBusiness implements ICampeonatoBusiness {
@@ -44,8 +48,10 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 	@Inject
 	private FotoDAO fotoDAO;
 
+	@Inject
+	private AtletaDAO atletaDAO;
+
 	@Override
-	@PostPersist
 	public Campeonato salvar(Campeonato model) throws Exception {
 		try {
 
@@ -65,12 +71,15 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 			entity.setFotos(model.getFotos());
 			for (Foto foto : entity.getFotos())
 				if (foto.getId() != null)
-					entity.getMidiasDivulgacao().set(entity.getMidiasDivulgacao().indexOf(foto),
-							fotoDAO.findById(foto.getId()).get());
+					entity.getFotos().set(entity.getFotos().indexOf(foto), fotoDAO.findById(foto.getId()).get());
 
 			if (model.getRegulamentoModificado()) {
-				entity.getRegulamento().free();
 				entity.setRegulamento(model.getRegulamento());
+			}
+
+			entity.getArbitros().clear();
+			for (Atleta arbitro : model.getArbitros()) {
+				entity.getArbitros().add(atletaDAO.findById(arbitro.getId()).get());
 			}
 
 			entity.getCategorias().clear();
@@ -113,8 +122,58 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 
 	@Override
 	public Optional<Campeonato> consultar(Integer id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.findById(id);
+	}
+
+	@Override
+	public void setPermitirInscricoes(Boolean permitir, Integer categoriaId) throws Exception {
+		var categoria = categoriaCampeonatoDAO.findById(categoriaId).get();
+		categoria.setPermitirInscricoes(permitir);
+		categoriaCampeonatoDAO.merge(categoria);
+	}
+
+	@Override
+	public void setExibirInscricoes(Boolean exibir, Integer categoriaId) throws Exception {
+		var categoria = categoriaCampeonatoDAO.findById(categoriaId).get();
+		categoria.setExibirInscricoes(exibir);
+		categoriaCampeonatoDAO.merge(categoria);
+
+	}
+
+	@Override
+	public void setExibirClassificacao(Boolean exibir, Integer categoriaId) throws Exception {
+		var categoria = categoriaCampeonatoDAO.findById(categoriaId).get();
+		categoria.setExibirClassificacao(exibir);
+		categoriaCampeonatoDAO.merge(categoria);
+	}
+
+	@Override
+	public void setNota(NotaCampeonato notaEntity, Integer idInscricao) throws Exception {
+		var nota = notaEntity.getId() != null ? notaCampeonatoDAO.findById(notaEntity.getId()).get() : new NotaCampeonato();
+
+		if (nota.getId() == null) {
+			nota.setInscricao(inscricaoCampeonatoDAO.findById(idInscricao).get());
+			nota.setArbitro(atletaDAO.findById(notaEntity.getArbitro().getId()).get());
+			nota.setVolta(notaEntity.getVolta());
+		}
+		nota.setNota(notaEntity.getNota());
+
+		notaCampeonatoDAO.merge(nota);
+	}
+
+	@Override
+	public void setInscricao(Integer idCategoria, Integer idAtleta) throws Exception {
+		var inscricao = new InscricaoCampeonato();
+		inscricao.setAtleta(atletaDAO.findById(idAtleta).get());
+		inscricao.setStatusPagamento(StatusPagamento.PENDENTE);
+		inscricao.setCategoria(categoriaCampeonatoDAO.findById(idCategoria).get());
+		inscricaoCampeonatoDAO.merge(inscricao);
+	}
+
+	@Override
+	public void deleteInscricao(Integer idInscricao) throws Exception {
+		var inscricao = inscricaoCampeonatoDAO.findById(idInscricao).get();
+		inscricaoCampeonatoDAO.remove(inscricao);
 	}
 
 }

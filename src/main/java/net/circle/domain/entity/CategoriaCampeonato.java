@@ -6,6 +6,7 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -40,8 +41,7 @@ public class CategoriaCampeonato extends AbstractEntity {
 	@JoinColumn(name="categoria_campeonato_id", referencedColumnName = "id", nullable = false)
 	private List<PremiacaoCampeonato> premiacoes = new ArrayList<PremiacaoCampeonato>();
 
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name="categoria_campeonato_id", referencedColumnName = "id", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "categoria", fetch = FetchType.LAZY)
 	private List<InscricaoCampeonato> inscricoes = new ArrayList<InscricaoCampeonato>();
 
 	@Column(name = "permitir_inscricoes")

@@ -11,6 +11,9 @@ public class UsuarioModel {
 	private String email;
 	private Set<String> perfis;
 
+	public UsuarioModel() {
+	}
+
 	public UsuarioModel(String email, Set<String> perfis) {
 		this.email = email;
 		this.perfis = perfis;

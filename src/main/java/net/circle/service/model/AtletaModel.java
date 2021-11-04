@@ -29,6 +29,9 @@ public class AtletaModel extends AbstractModel{
 	private UsuarioModel usuario;
 	
 	
+	public AtletaModel() {
+		
+	}
 	
 	public AtletaModel(Integer id, String nome) {
 		super();

@@ -11,11 +11,14 @@ import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.rowset.serial.SerialBlob;
+import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -38,6 +41,7 @@ import net.circle.domain.entity.InscricaoCampeonato;
 import net.circle.domain.entity.NotaCampeonato;
 import net.circle.domain.entity.Pico;
 import net.circle.domain.entity.PremiacaoCampeonato;
+import net.circle.service.model.AtletaModel;
 import net.circle.service.model.CampeonatoModel;
 import net.circle.service.model.CategoriaCampeonatoModel;
 import net.circle.service.model.ErroModel;
@@ -73,8 +77,10 @@ public class CampeonatoRest {
 	 * @param pessoa - Atleta
 	 * 
 	 * @returns Response: <br/>
+	 *          Status.BAD_REQUEST(400, "Bad Request")
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 *          Status.ACCEPTED(202, "Accepted")
 	 */
 	@POST
 	@PUT
@@ -150,9 +156,234 @@ public class CampeonatoRest {
 		}
 	}
 
+	/**
+	 * Realiza a consulta de um campeonato
+	 *
+	 * @param idCampeonato
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FOUND(302, "Found"),<br/>
+	 *          Status.NOT_FOUND(404, "Not Found"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@GET
+	@Path("/{idCampeonato}")
+	@Transactional
+	public Response consultar(@PathParam("idCampeonato") Integer idCampeonato) {
+		try {
+			var campeonato = servicoCampeonato.consultar(idCampeonato);
+
+			return campeonato.isPresent() ? Response.status(Status.FOUND).entity(parseModel(campeonato.get())).build()
+					: Response.status(Status.NOT_FOUND).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+
+	/**
+	 * Realiza alteração em permitir inscrição de uma determinada categoria
+	 *
+	 * @param idCategoria      Integer
+	 * @param exibirInscricoes Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@GET
+	@RolesAllowed("ADMIN")
+	@Path("/permitirInscricoes/{idCategoria}/{permitirInscricoes}")
+	public Response permitirInscricoes(@PathParam("idCategoria") Integer idCategoria,
+			@PathParam("permitirInscricoes") Boolean permitirInscricoes) {
+		try {
+			servicoCampeonato.setPermitirInscricoes(permitirInscricoes, idCategoria);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+
+	/**
+	 * Realiza alteração em exibir inscrição de uma determinada categoria
+	 *
+	 * @param idCategoria      Integer
+	 * @param exibirInscricoes Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@PUT
+	@RolesAllowed("ADMIN")
+	@Path("/exibirInscricoes/{idCategoria}/{exibirInscricoes}")
+	public Response exibirInscricoes(@PathParam("idCategoria") Integer idCategoria,
+			@PathParam("exibirInscricoes") Boolean exibirInscricoes) {
+		try {
+			servicoCampeonato.setExibirInscricoes(exibirInscricoes, idCategoria);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+
+	/**
+	 * Realiza alteração em exibir classificação de uma determinada categoria
+	 *
+	 * @param idCategoria         Integer
+	 * @param exibirClassificacao Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@PUT
+	@RolesAllowed("ADMIN")
+	@Path("/exibirClassificacao/{idCategoria}/{exibirClassificacao}")
+	public Response exibirClassificacao(@PathParam("idCategoria") Integer idCategoria,
+			@PathParam("exibirClassificacao") Boolean exibirClassificacao) {
+		try {
+			servicoCampeonato.setExibirInscricoes(exibirClassificacao, idCategoria);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+
+	/**
+	 * Realiza alteração em uma nota de uma volta
+	 *
+	 * @param idCategoria         Integer
+	 * @param exibirClassificacao Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@PUT
+	@RolesAllowed("ADMIN")
+	@Path("/nota/{idInscricao}")
+	public Response setNota(NotaCampeonatoModel notaModel, @PathParam("idInscricao") Integer idInscricao) {
+		try {
+			servicoCampeonato.setNota(parseEntity(notaModel), idInscricao);
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+	
+	/**
+	 * Realiza a inscrição de um atleta em uma categoria
+	 *
+	 * @param idCategoria         Integer
+	 * @param exibirClassificacao Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.FORBIDDEN(403, "Forbidden")
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@POST
+	@RolesAllowed("USER")
+	@Path("/inscricao/{idCategoria}")
+	public Response setInscricao(@Context HttpServletRequest request, AtletaModel atleta, @PathParam("idCategoria")Integer idCategoria) {
+		try {
+			if(!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
+				return Response.status(Status.FORBIDDEN).build();
+			
+			servicoCampeonato.setInscricao(idCategoria, atleta.getId());
+			
+			return Response.ok().build();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			
+			if(e.getCause().getCause().getMessage().contains(" duplicate key value violates unique constraint \"unique\""))
+				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
+			
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+	
+	/**
+	 * Realiza a inscrição de um atleta em uma categoria
+	 *
+	 * @param idCategoria         Integer
+	 * @param exibirClassificacao Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.OK(200, "OK"),<br/>
+	 *          Status.FORBIDDEN(403, "Forbidden")
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@POST
+	@RolesAllowed("ADMIN")
+	@Path("/inscricao/{idCategoria}/{idAtleta}")
+	public Response setInscricaoAdmin(@Context HttpServletRequest request, AtletaModel atleta, @PathParam("idCategoria")Integer idCategoria,  @PathParam("idAtleta")Integer idAtleta) {
+		try {
+			if(!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
+				return Response.status(Status.FORBIDDEN).build();
+			
+			servicoCampeonato.setInscricao(idCategoria, idAtleta);
+			
+			return Response.ok().build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			if(e.getCause().getCause().getMessage().contains(" duplicate key value violates unique constraint \"unique\""))
+				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
+			
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+	
+	/**
+	 * Realiza a remoção da inscrição de um atleta em uma categoria
+	 *
+	 * @param idCategoria         Integer
+	 * @param exibirClassificacao Boolean
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.NO_CONTENT(204, "No Content"),<br/>
+	 *          Status.FORBIDDEN(403, "Forbidden")
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@DELETE
+	@RolesAllowed("ADMIN")
+	@Path("/inscricao/{idInscricao}")
+	public Response deleteInscricaoAdmin(@Context HttpServletRequest request, AtletaModel atleta, @PathParam("idInscricao")Integer idInscricao) {
+		try {
+			if(!atleta.getUsuario().getEmail().equals(request.getUserPrincipal().getName()))
+				return Response.status(Status.FORBIDDEN).build();
+			
+			servicoCampeonato.deleteInscricao(idInscricao);
+			
+			return Response.status(Status.NO_CONTENT).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
+	
+	
+
 	private List<CampeonatoModel> parseModel(List<Campeonato> lista) {
-		return lista.stream().map(campeonato -> new CampeonatoModel(campeonato.getTitulo()))
+		return lista.stream().map(campeonato -> new CampeonatoModel(campeonato.getId(), campeonato.getTitulo()))
 				.collect(Collectors.toList());
+	}
+
+	private NotaCampeonato parseEntity(NotaCampeonatoModel model) {
+		var nota = new NotaCampeonato();
+		nota.setId(model.getId());
+		if (model.getArbitro() != null)
+			nota.setArbitro(new Atleta(model.getArbitro().getId()));
+		nota.setVolta(model.getVolta());
+		nota.setNota(model.getNota());
+		return nota;
 	}
 
 	private CampeonatoModel parseModel(Campeonato campeonato) {
@@ -167,16 +398,20 @@ public class CampeonatoRest {
 
 		model.setArbitros(campeonato.getArbitros().stream().map(arbitro -> ParseModelUtil.parseModel(arbitro, true))
 				.collect(Collectors.toList()));
-		model.setMidiasDivulgacao(campeonato.getMidiasDivulgacao().stream().map(midia -> new IDModel(midia.getId())).collect(Collectors.toList()));
-		model.setFotos(campeonato.getFotos().stream().map(foto -> new IDModel(foto.getId())).collect(Collectors.toList()));
-		
+		model.setMidiasDivulgacao(campeonato.getMidiasDivulgacao().stream().map(midia -> new IDModel(midia.getId()))
+				.collect(Collectors.toList()));
+		model.setFotos(
+				campeonato.getFotos().stream().map(foto -> new IDModel(foto.getId())).collect(Collectors.toList()));
+
 		try {
-			model.setRegulamento(campeonato.getRegulamento() != null ? campeonato.getRegulamento().getBinaryStream().available() != 0 : false);
+			model.setRegulamento(campeonato.getRegulamento() != null
+					? campeonato.getRegulamento().getBinaryStream().readAllBytes().length != 0
+					: false);
 		} catch (IOException | SQLException e) {
 			e.printStackTrace();
 		}
-		
-		for(CategoriaCampeonato categoriaCampeonato : campeonato.getCategorias()) {
+
+		for (CategoriaCampeonato categoriaCampeonato : campeonato.getCategorias()) {
 			var categoriaModel = new CategoriaCampeonatoModel();
 			categoriaModel.setId(categoriaCampeonato.getId());
 			categoriaModel.setNome(categoriaCampeonato.getNome());
@@ -187,21 +422,21 @@ public class CampeonatoRest {
 			categoriaModel.setPermitirInscricoes(categoriaCampeonato.getPermitirInscricoes());
 			categoriaModel.setExibirInscricoes(categoriaCampeonato.getExibirInscricoes());
 			categoriaModel.setExibirClassificacao(categoriaCampeonato.getExibirClassificacao());
-			
-			for(PremiacaoCampeonato premiacaoCampeonato : categoriaCampeonato.getPremiacoes()) {
-				var premiacaoModel  = new PremiacaoCampeonatoModel();
+
+			for (PremiacaoCampeonato premiacaoCampeonato : categoriaCampeonato.getPremiacoes()) {
+				var premiacaoModel = new PremiacaoCampeonatoModel();
 				premiacaoModel.setId(premiacaoCampeonato.getId());
 				premiacaoModel.setColocacao(premiacaoCampeonato.getColocacao());
 				premiacaoModel.setPremiacao(premiacaoCampeonato.getPremiacao());
 				categoriaModel.getPremiacoes().add(premiacaoModel);
 			}
-			
-			for(InscricaoCampeonato inscricaoCampeonato : categoriaCampeonato.getInscricoes()) {
+
+			for (InscricaoCampeonato inscricaoCampeonato : categoriaCampeonato.getInscricoes()) {
 				var inscricaoModel = new InscricaoCampeonatoModel();
 				inscricaoModel.setId(inscricaoCampeonato.getId());
 				inscricaoModel.setAtleta(ParseModelUtil.parseModel(inscricaoCampeonato.getAtleta(), false));
 				inscricaoModel.setStatusPagamento(inscricaoCampeonato.getStatusPagamento().name());
-				for(NotaCampeonato notaCampeonato : inscricaoCampeonato.getNotas()) {
+				for (NotaCampeonato notaCampeonato : inscricaoCampeonato.getNotas()) {
 					var notaModel = new NotaCampeonatoModel();
 					notaModel.setId(notaCampeonato.getId());
 					notaModel.setVolta(notaCampeonato.getVolta());
@@ -211,11 +446,10 @@ public class CampeonatoRest {
 				}
 				categoriaModel.getInscricoes().add(inscricaoModel);
 			}
-			
+
 			model.getCategorias().add(categoriaModel);
 		}
-		
-		
+
 		return model;
 	}
 
@@ -239,9 +473,12 @@ public class CampeonatoRest {
 			categoriaCampeonato.setVoltas(categoriaModel.getVoltas());
 			categoriaCampeonato.setPodium(categoriaModel.getPodium());
 			categoriaCampeonato.setValorInscricao(categoriaModel.getValorInscricao());
-			categoriaCampeonato.setPermitirInscricoes(false);
-			categoriaCampeonato.setExibirInscricoes(false);
-			categoriaCampeonato.setExibirClassificacao(false);
+			categoriaCampeonato.setPermitirInscricoes(
+					categoriaModel.getPermitirInscricoes() != null ? categoriaModel.getPermitirInscricoes() : false);
+			categoriaCampeonato.setExibirInscricoes(
+					categoriaModel.getExibirInscricoes() != null ? categoriaModel.getExibirInscricoes() : false);
+			categoriaCampeonato.setExibirClassificacao(
+					categoriaModel.getExibirClassificacao() != null ? categoriaModel.getExibirClassificacao() : false);
 
 			for (PremiacaoCampeonatoModel premiacaoModel : categoriaModel.getPremiacoes()) {
 				var premiacaoCampeonato = new PremiacaoCampeonato();

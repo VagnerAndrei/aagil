@@ -8,6 +8,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,13 +29,16 @@ public class InscricaoCampeonato extends AbstractEntity {
 	@JoinColumn(nullable = false)
 	private Atleta atleta;
 	
-	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
-	@JoinColumn(name="inscricao_campeonato_id", referencedColumnName = "id", nullable = false)
+	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "inscricao", fetch = FetchType.LAZY)
 	private List<NotaCampeonato> notas = new ArrayList<NotaCampeonato>();
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name = "status_pagamento")
 	private StatusPagamento statusPagamento;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(nullable = false, name = "categoria_campeonato_id")
+	private CategoriaCampeonato categoria;
 
 	public Integer getId() {
 		return id;
@@ -67,8 +71,13 @@ public class InscricaoCampeonato extends AbstractEntity {
 	public void setStatusPagamento(StatusPagamento statusPagamento) {
 		this.statusPagamento = statusPagamento;
 	}
-	
-	
-	
 
+	public CategoriaCampeonato getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriaCampeonato categoria) {
+		this.categoria = categoria;
+	}
+	
 }

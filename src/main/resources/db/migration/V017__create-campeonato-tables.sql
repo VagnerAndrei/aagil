@@ -44,8 +44,7 @@ CREATE TABLE premiacao_campeonato(
 	id SERIAL PRIMARY KEY,
 	colocacao INTEGER NOT NULL,
 	premiacao VARCHAR(255) NOT NULL,
-	categoria_campeonato_id INTEGER NOT NULL REFERENCES categoria_campeonato(id),
-	UNIQUE(colocacao, categoria_campeonato_id)
+	categoria_campeonato_id INTEGER NOT NULL REFERENCES categoria_campeonato(id)
 );
 
 CREATE TABLE inscricao_campeonato(
@@ -61,7 +60,7 @@ CREATE TABLE nota_campeonato(
 	inscricao_campeonato_id INTEGER NOT NULL REFERENCES inscricao_campeonato(id),
 	volta INTEGER NOT NULL,
 	arbitro_id INTEGER NOT NULL REFERENCES atleta(id),
-	private NUMERIC(4,2) NOT NULL,
+	nota NUMERIC(4,2) NOT NULL,
 	UNIQUE(inscricao_campeonato_id, volta, arbitro_id)
 )
 

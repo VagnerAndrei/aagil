@@ -12,6 +12,7 @@ public enum CampeonatoExcecao implements INegocioExcecao {
 	VARIOS_REGULAMENTOS_ENVIADOS("InputRegulamento", "Este serviço aceita upload de uma regulamento apenas"),
 	FORMATO_MIDIA_INVALIDO("InputMidiaDivugacao",
 			"Formato de mídia de divulgação inválido. Formatos aceitos: " + Arrays.asList(InputPartUtil.fotoFormatos)),
+	ATLETA_JA_INSCRITO("Atleta/Categoria",	"Atleta já inscrito nesta categoria"),
 	FORMATO_FOTO_INVALIDO("InputFoto",
 			"Formato de foto inválido. Formatos aceitos: " + Arrays.asList(InputPartUtil.fotoFormatos));
 

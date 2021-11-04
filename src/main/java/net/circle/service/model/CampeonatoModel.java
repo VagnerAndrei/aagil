@@ -19,8 +19,9 @@ public class CampeonatoModel {
 	public CampeonatoModel() {
 	}
 
-	public CampeonatoModel(String titulo) {
+	public CampeonatoModel(Integer id, String titulo) {
 		super();
+		this.id = id;
 		this.titulo = titulo;
 	}
 

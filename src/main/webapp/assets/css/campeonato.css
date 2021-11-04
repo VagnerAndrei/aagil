@@ -112,6 +112,10 @@
 	align-self: stretch;
 }
 
+.tabela-campeonato-inscricao tbody tr td:last-child img{
+	margin: 0;
+}
+
 .tabela-campeonato-classificacao thead,
 .tabela-campeonato-inscricao thead{
 	background-color: #FBFF56;

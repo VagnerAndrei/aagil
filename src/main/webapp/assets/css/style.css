@@ -1019,6 +1019,10 @@ iframe{
 	background: url(../img/icons/search_white_24dp.svg) no-repeat;
 }
 
+.botao-atualizar{
+	background: url(../img/icons/autorenew_white_24dp.svg) no-repeat;
+}
+
 .icon-botao-inserir{
 	background: url(../img/icons/add_white_24dp.svg) no-repeat;
 }

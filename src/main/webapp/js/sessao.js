@@ -27,7 +27,7 @@ export function getUser(event) {
 }
 
 export async function isLogged(event) {
-	console.log('isLogged()')
+//	console.log('isLogged()')
 	const response = await get('api/usuarios/autenticado')
 	const value = await response.text()
 	if (value !== 'false') {
@@ -47,7 +47,7 @@ export async function isLogged(event) {
 }
 
 export function loginHandler(value, event) {
-	console.log('loginHandler', value, event)
+//	console.log('loginHandler', value, event)
 	atletaLogado = value;
 
 	document.getElementById('label-usuario-logado').textContent = atletaLogado ? `Bem-vindo, ${atletaLogado.nome}` : 'Bem-vindo.';

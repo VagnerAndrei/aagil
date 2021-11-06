@@ -1,0 +1,134 @@
+<main>
+	
+	<form id="form-campeonato">
+		<h2>Criar Campeonato</h2>
+		
+		<div class="form-item">
+			<label>Título:</label>
+			<input type="text" id="input-titulo" maxlength="100" required>
+		</div>
+		
+		<div class="form-item">
+			<label>Descrição:</label>
+			<textarea id="textarea-descricao" maxlength="1000" required></textarea>
+		</div>
+		
+		<h3>Local/Data:</h3>
+		<div class="form-item">
+			<label>Local:</label>
+			<input list="datalist-pistas" type="search" id="input-local" maxlength="100" required>
+			<datalist id="datalist-pistas">
+				<option value="dinos" itemid="1">
+			</datalist>
+			<button id="button-atualizar-pistas" class="botao-atualizar" title="Atualizar Lista" type="button"></button>
+		</div>
+		<div class="form-item">
+			<label>Data:</label>
+			<input type="date" id="input-data" maxlength="100" required>
+		</div>
+		<div class="form-item">
+			<label>Hora:</label>
+			<input type="number" id="input-hora" maxlength="2" max="24" min="0" value="00" required>
+			<label>:</label>
+			<input type="number" id="input-minuto" maxlength="2" max="59" min="0" value="00" required>
+			<label>(hh:mm)</label>
+		</div>
+		
+		<h3>Categorias:</h3>
+		<div class="form-item">
+			<label>Nome:</label>
+			<input type="text" id="input-categoria">
+		</div>
+		<div class="form-item">
+			<label>Descrição:</label>
+			<textarea id="textarea-descricao-categoria" maxlength="1000" required></textarea>
+		</div>
+		<div class="form-item">
+			<label>Voltas:</label>
+			<input type="number" id="input-voltas-categoria" value="1" min="1" >
+		</div>
+		<div class="form-item">
+			<label>Podium:</label>
+			<input type="number" id="input-podium-categoria" value="3" min="1" max="10">
+		</div>
+		<div id="div-premiacoes">
+			<div class="form-item">
+				<label>Premiação 1º:</label>
+				<textarea id="textarea-premiacao-1" maxlength="300"></textarea>
+			</div>
+			<div class="form-item">
+				<label>Premiação 2º:</label>
+				<textarea id="textarea-premiacao-2" maxlength="300"></textarea>
+			</div>
+			<div class="form-item">
+				<label>Premiação 3º:</label>
+				<textarea id="textarea-premiacao-3" maxlength="300"></textarea>
+			</div>
+		</div>
+		<div class="form-item">
+			<label>Valor R$:</label>
+			<input id="input-valor-inscricao" type="number" min="0">
+		</div>
+		<div class="form-item">
+			<label id="label-erro-categoria" class="mensagem-erro">Erros aqui</label>
+		</div>
+		<div class="form-item">
+			<button id="button-adicionar-categoria" class="icon-botao-inserir" title="Adicionar Categoria" type="button">Adicionar Categoria</button>
+		</div>
+		
+		<ul id="ul-categorias">
+		</ul>
+		
+		
+		<h3>Arbitragem:</h3>
+		<div class="form-item">
+			<label>Árbitro:</label>
+			<input type="text" id="input-arbitro">
+			<button id="button-adicionar-arbitro" class="icon-botao-inserir" type="button" title="Adicionar"></button>
+			<button id="button-pesquisar-atleta-arbitro" class="botao-pesquisar" type="button" title="Pesquisar Árbitro"></button>
+		</div>
+		
+		<ul id="ul-arbitros">
+		</ul>
+		
+		<h3>Mídias de Divulgação:</h3>
+		<div>
+			<div class="form-item">
+				<label>Imagens:</label>
+				<input type="file" id="input-imagens-divulgacao" accept="image/jpg, image/jpeg, image/png, image/bmp" multiple style="display:none">
+				<button id="button-selecionar-midias-divulgacao" type="button" class="botao-selecionar-fotos">Selecionar...</button>
+				<span id="span-limite-fotos"></span>
+			</div>
+			<ul id="ul-midias-divulgacao">
+			</ul>
+		</div>
+		
+		<h3>Fotos do campeonato:</h3>
+		<div>
+			<div class="form-item">
+				<label>Imagens:</label>
+				<input type="file" id="input-imagens-divulgacao" accept="image/jpg, image/jpeg, image/png, image/bmp" multiple style="display:none">
+				<button id="button-selecionar-fotos" type="button" class="botao-selecionar-fotos">Selecionar...</button>
+				<span id="span-limite-fotos"></span>
+			</div>
+			
+			<ul id="ul-fotos">
+			</ul>
+		</div>
+		
+		<h3>Regulamento:</h3>
+		<div class="form-item">
+				<label>Anexo:</label>
+				<input type="file" id="input-anexo-regulamento" accept="pdf" multiple style="display:none">
+				<button id="button-selecionar-anexo-regulamento" type="button" class="botao-selecionar-fotos">Selecionar...</button>
+				<span id="label-anexo-regulamento">Anexo X.pdf</span>
+		</div>
+		
+		<br/>
+		<br/>
+		<label id="label-erro-formulario" class="mensagem-erro">Erros aqui</label>
+		<button id="button-enviar-formulario" type="button">Enviar</button>
+	</form>
+
+
+</main>

@@ -12,6 +12,7 @@ public class PicoModel extends AbstractModel {
 
 	private String titulo;
 
+	@JsonInclude(value = Include.NON_NULL)
 	private EnderecoModel endereco;
 
 	@JsonInclude(value = Include.NON_EMPTY)

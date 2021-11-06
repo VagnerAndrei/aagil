@@ -37,12 +37,12 @@ import net.circle.domain.entity.Foto;
 import net.circle.domain.entity.Pico;
 import net.circle.domain.entity.PicoRegistro;
 import net.circle.domain.entity.Tag;
-import net.circle.service.model.EnderecoModel;
 import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.PaginacaoModel;
 import net.circle.service.model.PicoModel;
 import net.circle.service.model.PicoRegistroModel;
+import net.circle.service.model.util.ParseModelUtil;
 import net.circle.service.util.InputPartUtil;
 
 @Path("/picos")
@@ -140,7 +140,13 @@ public class PicoRest {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<PicoModel> consultarPicos() {
-		return parseModel(picoBusiness.consultarLista());
+		return parseModel(picoBusiness.consultarLista(), false);
+	}
+	
+	@GET
+	@Path("/simple")
+	public List<PicoModel> consultarPicosSimple() {
+		return parseModel(picoBusiness.consultarLista(), true);
 	}
 	
 	/**
@@ -190,31 +196,27 @@ public class PicoRest {
 		return registro;
 	}
 
-	private List<PicoModel> parseModel(List<Pico> consultarLista) {
-		return consultarLista.stream().map(pico -> parseModel(pico)).collect(Collectors.toList());
+	private List<PicoModel> parseModel(List<Pico> consultarLista, Boolean simple) {
+		return consultarLista.stream().map(pico -> parseModel(pico, simple)).collect(Collectors.toList());
 	}
 
-	private PicoModel parseModel(Pico pico) {
+	private PicoModel parseModel(Pico pico, Boolean simple) {
 		PicoModel model = new PicoModel();
 		model.setId(pico.getId());
-		model.setEndereco(new EnderecoModel());
-		model.getEndereco().setBairro(pico.getEndereco().getBairro());
-		model.getEndereco().setCep(pico.getEndereco().getCep());
-		model.getEndereco().setComplemento(pico.getEndereco().getComplemento());
-		model.getEndereco().setUF(pico.getEndereco().getUF());
-		model.getEndereco().setLocalidade(pico.getEndereco().getLocalidade());
-		model.getEndereco().setLogradouro(pico.getEndereco().getLogradouro());
-		model.getEndereco().setPerimetro(pico.getEndereco().getPerimetro());
-		model.getEndereco().setReferencia(pico.getEndereco().getReferencia());
-		pico.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
-		pico.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
 		model.setTitulo(pico.getTitulo());
+		
+		if(!simple) {
+			model.setEndereco(ParseModelUtil.parseModel(pico.getEndereco()));
+			pico.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
+			pico.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
+		}
+		
 		return model;
 	}
 	
 	private PaginacaoModel parseModelPaginacao(List<Pico> lista) {
 		var paginacao = new PaginacaoModel();
-		paginacao.setPagina(lista.stream().map(pico -> parseModel(pico)).collect(Collectors.toList()));
+		paginacao.setPagina(lista.stream().map(pico -> parseModel(pico, false)).collect(Collectors.toList()));
 		return paginacao;
 
 	}

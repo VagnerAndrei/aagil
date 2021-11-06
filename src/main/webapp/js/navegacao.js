@@ -10,6 +10,8 @@ import { Manobras } from './controller/Manobras.js';
 import { Picos } from './controller/Picos.js';
 import { PicoRegistro } from './controller/PicoRegistro.js';
 import { View } from './components/View.js';
+import { CampeonatoListaController } from './controller/CampeonatoListaController.js'
+import { CampeonatoFormController } from './controller/CampeonatoFormController.js'
 
 const instances = { current: undefined, atletas: undefined, picos: undefined }
 
@@ -19,6 +21,9 @@ const views = {
 	manobras: "manobras",
 	picos: "picos",
 	pico_registro: "pico-registro",
+	campeonatos: "campeonatos",
+	campeonato: "campeonato",
+	campeonato_registro: "campeonato-registro",
 	atleta: { nome: "atleta", id: NaN },
 	atletas: "atletas",
 	sobre: "sobre",
@@ -31,7 +36,6 @@ const views = {
 
 function verificaURL(event) {
 	const param = new URLSearchParams(new URL(window.location.href).search).get('p');
-	console.log('verificaURL', event, param, atletaLogado?.usuario.email)
 
 	switch (param) {
 		case null:
@@ -62,6 +66,12 @@ function verificaURL(event) {
 		case views.picos: picos()
 			break
 		case views.pico_registro: picoRegistro()
+			break
+		case views.campeonatos: campeonatos()
+			break
+		case views.campeonato: campeonato()
+			break
+		case views.campeonato_registro: campeonatoRegistro()
 			break
 		default: pagina_nao_encontrada();
 			break;
@@ -132,12 +142,27 @@ function atletas(clickEvent) {
 	if (clickEvent) changeState(views.atletas)
 }
 
-function campeonatos(clickEvent){
+function campeonatos(clickEvent) {
 	current_verify()
 	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
-	else instances.atletas.display(true)
-	instances.current = instances.atletas
-	if (clickEvent) changeState(views.atletas)
+	else instances.campeonatos.display(true)
+	instances.current = instances.campeonatos
+	if (clickEvent) changeState(views.campeonatos)
+}
+
+function campeonato(clickEvent) {
+	console.log('clicou')
+	current_verify()
+	if (!instances.campeonatos) instances.campeonato = new CampeonatoController()
+	else instances.campeonato.display(true)
+	instances.current = instances.campeonato
+	if (clickEvent) changeState(views.campeonato)
+}
+
+function campeonatoRegistro(clickEvent) {
+	current_verify()
+	instances.current = new CampeonatoFormController()
+	if (clickEvent) changeState(views.campeonato_registro)
 }
 
 function sobre(clickEvent) {
@@ -165,6 +190,7 @@ function current_verify() {
 			case Atletas:
 			case Picos:
 			case Atleta:
+			case CampeonatoListaController:
 				instances.current.display(false)
 				break
 			default:
@@ -176,7 +202,7 @@ function current_verify() {
 }
 
 function changeState(view, event) {
-	console.log('changeState', view, event)
+//	console.log('changeState', view, event)
 
 	switch (view) {
 
@@ -231,4 +257,4 @@ function debounce(fn) {
 	timer = setTimeout(fn, 1);
 }
 
-export { views, verificaURL, registrar, acessar, home, postagem, manobras, picos, picoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }
+export { views, verificaURL, registrar, acessar, home, postagem, manobras, picos, picoRegistro, campeonatos, campeonato, campeonatoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }

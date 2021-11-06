@@ -25,9 +25,17 @@
 	width: 70px;
 }
 
-#button-adicionar-categoria{
+#button-adicionar-categoria,
+#button-salvar-categoria
+{
 	width: 200px;
 	margin-left: 100px;
+}
+
+#button-cancelar-categoria{
+	width: 200px;
+	background-color: #ccc;
+	color: #000000;
 }
 
 #ul-categorias li{

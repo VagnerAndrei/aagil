@@ -36,6 +36,8 @@ export class CampeonatoFormView extends View2 {
 		this._inputValorInscricao = document.querySelector('#input-valor-inscricao')
 		this._labelErroCategoria = document.querySelector('#label-erro-categoria')
 		this._buttonAdicionarCategoria = document.querySelector('#button-adicionar-categoria')
+		this._buttonSalvarCategoria = document.querySelector('#button-salvar-categoria')
+		this._buttonCancelarCategoria = document.querySelector('#button-cancelar-categoria')
 		this._ulCategorias = document.querySelector('#ul-categorias')
 		this._ulArbitros = document.querySelector('#ul-arbitros')
 		this._ulFotos = document.querySelector('#ul-midias-divulgacao')
@@ -47,8 +49,14 @@ export class CampeonatoFormView extends View2 {
 		this._labelErroFormulario = document.querySelector('#label-erro-formulario')
 		this._buttonEnviarFormulario = document.querySelector('#button-enviar-formulario')
 
-		this.configurePodiumChange()
+		this._configurePodiumChange()
 		this._configureAdicionarCategoria()
+		this._configureSalvarCategoria()
+		this._configureCancelarCategoria()
+		
+		this._listCategoriasTemp = []
+		this._edicaoCategoria = false
+		this._idIndexElementCategoriaEmEdicao = undefined
 	}
 
 	_templatePremiacao({ podium, premio }) {
@@ -62,20 +70,21 @@ export class CampeonatoFormView extends View2 {
 
 	_templateLiCategoria({ model = new CategoriaCampeonato(), index }) {
 		return `
-			<li id="${index}">
-				<p class="icon-label titulo-categoria-label"><img class="icon-categoria">${model.nome}</p>
-				<img class="icon-editar icon-editar-categoria" title="Editar" id="icon-editar-categoria-${index}">
-				<img class="icon-remover icon-remover-categoria" title="Remover" id="icon-remover-categoria-${index}">
-				<br/>
-				<p class="icon-label"><img class="icon-descricao">${model.descricao}</p>
-				<br/>
-				<p class="icon-label"><img class="icon-double-arrow">Voltas: ${model.voltas}</p>
-				<br/>
-				
-				${model.premiacoes?.map(premiacao =>
+			<p class="icon-label titulo-categoria-label"><img class="icon-categoria">${model.nome}</p>
+			<img class="icon-editar icon-editar-categoria" title="Editar" id="icon-editar-categoria-${index}">
+			<img class="icon-remover icon-remover-categoria" title="Remover" id="icon-remover-categoria-${index}">
+			<br/>
+			<p class="icon-label"><img class="icon-descricao">${model.descricao}</p>
+			<br/>
+			<p class="icon-label"><img class="icon-double-arrow">Voltas: ${model.voltas}</p>
+			<br/>
+			
+			${model.premiacoes?.map(premiacao =>
 			`<p class="icon-label"><img class="icon-podium">${premiacao.colocacao}º: ${premiacao.premiacao}</p>`).join('')}
-				<br/>
-			</li>
+			<br/>
+			
+			${model.valorInscricao ? `<p class="icon-label"><img class="icon-money">Inscrição: R$ ${model.valorInscricao.replace('.', ',')}</p>` : ''}
+			<br/>
 		`
 	}
 
@@ -115,7 +124,13 @@ export class CampeonatoFormView extends View2 {
 		command()
 	}
 
-	configurePodiumChange() {
+
+
+	/*
+										CATEGORIA
+																						*/
+
+	_configurePodiumChange() {
 		this._inputPodiumCategoria.addEventListener('change', (event) => {
 			const podium = event.target.value
 
@@ -143,41 +158,129 @@ export class CampeonatoFormView extends View2 {
 
 	_configureAdicionarCategoria() {
 		this._buttonAdicionarCategoria.addEventListener('click', () => {
-			const erros = []
-			if (this._inputCategoria.value == '') erros.push('Nome da categoria obrigatório')
-			if (this._textareaDescricaoCategoria.value == '') erros.push('Descrição da categoria obrigatório')
-			if (this._inputVoltasCategoria.value == '') erros.push('Número de voltas da categoria obrigatório')
-			if (this._inputPodiumCategoria.value == '') erros.push('Podium da categoria obrigatório')
-			const premiacoes = this._divPremiacoes.getElementsByTagName('textarea')
-			for (let i = 0; i < premiacoes.length; i++)
-				if (premiacoes[i].value == '') erros.push(`Premiação ${i + 1}º lugar obrigatório `)
-
-			if (erros.length == 0) {
-				this._labelErroCategoria.textContent = ''
-
-				const categoria = new CategoriaCampeonato({
-					nome: this._inputCategoria.value,
-					descricao: this._textareaDescricaoCategoria.value,
-					voltas: this._inputVoltasCategoria.value,
-					podium: this._inputPodiumCategoria.value,
-					valorInscricao: this._inputValorInscricao.value,
-					premiacoes: this.getPremiacoesCategoria()
-				})
-				this._ulCategorias.innerHTML += this._templateLiCategoria({ model: categoria, index: Math.floor(Math.random() * 100000) })
-				this._inputCategoria.value = ''
-				this._textareaDescricaoCategoria.value = ''
-				this._inputVoltasCategoria.value = 1
-				this._inputPodiumCategoria.value = 3 
-				this._inputValorInscricao.value = ''
-				
-				const premiacoes = this._divPremiacoes.getElementsByTagName('textarea')
-				for (let i = 0; i < premiacoes.length; i++)
-					premiacoes[i].value = ''
-					
-			} else {
-				this._labelErroCategoria.textContent = `${erros.map(erro => erro).join('\n')}`
-			}
+			this._saveCategoria()
 		})
+	}
+
+	_configureSalvarCategoria() {
+		this._buttonSalvarCategoria.addEventListener('click', () => {
+			this._saveCategoria()
+		})
+	}
+	
+	_configureCancelarCategoria() {
+		this._buttonCancelarCategoria.addEventListener('click', () => {
+			this._setupEditarCategoria(false)
+			this._setCategoriaForm()
+		})
+	}
+
+	_saveCategoria() {
+		if (this._validateCategoria().length == 0) {
+			this._labelErroCategoria.textContent = ''
+
+			const index = this._edicaoCategoria ?
+				this._idIndexElementCategoriaEmEdicao :
+				Math.floor(Math.random() * 100000)
+
+			const categoria = new CategoriaCampeonato({
+				nome: this._inputCategoria.value,
+				descricao: this._textareaDescricaoCategoria.value,
+				voltas: this._inputVoltasCategoria.value,
+				podium: this._inputPodiumCategoria.value,
+				valorInscricao: this._inputValorInscricao.value ? new Number(this._inputValorInscricao.value).toFixed(2) : null,
+				premiacoes: this.getPremiacoesCategoria()
+			})
+
+
+			const li = this._edicaoCategoria ?
+				document.querySelector(`#li-categoria-${index}`) :
+				document.createElement('li')
+
+			li.id = `li-categoria-${index}`
+			li.innerHTML = this._templateLiCategoria({ model: categoria, index })
+
+
+			if (!this._edicaoCategoria) {
+				this._listCategoriasTemp.push({ index, categoria })
+				this._ulCategorias.appendChild(li)
+			} else {
+				this._listCategoriasTemp[this._getIndexCategoriaByIdElement(index)] = { index, categoria }
+				this._setupEditarCategoria(false)
+			}
+
+
+			this._configureRemoverCategoria(index)
+			this._configureEditarCategoria(index)
+
+			this._setCategoriaForm()
+
+		} else {
+			this._labelErroCategoria.textContent = `${erros.map(erro => erro).join('\n')}`
+		}
+	}
+
+	_setCategoriaForm(model) {
+		this._inputCategoria.value = model ? model.nome : ''
+		this._textareaDescricaoCategoria.value = model ? model.descricao : ''
+		this._inputVoltasCategoria.value = model ? model.voltas : 1
+		this._inputPodiumCategoria.value = model ? model.podium : 3
+		this._inputValorInscricao.value = model ? model.valorInscricao : ''
+
+		this._inputPodiumCategoria.dispatchEvent(new Event('change'))
+
+		const premiacoes = this._divPremiacoes.getElementsByTagName('textarea')
+		for (let i = 0; i < premiacoes.length; i++)
+			premiacoes[i].value = model ? model.premiacoes[i].premiacao : ''
+	}
+
+	_validateCategoria() {
+		const erros = []
+
+		if (this._inputCategoria.value == '') erros.push('Nome da categoria obrigatório')
+		if (this._textareaDescricaoCategoria.value == '') erros.push('Descrição da categoria obrigatório')
+		if (this._inputVoltasCategoria.value == '') erros.push('Número de voltas da categoria obrigatório')
+		if (this._inputPodiumCategoria.value == '') erros.push('Podium da categoria obrigatório')
+
+		const premiacoes = this._divPremiacoes.getElementsByTagName('textarea')
+		for (let i = 0; i < premiacoes.length; i++)
+			if (premiacoes[i].value == '') erros.push(`Premiação ${i + 1}º lugar obrigatório `)
+
+		return erros
+	}
+
+	_configureRemoverCategoria(index) {
+		document.querySelector(`#icon-remover-categoria-${index}`).addEventListener('click', () => {
+			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${index}`))
+			this._listCategoriasTemp.splice(this._getIndexCategoriaByIdElement(index), 1)
+
+		})
+	}
+
+	_getIndexCategoriaByIdElement(index) {
+		return this._listCategoriasTemp.findIndex(item => item.index == index)
+	}
+
+	_configureEditarCategoria(idIndexElement) {
+		document.querySelector(`#icon-editar-categoria-${idIndexElement}`).addEventListener('click', () => {
+			this._setupEditarCategoria(true)
+			const { categoria, index } = this._listCategoriasTemp[this._getIndexCategoriaByIdElement(idIndexElement)]
+			this._idIndexElementCategoriaEmEdicao = index
+			this._setCategoriaForm(categoria)
+		})
+	}
+
+	_setupEditarCategoria(boolean) {
+		this._edicaoCategoria = boolean
+		if (boolean) {
+			this._buttonAdicionarCategoria.classList.add('display-none')
+			this._buttonCancelarCategoria.classList.remove('display-none')
+			this._buttonSalvarCategoria.classList.remove('display-none')
+		} else {
+			this._buttonAdicionarCategoria.classList.remove('display-none')
+			this._buttonCancelarCategoria.classList.add('display-none')
+			this._buttonSalvarCategoria.classList.add('display-none')
+		}
 	}
 
 }

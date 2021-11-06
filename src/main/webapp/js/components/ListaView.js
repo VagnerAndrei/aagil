@@ -20,8 +20,12 @@ export class ListaView extends View2 {
 
 	updateList(list) {
 		this._ulLista.innerHTML = ''
-		list.forEach(item => this._ulLista.innerHTML += this.liTemplate(item))
-		list.forEach(item => this.adicionarClickEvent(item))
+		list.forEach(item => {
+			const li = document.createElement('li')
+			li.innerHTML = this.liTemplate(item)
+			this._ulLista.appendChild(li)
+			this.adicionarClickEvent(item)
+		})
 	}
 
 	update(template) {

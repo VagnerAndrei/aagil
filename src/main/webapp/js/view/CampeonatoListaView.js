@@ -14,7 +14,7 @@ export class CampeonatoListaView extends ListaView {
 	init() {
 		super.init()
 		this._buttonCriarCampeonato = document.querySelector("#button-criar-campeonato")
-		
+
 		this._buttonCriarCampeonato.addEventListener('click', () => {
 			campeonatoRegistro('clickEvent')
 		})
@@ -31,9 +31,7 @@ export class CampeonatoListaView extends ListaView {
 
 	liTemplate(model = new Campeonato()) {
 		return `
-			<li>
-					<a id="a-campeonato-${model.id}">${model.titulo}</a>
-			</li>
+			<a id="a-campeonato-${model.id}">${model.titulo}</a>
 		`
 	}
 

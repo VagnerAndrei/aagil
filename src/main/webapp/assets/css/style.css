@@ -1033,6 +1033,12 @@ iframe{
 	content: url(../img/icons/podium_yellow_24dp.svg);
 }
 
+.icon-money{
+	width: 26px;
+	height: 26px;
+	content: url(../img/icons/monetization_on_black_24dp.svg);
+}
+
 .icon-double-arrow{
 	width: 26px;
 	height: 26px;

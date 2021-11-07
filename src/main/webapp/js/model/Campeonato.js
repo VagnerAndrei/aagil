@@ -3,7 +3,7 @@
  */
 export class Campeonato {
 
-	constructor({ id, titulo, descricao, pico, data, categorias, arbitros, midiasDivulgacao, fotos, regulamento }) {
+	constructor({ id, titulo, descricao, pico, data, categorias= [], arbitros = [], midiasDivulgacao = [], fotos  = [], regulamento }) {
 		this.id = id
 		this.titulo = titulo
 		this.descricao = descricao

@@ -2,8 +2,11 @@
  * 
  */
 import { View2 } from './../components/View2.js'
+import { UploadFormItem } from './../components/UploadFormItem.js'
 import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
 import { PremiacaoCampeonato } from './../model/PremiacaoCampeonato.js'
+import { Campeonato } from './../model/Campeonato.js'
+import { Atleta } from './../model/Atleta.js'
 
 export class CampeonatoFormView extends View2 {
 
@@ -23,7 +26,7 @@ export class CampeonatoFormView extends View2 {
 		this._inputTitulo = document.querySelector('#input-titulo')
 		this._textareaDescricao = document.querySelector('#textarea-descricao')
 		this._inputLocal = document.querySelector('#input-local')
-		this._datalistPistas = document.querySelector('#datalist-pistas')
+		this._selectPista = document.querySelector('#select-pista')
 		this._buttonAtualizarPistas = document.querySelector('#button-atualizar-pistas')
 		this._inputData = document.querySelector('#input-data')
 		this._inputHora = document.querySelector('#input-hora')
@@ -39,6 +42,9 @@ export class CampeonatoFormView extends View2 {
 		this._buttonSalvarCategoria = document.querySelector('#button-salvar-categoria')
 		this._buttonCancelarCategoria = document.querySelector('#button-cancelar-categoria')
 		this._ulCategorias = document.querySelector('#ul-categorias')
+		this._buttonAtualizarArbitros = document.querySelector('#button-atualizar-arbitros')
+		this._buttonAdicionarArbitro = document.querySelector('#button-adicionar-arbitro')
+		this._selectArbitro = document.querySelector('#select-arbitro')
 		this._ulArbitros = document.querySelector('#ul-arbitros')
 		this._ulFotos = document.querySelector('#ul-midias-divulgacao')
 		this._ulFotos = document.querySelector('#ul-fotos')
@@ -48,16 +54,49 @@ export class CampeonatoFormView extends View2 {
 		this._labelAnexoRegulamento = document.querySelector('#label-anexo-regulamento')
 		this._labelErroFormulario = document.querySelector('#label-erro-formulario')
 		this._buttonEnviarFormulario = document.querySelector('#button-enviar-formulario')
+	
 
 		this._configurePodiumChange()
 		this._configureAdicionarCategoria()
 		this._configureSalvarCategoria()
 		this._configureCancelarCategoria()
-		
+
 		this._listCategoriasTemp = []
 		this._edicaoCategoria = false
 		this._idIndexElementCategoriaEmEdicao = undefined
+
+		this._configureAdicionarArbitro()
+		
+		
+		/*								FILE UPLOADS										*/
+		
+		this._uploadMidiasDivulgacao = new UploadFormItem({
+			elementID : 'div-midias-divulgacao',
+			label : 'Imagens',
+			name : 'midias-divulgacao'
+		})
+		this._uploadFotosCampeonato = new UploadFormItem({
+			elementID : 'div-fotos-campeonato',
+			label : 'Fotos',
+			name : 'fotos-campeonato'
+		})
+		this._uploadRegulamento = new UploadFormItem({
+			elementID : 'div-regulamento',
+			label : 'Arquivo',
+			name : 'regulamento',
+			acceptTypes : 'application/pdf',
+			maxFiles : 1,
+			isTypeImage : false
+		})
+		
+		/*							===================										*/
+		
+		this._campeonato = new Campeonato({})
 	}
+
+	/*
+										TEMPLATES
+																						*/
 
 	_templatePremiacao({ podium, premio }) {
 		return `
@@ -88,34 +127,41 @@ export class CampeonatoFormView extends View2 {
 		`
 	}
 
-	_templateLiArbitro(atletaModel = new Atleta()) {
+	_templateLiArbitro(model = new Atleta()) {
 		return `
-			<li>
-				Árbitro 01 
-				<img class="icon-remover icon-remover-arbitro" title="Remover">
-			</li>
+			<span>${model.nome}</span> 
+			<img id="img-remover-arbitro-${model.id}" class="icon-remover icon-remover-arbitro" title="Remover">
 		`
 	}
 
-	_templateLiImagem() {
-		return `
-			<li>
-				<img title="Clique para remover" class="imgFileObject" width="150" src="https://scontent.fbel7-1.fna.fbcdn.net/v/t39.30808-6/245157547_5149568728391126_2072399307286031093_n.jpg?_nc_cat=105&ccb=1-5&_nc_sid=973b4a&_nc_ohc=7ucmfikQJm0AX86ecT2&_nc_ht=scontent.fbel7-1.fna&oh=822d464593fdfa31342a98bcb343a835&oe=6174C52D">
-			</li>
-		`
-	}
 
-	setupListaPremiacoes() {
-		this._inputPodiumCategoria.value
-	}
+	/*
+										PUBLIC METHODS
+																						*/
 
 	setupListaPistas(pistas) {
-		this._datalistPistas.innerHTML = ''
+		this._selectPista.innerHTML = ''
+		const option = document.createElement('option')
+		option.label = 'Selecione...'
+		this._selectPista.appendChild(option)
 		pistas.forEach(pista => {
 			const option = document.createElement('option')
-			option.value = pista.titulo
-			option.itemid = pista.id
-			this._datalistPistas.appendChild(option)
+			option.value = pista.id
+			option.label = pista.titulo
+			this._selectPista.appendChild(option)
+		})
+	}
+
+	setupListaArbitros(arbitros) {
+		this._selectArbitro.innerHTML = ''
+		const option = document.createElement('option')
+		option.label = 'Selecione...'
+		this._selectArbitro.appendChild(option)
+		arbitros.forEach(arbitro => {
+			const option = document.createElement('option')
+			option.value = arbitro.id
+			option.label = arbitro.nome
+			this._selectArbitro.appendChild(option)
 		})
 	}
 
@@ -124,6 +170,32 @@ export class CampeonatoFormView extends View2 {
 		command()
 	}
 
+	configureRefreshListaArbitro(command) {
+		this._buttonAtualizarArbitros.addEventListener('click', () => { command() })
+		command()
+	}
+	
+	configureEnviarFormulario(command){
+		this._buttonEnviarFormulario.addEventListener('click', () =>{
+			const erros = this._validateFormulário()
+		})
+	}
+	
+	getCampeonatoModel(){
+		return this._campeonato
+	}
+	
+	getMidiasDivulgacaoFileList(){
+		return this._uploadMidiasDivulgacao.getListFiles()
+	}
+	
+	getFotosCampeonatoFileList(){
+		return this._uploadFotosCampeonato.getListFiles()
+	}
+
+	getRegulamentoFile(){
+		return this._uploadRegulamento.getListFiles()
+	}
 
 
 	/*
@@ -148,14 +220,6 @@ export class CampeonatoFormView extends View2 {
 		})
 	}
 
-	getPremiacoesCategoria() {
-		const premiacoes = this._divPremiacoes.getElementsByTagName('textarea')
-		const premiacoesCampeonato = []
-		for (let i = 0; i < premiacoes.length; i++)
-			premiacoesCampeonato.push(new PremiacaoCampeonato({ colocacao: i + 1, premiacao: premiacoes[i].value }))
-		return premiacoesCampeonato
-	}
-
 	_configureAdicionarCategoria() {
 		this._buttonAdicionarCategoria.addEventListener('click', () => {
 			this._saveCategoria()
@@ -167,7 +231,7 @@ export class CampeonatoFormView extends View2 {
 			this._saveCategoria()
 		})
 	}
-	
+
 	_configureCancelarCategoria() {
 		this._buttonCancelarCategoria.addEventListener('click', () => {
 			this._setupEditarCategoria(false)
@@ -175,8 +239,34 @@ export class CampeonatoFormView extends View2 {
 		})
 	}
 
+	_configureRemoverCategoria(index) {
+		document.querySelector(`#icon-remover-categoria-${index}`).addEventListener('click', () => {
+			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${index}`))
+			this._listCategoriasTemp.splice(this._getIndexCategoriaByIdElement(index), 1)
+
+		})
+	}
+
+	_configureEditarCategoria(idIndexElement) {
+		document.querySelector(`#icon-editar-categoria-${idIndexElement}`).addEventListener('click', () => {
+			this._setupEditarCategoria(true)
+			const { categoria, index } = this._listCategoriasTemp[this._getIndexCategoriaByIdElement(idIndexElement)]
+			this._idIndexElementCategoriaEmEdicao = index
+			this._setCategoriaForm(categoria)
+		})
+	}
+
+	_getPremiacoesCategoria() {
+		const premiacoes = this._divPremiacoes.getElementsByTagName('textarea')
+		const premiacoesCampeonato = []
+		for (let i = 0; i < premiacoes.length; i++)
+			premiacoesCampeonato.push(new PremiacaoCampeonato({ colocacao: i + 1, premiacao: premiacoes[i].value }))
+		return premiacoesCampeonato
+	}
+
 	_saveCategoria() {
-		if (this._validateCategoria().length == 0) {
+		const erros = this._validateCategoria()
+		if (erros.length == 0) {
 			this._labelErroCategoria.textContent = ''
 
 			const index = this._edicaoCategoria ?
@@ -189,7 +279,7 @@ export class CampeonatoFormView extends View2 {
 				voltas: this._inputVoltasCategoria.value,
 				podium: this._inputPodiumCategoria.value,
 				valorInscricao: this._inputValorInscricao.value ? new Number(this._inputValorInscricao.value).toFixed(2) : null,
-				premiacoes: this.getPremiacoesCategoria()
+				premiacoes: this._getPremiacoesCategoria()
 			})
 
 
@@ -249,25 +339,8 @@ export class CampeonatoFormView extends View2 {
 		return erros
 	}
 
-	_configureRemoverCategoria(index) {
-		document.querySelector(`#icon-remover-categoria-${index}`).addEventListener('click', () => {
-			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${index}`))
-			this._listCategoriasTemp.splice(this._getIndexCategoriaByIdElement(index), 1)
-
-		})
-	}
-
 	_getIndexCategoriaByIdElement(index) {
 		return this._listCategoriasTemp.findIndex(item => item.index == index)
-	}
-
-	_configureEditarCategoria(idIndexElement) {
-		document.querySelector(`#icon-editar-categoria-${idIndexElement}`).addEventListener('click', () => {
-			this._setupEditarCategoria(true)
-			const { categoria, index } = this._listCategoriasTemp[this._getIndexCategoriaByIdElement(idIndexElement)]
-			this._idIndexElementCategoriaEmEdicao = index
-			this._setCategoriaForm(categoria)
-		})
 	}
 
 	_setupEditarCategoria(boolean) {
@@ -283,4 +356,45 @@ export class CampeonatoFormView extends View2 {
 		}
 	}
 
+	/*
+										ÁRBITRO
+																						*/
+
+
+	_configureAdicionarArbitro() {
+		this._buttonAdicionarArbitro.addEventListener('click', () => {
+			this._addArbitro()
+		})
+	}
+
+	_addArbitro() {
+		const id =  this._selectArbitro.value
+		const nome = this._selectArbitro[this._selectArbitro.selectedIndex].label
+		if (id && !this._campeonato.arbitros.find(arbitro => arbitro.id == id)){
+			const arbitro = new Atleta({id , nome})
+			const li = document.createElement('li')
+			li.innerHTML = this._templateLiArbitro(arbitro)
+			li.id = `li-arbitro-${id}`
+			this._ulArbitros.appendChild(li)
+			this._configureRemoverArbitro(id)
+			this._campeonato.arbitros.push(arbitro)
+		}
+	}
+	
+	_configureRemoverArbitro(id){
+		document.querySelector(`#img-remover-arbitro-${id}`).addEventListener('click', () =>{
+			this._ulArbitros.removeChild(document.querySelector(`#li-arbitro-${id}`))
+			this._campeonato.arbitros.splice(this._campeonato.arbitros.findIndex(arbitro => arbitro.id == id), 1)
+		})
+	}
+	
+	
+	/*
+										FORMULÁRIO
+																						*/
+
+	_validateFormulário(){
+		const erros = []
+		return erros
+	}
 }

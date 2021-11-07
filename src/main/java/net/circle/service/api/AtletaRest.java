@@ -55,7 +55,18 @@ public class AtletaRest {
 	 */
 	@GET
 	public List<AtletaModel> getLista() {
-		return parseModel(servicoAtleta.consultarLista());
+		return parseModel(servicoAtleta.consultarLista(), false);
+	}
+
+	/**
+	 * Realiza a obtenção da lista de atletas
+	 *
+	 * @returns List<AtletaModel>
+	 */
+	@GET
+	@Path("/simple")
+	public List<AtletaModel> getListaSimple() {
+		return parseModel(servicoAtleta.consultarLista(), true);
 	}
 
 	/**
@@ -92,7 +103,7 @@ public class AtletaRest {
 			var atleta = servicoAtleta.consultar(idAtleta);
 
 			if (atleta.isPresent())
-				return Response.status(Status.FOUND).entity(parseModel(atleta.get())).build();
+				return Response.status(Status.FOUND).entity(parseModel(atleta.get(), false)).build();
 
 			return Response.status(Status.NOT_FOUND).build();
 		} catch (Exception e) {
@@ -154,7 +165,8 @@ public class AtletaRest {
 			if (atleta.getFoto() == null)
 				return Response.status(Status.NO_CONTENT).build();
 
-			ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo().getBinaryStream().readAllBytes()).type("image/jpg"); // +
+			ResponseBuilder response = Response.ok(atleta.getFoto().getArquivo().getBinaryStream().readAllBytes())
+					.type("image/jpg"); // +
 			// atleta.getFoto().getExtensao()
 			response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + ".jpg");// +
 			// atleta.getFoto().getExtensao()
@@ -219,7 +231,8 @@ public class AtletaRest {
 
 			if (atleta.getFoto() == null)
 				return Response.status(Status.NO_CONTENT).build();
-			ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail().getBinaryStream().readAllBytes()).type("image/jpg");
+			ResponseBuilder response = Response.ok(atleta.getFoto().getThumbnail().getBinaryStream().readAllBytes())
+					.type("image/jpg");
 			response.header("Content-Disposition", "inline; filename=" + atleta.getNome().trim() + "-thumbnail.jpg");
 
 			return response.build();
@@ -248,7 +261,7 @@ public class AtletaRest {
 			if (!request.getUserPrincipal().getName().equals(servicoAtleta.consultarUsuario(atleta.getId())))
 				return Response.status(Status.FORBIDDEN).entity("Acesso negado").build();
 
-			return Response.accepted().entity(parseModel(servicoAtleta.atualizar(atleta))).build();
+			return Response.accepted().entity(parseModel(servicoAtleta.atualizar(atleta), false)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
@@ -319,38 +332,42 @@ public class AtletaRest {
 
 	}
 
-	private AtletaModel parseModel(Atleta pessoa) {
-		return new AtletaModel(
+	private AtletaModel parseModel(Atleta pessoa, Boolean simple) {
+		return simple ? new AtletaModel(pessoa.getId(),
 
-				pessoa.getId(),
+				pessoa.getNome()) :
 
-				pessoa.getNome(),
-				
-				pessoa.getApelido(),
+				new AtletaModel(
 
-				pessoa.getBiografia(),
+						pessoa.getId(),
 
-				pessoa.getNascimento(),
+						pessoa.getNome(),
 
-				pessoa.getLocalidade() != null
-						? new LocalidadeModel(pessoa.getLocalidade().getId(), pessoa.getLocalidade().getNome(),
-								pessoa.getLocalidade().getEstado().getId(),
-								pessoa.getLocalidade().getEstado().getSigla())
-						: null,
+						pessoa.getApelido(),
 
-				pessoa.getCategoria() != null ? pessoa.getCategoria().toString() : null,
+						pessoa.getBiografia(),
 
-				pessoa.getFoto() != null ? new IDModel(pessoa.getFoto().getId()) : null);
+						pessoa.getNascimento(),
+
+						pessoa.getLocalidade() != null
+								? new LocalidadeModel(pessoa.getLocalidade().getId(), pessoa.getLocalidade().getNome(),
+										pessoa.getLocalidade().getEstado().getId(),
+										pessoa.getLocalidade().getEstado().getSigla())
+								: null,
+
+						pessoa.getCategoria() != null ? pessoa.getCategoria().toString() : null,
+
+						pessoa.getFoto() != null ? new IDModel(pessoa.getFoto().getId()) : null);
 
 	}
 
-	private List<AtletaModel> parseModel(List<Atleta> lista) {
-		return lista.stream().map(atleta -> parseModel(atleta)).collect(Collectors.toList());
+	private List<AtletaModel> parseModel(List<Atleta> lista, Boolean simple) {
+		return lista.stream().map(atleta -> parseModel(atleta, simple)).collect(Collectors.toList());
 	}
 
 	private PaginacaoModel parseModelPaginacao(List<Atleta> lista) {
 		var paginacao = new PaginacaoModel();
-		paginacao.setPagina(lista.stream().map(atleta -> parseModel(atleta)).collect(Collectors.toList()));
+		paginacao.setPagina(lista.stream().map(atleta -> parseModel(atleta, false)).collect(Collectors.toList()));
 		return paginacao;
 
 	}

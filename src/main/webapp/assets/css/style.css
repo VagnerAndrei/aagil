@@ -534,6 +534,10 @@ iframe{
 	text-align: right;
 }
 
+.form-item span{
+	align-self: center;
+}
+
 .form-item input + label, .form-item button + label{
 	text-align: left;
 	width: auto;
@@ -656,9 +660,14 @@ iframe{
 	text-align: left;
 }
 
-#ul-fotos li:hover, #ul-tags li:hover{
+#ul-fotos li:hover, #ul-tags li:hover, .lista-upload li:hover{
 	cursor: pointer;
 	opacity: 65%;
+}
+
+.lista-upload{
+	align-self: center;
+	margin-left: 100px;
 }
 
 #ul-fotos li img, #ul-fotos li span{

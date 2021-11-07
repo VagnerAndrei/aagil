@@ -6,7 +6,8 @@
 	width: 100%;
 }
 
-#form-campeonato input[type=text]{
+#form-campeonato input[type=text],
+#form-campeonato select{
 	width: 70%;
 }
 
@@ -15,7 +16,7 @@
 	height: 60px;
 }
 
-#button-atualizar-pistas, #button-pesquisar-atleta-arbitro, #button-adicionar-arbitro{
+#button-atualizar-pistas, #button-atualizar-arbitros, #button-adicionar-arbitro{
 	width: 27px;
 	height: 27px;
 	display: inline-block;
@@ -93,13 +94,14 @@
 	margin: 3px 30px 3px 90px;
 }
 
-#ul-fotos{
+#ul-uploads-midias-divulgacao,
+#ul-uploads-fotos-campeonato{
 	max-width: 700px;
 	width: 70vw;
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: flex-start;
+	justify-content: space-around;
 }
 
 #label-erro-formulario{

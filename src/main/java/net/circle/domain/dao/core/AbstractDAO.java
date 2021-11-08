@@ -156,6 +156,11 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 		return em.createQuery("FROM " + getName()).getResultList();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<T> findAll(String orderBy) {
+		return em.createQuery("FROM " + getName() + " ORDER BY " + orderBy).getResultList();
+	}
+
 	@Transactional
 	public void persist(T obj) throws Exception {
 		em.persist(obj);

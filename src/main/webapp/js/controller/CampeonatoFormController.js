@@ -8,6 +8,7 @@ import { FotosUpload } from '../controller/FotosUpload.js'
 import { get } from './../fetch.js'
 import { Pista } from './../model/Pista.js'
 import { Atleta } from './../model/Atleta.js'
+import { campeonato } from './../navegacao.js'
 
 export class CampeonatoFormController extends Controller {
 
@@ -136,23 +137,25 @@ export class CampeonatoFormController extends Controller {
 	}
 
 	_configureXHRResponse() {
-		
+
 		this._xhr.onreadystatechange = () => {
 			if (this._xhr.readyState === 4) {
-				console.log(this._xhr.status)
+				let json = {}
 				switch (this._xhr.status) {
 					case 403:
 						this._labelErro.textContent = 'Acesso negado!'
 						this._modalUpload.fecharModal()
 						break
 					case 400:
-						const json = JSON.parse(this._xhr.response)
+						json = JSON.parse(this._xhr.response)
 						this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
 						this._modalUpload.fecharModal()
 						break
 					case 202:
-						if (!this._upload) this._modalUpload = new FotosUpload('Campeonato', () => this.uploadedHandler())
-						this._modalUpload.setResult('Upload realizado com sucesso!')
+						json = JSON.parse(this._xhr.response)
+						this._idCampeonato = json.id
+						if (!this._upload) this._modalUpload = new FotosUpload('Campeonato', () => this._uploadedHandler())
+						this._modalUpload.setResult('Campeonato criado com sucesso!')
 						break
 					case 500:
 						this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
@@ -168,7 +171,7 @@ export class CampeonatoFormController extends Controller {
 	}
 
 	_uploadedHandler() {
-		home('campeonatoRegistroEvent')
+		campeonato({ event: 'campeonatoRegistroEvent', id: this._idCampeonato })
 		window.scroll(0, 500)
 	}
 

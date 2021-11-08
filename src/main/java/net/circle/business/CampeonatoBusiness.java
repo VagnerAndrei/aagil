@@ -7,7 +7,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.transaction.Transactional;
 
-import net.circle.business.exception.BusinessException;
 import net.circle.business.interfaces.ICampeonatoBusiness;
 import net.circle.domain.dao.AtletaDAO;
 import net.circle.domain.dao.CampeonatoDAO;
@@ -119,7 +118,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 
 	@Override
 	public List<Campeonato> consultarLista() {
-		return dao.findAll();
+		return dao.findAll("data DESC");
 	}
 
 	@Override

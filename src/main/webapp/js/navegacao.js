@@ -12,6 +12,7 @@ import { PicoRegistro } from './controller/PicoRegistro.js';
 import { View } from './components/View.js';
 import { CampeonatoListaController } from './controller/CampeonatoListaController.js'
 import { CampeonatoFormController } from './controller/CampeonatoFormController.js'
+import { CampeonatoController } from './controller/CampeonatoController.js'
 
 const instances = { current: undefined, atletas: undefined, picos: undefined }
 
@@ -24,7 +25,7 @@ const views = {
 	campeonatos: "campeonatos",
 	campeonato: "campeonato",
 	campeonato_registro: "campeonato-registro",
-	atleta: { nome: "atleta", id: NaN },
+	atleta: "atleta",
 	atletas: "atletas",
 	sobre: "sobre",
 	registro: "registro",
@@ -36,14 +37,13 @@ const views = {
 
 function verificaURL(event) {
 	const param = new URLSearchParams(new URL(window.location.href).search).get('p');
-
+	const id = new URLSearchParams(new URL(window.location.href).search).get("id")
 	switch (param) {
 		case null:
 			if (window.location != window.location.origin + window.location.pathname) pagina_nao_encontrada()
 			else home();
 			break;
-		case views.atleta.nome:
-			const id = new URLSearchParams(new URL(window.location.href).search).get("id")
+		case views.atleta:
 			if (id && !isNaN(id) && id > 0) perfil(event, id);
 			else pagina_nao_encontrada();
 			break;
@@ -69,7 +69,9 @@ function verificaURL(event) {
 			break
 		case views.campeonatos: campeonatos()
 			break
-		case views.campeonato: campeonato()
+		case views.campeonato:
+			if (id && !isNaN(id) && id > 0) campeonato({ event, id })
+			else pagina_nao_encontrada();
 			break
 		case views.campeonato_registro: campeonatoRegistro()
 			break
@@ -86,19 +88,19 @@ function pagina_nao_encontrada() {
 function home(event) {
 	current_verify()
 	instances.current = new Home()
-	if (event) changeState(views.home, event)
+	if (event) changeState({ view: views.home, event })
 }
 
 function manobras(e) {
 	current_verify()
 	instances.current = new Manobras()
-	if (e) changeState(views.manobras)
+	if (e) changeState({ view: views.manobras })
 }
 
 function postagem(e) {
 	current_verify()
 	instances.current = new Postagem()
-	if (e) changeState(views.postagem)
+	if (e) changeState({ view: views.postagem })
 }
 
 function picos(e) {
@@ -109,13 +111,13 @@ function picos(e) {
 		instances.picos.applyRole()
 	}
 	instances.current = instances.picos
-	if (e) changeState(views.picos)
+	if (e) changeState({ view: views.picos })
 }
 
 function picoRegistro(e) {
 	current_verify()
 	instances.current = new PicoRegistro()
-	if (e) changeState(views.pico_registro)
+	if (e) changeState({ view: views.pico_registro })
 }
 
 async function perfil(event, idAtleta) {
@@ -124,14 +126,12 @@ async function perfil(event, idAtleta) {
 	if (!instances.atleta)
 		instances.atleta = new Atleta(idAtual)
 	else {
-		if (isNaN(views.atleta.id) || views.atleta.id !== idAtual)
-			await instances.atleta.consultarAtleta(idAtual)
+		await instances.atleta.consultarAtleta(idAtual)
 		instances.atleta.applyRole(atletaLogado ? 'User' : undefined)
 		instances.atleta.display(true)
 	}
 	instances.current = instances.atleta
-	views.atleta.id = idAtual
-	changeState(views.atleta.nome, event instanceof Event ? event.type : event)
+	changeState({ view: views.atleta, event: event instanceof Event ? event.type : event, id: idAtleta })
 }
 
 function atletas(clickEvent) {
@@ -139,7 +139,7 @@ function atletas(clickEvent) {
 	if (!instances.atletas) instances.atletas = new Atletas()
 	else instances.atletas.display(true)
 	instances.current = instances.atletas
-	if (clickEvent) changeState(views.atletas)
+	if (clickEvent) changeState({ view: views.atletas })
 }
 
 function campeonatos(clickEvent) {
@@ -147,40 +147,37 @@ function campeonatos(clickEvent) {
 	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
 	else instances.campeonatos.display(true)
 	instances.current = instances.campeonatos
-	if (clickEvent) changeState(views.campeonatos)
+	if (clickEvent) changeState({ view: views.campeonatos })
 }
 
-function campeonato(clickEvent) {
-	console.log('clicou')
+function campeonato({ event, id }) {
 	current_verify()
-	if (!instances.campeonatos) instances.campeonato = new CampeonatoController()
-	else instances.campeonato.display(true)
-	instances.current = instances.campeonato
-	if (clickEvent) changeState(views.campeonato)
+	instances.current = new CampeonatoController({ idCampeonato : id })
+	if (event) changeState({ view: views.campeonato, id })
 }
 
 function campeonatoRegistro(clickEvent) {
 	current_verify()
 	instances.current = new CampeonatoFormController()
-	if (clickEvent) changeState(views.campeonato_registro)
+	if (clickEvent) changeState({ view: views.campeonato_registro })
 }
 
 function sobre(clickEvent) {
 	current_verify()
 	instances.current = new Sobre()
-	if (clickEvent) changeState(views.sobre)
+	if (clickEvent) changeState({ view: views.sobre })
 }
 
 async function acessar(clickEvent) {
 	current_verify()
 	instances.current = new Acesso()
-	if (clickEvent) changeState(views.acesso)
+	if (clickEvent) changeState({ view: views.acesso })
 }
 
 async function registrar(clickEvent) {
 	current_verify()
 	instances.current = new Registro()
-	if (clickEvent) changeState(views.registro)
+	if (clickEvent) changeState({ view: views.registro })
 }
 
 function current_verify() {
@@ -201,25 +198,27 @@ function current_verify() {
 	}
 }
 
-function changeState(view, event) {
-//	console.log('changeState', view, event)
+function changeState({ view, event, id }) {
 
 	switch (view) {
 
 		case views.home:
 			window.history.pushState(view, view, `${location.pathname}`)
 			break
-		case views.atleta.nome:
-			console.log('viewAtleta', view, views.atleta.nome, views.atleta.id)
+		case views.atleta:
 			switch (event) {
 				case 'authEvent':
-					window.history.replaceState(view.nome, view.nome, `?p=${views.atleta.nome}&id=${views.atleta.id}`)
+					window.history.replaceState(view, view, `?p=${view}&id=${id}`)
 					break
 				case 'click':
 				case 'atletaClickEvent':
 					if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)
-						window.history.pushState(view.nome, view.nome, `?p=${views.atleta.nome}&id=${views.atleta.id}`)
+						window.history.pushState(view, view, `?p=${view}&id=${id}`)
 			}
+			break
+		case views.campeonato:
+			if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)
+				window.history.pushState(view, view, `?p=${view}&id=${id}`)
 			break
 		default:
 			if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)

@@ -37,7 +37,7 @@ export class CampeonatoListaView extends ListaView {
 
 	adicionarClickEvent(model) {
 		document.querySelector(`#a-campeonato-${model.id}`).addEventListener('click', () => {
-			campeonato('campeonatoClickEvent', model.id)
+			campeonato({ event: 'campeonatoClickEvent', id: model.id})
 		})
 	}
 

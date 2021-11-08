@@ -33,7 +33,7 @@ public class CampeonatoModel {
 
 	private PicoModel pico;
 
-	@JsonFormat(shape = Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
 	private LocalDateTime data;

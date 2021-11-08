@@ -62,7 +62,7 @@ export class UploadFormItem {
 				if (this._isTypeImage) {
 					let img = document.createElement('img')
 					img.height = 60
-					img.classList.add('uploadFileObject')
+					img.classList.add(`uploadFileObject-${this._name}`)
 					img.file = file;
 
 					/*img.src = window.URL.createObjectURL(file)
@@ -78,7 +78,8 @@ export class UploadFormItem {
 				}else{
 					const strong = document.createElement('strong')
 					strong.innerText = fileName
-					strong.classList.add('uploadFileObject')
+					strong.classList.add(`uploadFileObject-${this._name}`)
+					strong.file = file;
 					li.appendChild(strong)
 				}
 				this._ulUploads.appendChild(li)
@@ -120,12 +121,12 @@ export class UploadFormItem {
 	}
 
 	getListFiles() {
-		const imgs = document.querySelectorAll('.uploadFileObject')
+		const files = document.querySelectorAll(`.uploadFileObject-${this._name}`)
 
 		const listFiles = []
 
-		for (let i = 0; i < imgs.length; i++) {
-			listFiles.push(imgs[i].file)
+		for (let i = 0; i < files.length; i++) {
+			listFiles.push(files[i].file)
 		}
 
 		return listFiles;

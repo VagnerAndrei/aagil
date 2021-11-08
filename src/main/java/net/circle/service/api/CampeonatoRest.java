@@ -80,7 +80,7 @@ public class CampeonatoRest {
 	 * 
 	 * @returns Response: <br/>
 	 *          Status.BAD_REQUEST(400, "Bad Request")
-	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 *          Status.BAD_REQUEST(403, "Forbidden")
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 *          Status.ACCEPTED(202, "Accepted")
 	 */

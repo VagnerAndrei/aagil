@@ -23,6 +23,7 @@ export class CampeonatoFormView extends View2 {
 	}
 
 	init() {
+		this._form = document.querySelector('#form-campeonato')
 		this._inputTitulo = document.querySelector('#input-titulo')
 		this._textareaDescricao = document.querySelector('#textarea-descricao')
 		this._inputLocal = document.querySelector('#input-local')
@@ -54,7 +55,7 @@ export class CampeonatoFormView extends View2 {
 		this._labelAnexoRegulamento = document.querySelector('#label-anexo-regulamento')
 		this._labelErroFormulario = document.querySelector('#label-erro-formulario')
 		this._buttonEnviarFormulario = document.querySelector('#button-enviar-formulario')
-	
+
 
 		this._configurePodiumChange()
 		this._configureAdicionarCategoria()
@@ -66,31 +67,31 @@ export class CampeonatoFormView extends View2 {
 		this._idIndexElementCategoriaEmEdicao = undefined
 
 		this._configureAdicionarArbitro()
-		
-		
+
+
 		/*								FILE UPLOADS										*/
-		
+
 		this._uploadMidiasDivulgacao = new UploadFormItem({
-			elementID : 'div-midias-divulgacao',
-			label : 'Imagens',
-			name : 'midias-divulgacao'
+			elementID: 'div-midias-divulgacao',
+			label: 'Imagens',
+			name: 'midias-divulgacao'
 		})
 		this._uploadFotosCampeonato = new UploadFormItem({
-			elementID : 'div-fotos-campeonato',
-			label : 'Fotos',
-			name : 'fotos-campeonato'
+			elementID: 'div-fotos-campeonato',
+			label: 'Fotos',
+			name: 'fotos-campeonato'
 		})
 		this._uploadRegulamento = new UploadFormItem({
-			elementID : 'div-regulamento',
-			label : 'Arquivo',
-			name : 'regulamento',
-			acceptTypes : 'application/pdf',
-			maxFiles : 1,
-			isTypeImage : false
+			elementID: 'div-regulamento',
+			label: 'Arquivo',
+			name: 'regulamento',
+			acceptTypes: 'application/pdf',
+			maxFiles: 1,
+			isTypeImage: false
 		})
-		
+
 		/*							===================										*/
-		
+
 		this._campeonato = new Campeonato({})
 	}
 
@@ -174,26 +175,49 @@ export class CampeonatoFormView extends View2 {
 		this._buttonAtualizarArbitros.addEventListener('click', () => { command() })
 		command()
 	}
-	
-	configureEnviarFormulario(command){
-		this._buttonEnviarFormulario.addEventListener('click', () =>{
+
+	configureEnviarFormulario(command) {
+		this._buttonEnviarFormulario.addEventListener('click', (event) => {
+			event.preventDefault()
 			const erros = this._validateFormulário()
+			if (this._form.checkValidity() && erros.length == 0){
+				this._labelErroFormulario.textContent = ''
+				
+				this._campeonato.titulo = this._inputTitulo.value
+				this._campeonato.descricao = this._textareaDescricao.value
+
+				let data = new Date(this._inputData.value.replace('-','/'))
+				data.setHours(this._inputHora.value)
+				data.setMinutes(this._inputMinuto.value)
+				this._campeonato.setData(data)
+				
+				this._campeonato.pico = { id: this._selectPista.value }
+				
+				this._campeonato.categorias = []
+				this._listCategoriasTemp.forEach(obj => this._campeonato.categorias.push(obj.categoria))
+				
+				command()
+			}
+			else{
+				this._form.reportValidity()
+				this._labelErroFormulario.textContent = `${erros.map(erro => erro).join('\n')}`
+			}
 		})
 	}
-	
-	getCampeonatoModel(){
+
+	getCampeonatoModel() {
 		return this._campeonato
 	}
-	
-	getMidiasDivulgacaoFileList(){
+
+	getMidiasDivulgacaoFileList() {
 		return this._uploadMidiasDivulgacao.getListFiles()
 	}
-	
-	getFotosCampeonatoFileList(){
+
+	getFotosCampeonatoFileList() {
 		return this._uploadFotosCampeonato.getListFiles()
 	}
 
-	getRegulamentoFile(){
+	getRegulamentoFile() {
 		return this._uploadRegulamento.getListFiles()
 	}
 
@@ -368,33 +392,37 @@ export class CampeonatoFormView extends View2 {
 	}
 
 	_addArbitro() {
-		const id =  this._selectArbitro.value
+		const id = this._selectArbitro.value
 		const nome = this._selectArbitro[this._selectArbitro.selectedIndex].label
-		if (id && !this._campeonato.arbitros.find(arbitro => arbitro.id == id)){
-			const arbitro = new Atleta({id , nome})
+		if (id && !this._campeonato.arbitros.find(arbitro => arbitro.id == id)) {
+			const arbitro = new Atleta({ id, nome })
 			const li = document.createElement('li')
 			li.innerHTML = this._templateLiArbitro(arbitro)
 			li.id = `li-arbitro-${id}`
 			this._ulArbitros.appendChild(li)
 			this._configureRemoverArbitro(id)
-			this._campeonato.arbitros.push(arbitro)
+			this._campeonato.arbitros.push(new Atleta({ id }))
 		}
 	}
-	
-	_configureRemoverArbitro(id){
-		document.querySelector(`#img-remover-arbitro-${id}`).addEventListener('click', () =>{
+
+	_configureRemoverArbitro(id) {
+		document.querySelector(`#img-remover-arbitro-${id}`).addEventListener('click', () => {
 			this._ulArbitros.removeChild(document.querySelector(`#li-arbitro-${id}`))
 			this._campeonato.arbitros.splice(this._campeonato.arbitros.findIndex(arbitro => arbitro.id == id), 1)
 		})
 	}
-	
-	
+
+
 	/*
 										FORMULÁRIO
 																						*/
 
-	_validateFormulário(){
+	_validateFormulário() {
 		const erros = []
+		if (this._listCategoriasTemp.length == 0)
+			erros.push('Categoria é obrigatório')
+		if (this._campeonato.arbitros.length == 0)
+			erros.push('Arbitragem é obrigatório')
 		return erros
 	}
 }

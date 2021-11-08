@@ -4,6 +4,7 @@
 
 import { Controller } from './../components/Controller.js'
 import { CampeonatoFormView } from './../view/CampeonatoFormView.js'
+import { FotosUpload } from '../controller/FotosUpload.js'
 import { get } from './../fetch.js'
 import { Pista } from './../model/Pista.js'
 import { Atleta } from './../model/Atleta.js'
@@ -22,6 +23,7 @@ export class CampeonatoFormController extends Controller {
 		return async () => {
 			this._view.configureRefreshListaPista(this.consultarPistas())
 			this._view.configureRefreshListaArbitro(this.consultarArbitros())
+			this._view.configureEnviarFormulario(this.salvarCampeonato())
 		}
 	}
 
@@ -39,11 +41,11 @@ export class CampeonatoFormController extends Controller {
 					console.log(response)
 					break
 			}
-			
+
 			this._view.setupListaPistas(this._listaPista)
 		}
 	}
-	
+
 	consultarArbitros() {
 		return async () => {
 			const response = await get('api/atletas/simple')
@@ -58,45 +60,120 @@ export class CampeonatoFormController extends Controller {
 					console.log(response)
 					break
 			}
-			
+
 			this._view.setupListaArbitros(this._listaArbitro)
 		}
 	}
-	
+
 	salvarCampeonato() {
 		return async () => {
 			const formData = new FormData()
-			
+
 			/*			JSON CAMPEONATO			*/
 			const campeonato = this._view.getCampeonatoModel()
-			
-			const json = JSON.stringify(campeonato)
-			
-			console.log(json)
-		
-			
+
+			const blobJSON = new Blob([JSON.stringify(campeonato)], { type: 'application/json' })
+
+			formData.append('json', blobJSON)
+
+
 			/*		REGULAMENTO	 ATTACHMENT				*/
 			const regulamentoFile = this._view.getRegulamentoFile()
 			for (let i = 0; i < regulamentoFile.length; i++) {
 				formData.append('regulamento', regulamentoFile[i])
 			}
-			
+
 			/*		MIDIAS DIVULGACAO ATTACHMENT		*/
 			const midiasDivulgacaoFiles = this._view.getMidiasDivulgacaoFileList()
 			for (let i = 0; i < midiasDivulgacaoFiles.length; i++) {
 				formData.append('midia-divulgacao', midiasDivulgacaoFiles[i])
 			}
-			
+
 			/*		FOTOS CAMPEONATO ATTACHMENT			*/
 			const fotosCampeonatoFiles = this._view.getFotosCampeonatoFileList()
 			for (let i = 0; i < fotosCampeonatoFiles.length; i++) {
 				formData.append('foto', fotosCampeonatoFiles[i])
 			}
-			
-			
-		
-			
+
+
+			/*					XML HTTP REQUEST						*/
+
+			this._xhr = new XMLHttpRequest();
+			this._xhr.open('POST', 'api/campeonatos')
+
+			this._upload = (fotosCampeonatoFiles.length + midiasDivulgacaoFiles.length + regulamentoFile.length) != 0
+
+			if (this._upload)
+				this._configureXHRUpload()
+			this._configureXHRResponse()
+
+			this._xhr.send(formData)
 		}
+	}
+
+	_configureXHRUpload() {
+		this._xhr.upload.addEventListener('load', () => {
+		})
+
+		this._xhr.upload.addEventListener('loadstart', () => {
+			this._modalUpload = new FotosUpload('Campeonato - Upload', () => this._uploadedHandler(), () => this._cancelarUpload())
+		})
+
+		this._xhr.upload.addEventListener('abort', () => {
+			this._labelErro.textContent = 'Upload cancelado'
+			this._modalUpload.fecharModal()
+		})
+
+		this._xhr.upload.addEventListener('error', () => {
+			this._labelErro.textContent = 'Upload erro'
+			this._modalUpload.fecharModal()
+		})
+
+		this._xhr.upload.addEventListener('progress', e => {
+			let percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
+			this._modalUpload?.setPercent(percent)
+		})
+	}
+
+	_configureXHRResponse() {
+		
+		this._xhr.onreadystatechange = () => {
+			if (this._xhr.readyState === 4) {
+				console.log(this._xhr.status)
+				switch (this._xhr.status) {
+					case 403:
+						this._labelErro.textContent = 'Acesso negado!'
+						this._modalUpload.fecharModal()
+						break
+					case 400:
+						const json = JSON.parse(this._xhr.response)
+						this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
+						this._modalUpload.fecharModal()
+						break
+					case 202:
+						if (!this._upload) this._modalUpload = new FotosUpload('Campeonato', () => this.uploadedHandler())
+						this._modalUpload.setResult('Upload realizado com sucesso!')
+						break
+					case 500:
+						this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+						this._modalUpload?.fecharModal()
+				}
+			}
+		}
+
+		this._xhr.onerror = () => {
+			this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+			this._modalUpload.fecharModal()
+		}
+	}
+
+	_uploadedHandler() {
+		home('campeonatoRegistroEvent')
+		window.scroll(0, 500)
+	}
+
+	_cancelarUpload() {
+		this._xhr?.abort()
 	}
 
 

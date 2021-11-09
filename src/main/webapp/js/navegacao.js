@@ -152,7 +152,7 @@ function campeonatos(clickEvent) {
 
 function campeonato({ event, id }) {
 	current_verify()
-	instances.current = new CampeonatoController({ idCampeonato : id })
+	instances.current = new CampeonatoController({ idCampeonato: id })
 	if (event) changeState({ view: views.campeonato, id })
 }
 
@@ -230,13 +230,18 @@ function changeState({ view, event, id }) {
 function applyRole(role) {
 	if (instances.current?.constructor == Acesso || instances.current?.constructor == Registro)
 		perfil('authEvent')
-	Object.keys(instances).map(key => {
-		if (key === 'current' || instances[key] && instances[key] !== instances['current']) {
-			instances[key]?.applyRole(role)
-			console.log('aplicou', key)
-		}
+	try {
+		Object.keys(instances).map(key => {
+			if (key === 'current' || instances[key] && instances[key] !== instances['current']) {
+				instances[key]?.applyRole(role)
+				console.log('aplicou', key)
+			}
 
-	})
+		})
+	} catch (error) { }
+	try {
+		instances['current'].applyRole()
+	} catch (error) { }
 }
 
 // Verifica usuário quando o foco da app retorna, podendo haver caso de window.focus ou apenas tab visibilityChange

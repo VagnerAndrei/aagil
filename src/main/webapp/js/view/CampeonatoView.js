@@ -3,7 +3,9 @@
  */
 import { View2 } from './../components/View2.js'
 import { Campeonato } from './../model/Campeonato.js'
+import { Endereco } from './../model/Endereco.js'
 import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
+import { isAdmin } from './../sessao.js'
 
 export class CampeonatoView extends View2 {
 
@@ -24,7 +26,9 @@ export class CampeonatoView extends View2 {
 	init() {
 		this._labelTitulo = document.querySelector('#label-titulo')
 		this._pDescricao = document.querySelector('#p-descricao')
+		this._aRegulamento = document.querySelector('#a-regulamento')
 		this._buttonRegulamento = document.querySelector('#button-regulamento')
+		this._strongPistaNome = document.querySelector('#strong-pista-nome')
 		this._imgPista = document.querySelector('#img-pista')
 		this._divInformacoesPista = document.querySelector('#div-informacoes-pista')
 		this._imgUfPista = document.querySelector('#img-uf-pista')
@@ -33,6 +37,14 @@ export class CampeonatoView extends View2 {
 		//		this._= document.querySelector('#')
 		//		this._= document.querySelector('#')
 		//		this._= document.querySelector('#')
+	}
+
+	_setAdminsElements() {
+		this._campeonato.categorias.forEach(categoria => {
+			this._addAdminElement({ id: `button-inscrever-atleta-${categoria.id}`, className: 'button-campeonato-inscrever button-campeonato-inscrever-atleta' })
+			this._addAdminElement({ id: `div-controle-inscricao-${categoria.id}`, className: 'controle-categoria-campeonato' })
+			this._addAdminElement({ id: `div-controle-classificacao-${categoria.id}`, className: 'controle-categoria-campeonato' })
+		})
 	}
 
 	/*
@@ -47,7 +59,7 @@ export class CampeonatoView extends View2 {
 				<button class="button-campeonato-inscrever button-campeonato-inscrever-atleta" id="button-inscrever-atleta-${categoria.id}">Inscrever Atleta</button>
 			</div>
 			
-			<div class="controle-categoria-campeonato">
+			<div class="controle-categoria-campeonato" id="div-controle-inscricao-${categoria.id}">
 				<div class="div-checkbox-label">
 					<input type="checkbox" id="checkbox-permitir-inscricoes-${categoria.id}" name="checkbox-permitir-inscricoes-${categoria.id}" 
 						class="checkbox-permitir-exibicao-campeonato">
@@ -75,7 +87,7 @@ export class CampeonatoView extends View2 {
 			</table>
 			
 			<br/>
-			<div class="controle-categoria-campeonato-${categoria.id}">
+			<div class="controle-categoria-campeonato" id="div-controle-classificacao-${categoria.id}">
 				<div class="div-checkbox-label">
 					<input type="checkbox" id="checkbox-exibir-classificacao-${categoria.id}" name="checkbox-exibir-classificacao-${categoria.id}">
 					<label for="checkbox-exibir-classificacao-${categoria.id}">Exibir classificação publicamente</label>
@@ -164,9 +176,43 @@ export class CampeonatoView extends View2 {
 										PUBLIC METHODS
 																						*/
 
+	configureRegulamento(command) {
+		this._buttonRegulamento.addEventListener('click', () => command())
+	}
+
 	setCampeonato(campeonato = new Campeonato()) {
 		this._campeonato = campeonato
-		console.log(campeonato)
+		this._setAdminsElements()
+		console.log(this._campeonato)
+		this._setupCampeonato()
+	}
+
+	_setupCampeonato() {
+		this._labelTitulo.innerText = this._campeonato.titulo
+		this._pDescricao.innerText = this._campeonato.descricao
+
+		this._aRegulamento.href = `api/campeonatos/${this._campeonato.id}/regulamento`
+		this._campeonato.regulamento ? this._buttonRegulamento.classList.remove('display-none') : this._buttonRegulamento.classList.add('display-none')
+
+		this._strongPistaNome.value = this._campeonato.titulo
+		if (this._campeonato.pico.fotos?.length) {
+			this._imgPista.src = `api/fotos/${this._campeonato.pico.fotos[0].id}/thumb`
+		}
+		if (this._campeonato.pico.endereco) {
+			const endereco = new Endereco(this._campeonato.pico.endereco)
+			this._divInformacoesPista.innerText = `
+				${endereco.logradouro}
+				${endereco.bairro}
+				${endereco.localidade}-${endereco.uf}
+				${endereco.cep}
+				${endereco.referencia}
+				Perimêtro: ${endereco.perimetro}
+			`
+			this._imgUfPista.src = `assets/img/ufs/${endereco.uf}.png`
+		}
+
+
+		this._labelDataHoraCampeonato.innerText = this._campeonato.getData()
 		this._campeonato.categorias.forEach(categoria => {
 			const divCategoria = document.createElement('div')
 			divCategoria.id = `div-categoria-${categoria.id}`
@@ -174,5 +220,11 @@ export class CampeonatoView extends View2 {
 			divCategoria.innerHTML = this._templateCategoria(categoria)
 			this._divCategoriasCampeonato.appendChild(divCategoria)
 		})
+
+		this.applyRole()
+	}
+
+	applyRole() {
+		this._applyRole(isAdmin())
 	}
 }

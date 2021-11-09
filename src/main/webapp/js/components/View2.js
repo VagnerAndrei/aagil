@@ -10,11 +10,17 @@ export class View2 {
 		this._onViewCreatedFn = onViewCreatedFn
 		this._viewName = `view-${this._titulo.toLowerCase().trim()}`
 		this._main = document.getElementsByTagName('main')[0]
+		this._adminElements = []
 		document.getElementsByTagName('title')[0].textContent = this._titulo;
 		this.update()
 	}
+	
+	_addAdminElement({id, className}){
+		this._adminElements.push({id, className})
+	}
 
-	applyRole() {
+	_applyRole(isAdmin) {
+		this._adminElements.forEach(element => document.getElementById(element.id).className = isAdmin ? element.className : 'display-none')
 	}
 
 	display(condition) {

@@ -2,12 +2,13 @@
  * 
  */
 import { NotaCampeonato } from './../model/NotaCampeonato.js'
+import { Atleta } from './../model/Atleta.js'
 
 export class InscricaoCampeonato {
 
 	constructor({ id, atleta, notas, statusPagamento }) {
 		this.id = id
-		this.atleta = atleta
+		this.atleta = new Atleta(atleta)
 		this.notas = notas?.map(nota => new NotaCampeonato(nota))
 		this.statusPagamento = statusPagamento
 	}

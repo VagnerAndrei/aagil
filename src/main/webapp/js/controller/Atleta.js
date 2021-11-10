@@ -88,59 +88,57 @@ export class Atleta extends View {
 			this._imgAtualizarFoto.classList.add('display-none');
 			this._imgAtualizarAtleta.classList.add('display-none');
 		}
-}
-
-// TODO: asd
-async consultarAtleta(idAtleta) {
-	if (idAtleta) this._idAtleta = idAtleta
-	const response = await get(`api/atletas/${this._idAtleta}`);
-
-	if (response.status == 302) {
-		const atleta = await response.json();
-
-		this.setAtleta(atleta);
-
-		this.confereFoto(this._atleta.foto)
-	}
-	else
-		if (response.status == 404 || response.status == 500)
-			pagina_nao_encontrada();
-}
-
-confereFoto(foto) {
-	this._atleta.foto = foto
-	this._imgAtleta.src = `api/atletas/${this._atleta.id}/foto/thumb?t=${new Date().getTime()}`
-}
-
-async atualizarFoto() {
-	if (await isLogged('linkVerificationEvent'))
-		new AtletaFotoUpload(this._atleta, event => this.confereFoto(event))
-	// TODO: adicionar mensagem de login em outra conta
-}
-
-async atualizarAtleta() {
-	if (await isLogged('linkVerificationEvent'))
-		new AtletaForm(this._atleta, event => this.setAtleta(event))
-	// TODO: adicionar mensagem de login em outra conta 
-}
-
-setAtleta(atleta) {
-	this._atleta = atleta;
-	this._labelNome.textContent = this._atleta.nome
-	this._labelApelido.textContent = `(${this._atleta.apelido})`
-	this._textoBiografia.textContent = this._atleta.biografia
-	this._textoBiografia.innerHTML = this._textoBiografia.innerHTML.replace(/\n/g, '<br>\n')
-
-	if (this._atleta.localidade) {
-		this._labelLocalidadeUf.textContent = `${this._atleta.localidade.nome} - ${this._atleta.localidade.uf}`
-		this._imgEstado.src = `assets/img/ufs/${this._atleta.localidade.uf}.png`
 	}
 
-	if (this._atleta.nascimento) this._labelIdade.textContent = getIdade(this._atleta.nascimento);
-	if (this._atleta.categoria) this._labelCategoria.textContent = this._atleta.categoria;
+	// TODO: asd
+	async consultarAtleta(idAtleta) {
+		if (idAtleta) this._idAtleta = idAtleta
+		const response = await get(`api/atletas/${this._idAtleta}`);
 
-	this.applyRole()
-}
+		if (response.status == 302) {
+			const atleta = await response.json();
+
+			this.setAtleta(atleta);
+
+			this.confereFoto(this._atleta.foto)
+		}
+		else
+			if (response.status == 404 || response.status == 500)
+				pagina_nao_encontrada();
+	}
+
+	confereFoto(foto) {
+		this._atleta.foto = foto
+		this._imgAtleta.src = `api/atletas/${this._atleta.id}/foto/thumb?t=${new Date().getTime()}`
+	}
+
+	async atualizarFoto() {
+		if (await isLogged('linkVerificationEvent'))
+			new AtletaFotoUpload(this._atleta, event => this.confereFoto(event))
+		// TODO: adicionar mensagem de login em outra conta
+	}
+
+	async atualizarAtleta() {
+		if (await isLogged('linkVerificationEvent'))
+			new AtletaForm(this._atleta, event => this.setAtleta(event))
+		// TODO: adicionar mensagem de login em outra conta 
+	}
+
+	setAtleta(atleta) {
+		this._atleta = atleta;
+		this._labelNome.textContent = this._atleta.nome ?? ''
+		this._labelApelido.textContent = this._atleta.apelido ? ` (${this._atleta.apelido})` : ''
+		this._textoBiografia.textContent = this._atleta.biografia
+		this._textoBiografia.innerHTML = this._textoBiografia.innerHTML.replace(/\n/g, '<br>\n')
+
+		this._labelLocalidadeUf.textContent = this._atleta.localidade ? `${this._atleta.localidade.nome} - ${this._atleta.localidade.uf}` : ''
+		this._imgEstado.src = this._atleta.localidade ? `assets/img/ufs/${this._atleta.localidade.uf}.png` : ''
+
+		this._labelIdade.textContent = this._atleta.nascimento ? getIdade(this._atleta.nascimento) : ''
+		this._labelCategoria.textContent = this._atleta.categoria ? this._atleta.categoria : ''
+
+		this.applyRole()
+	}
 
 
 

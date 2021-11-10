@@ -3,12 +3,16 @@
  */
 export class Controller {
 
+	_getView(){}
 
 	remove() {
-		this._view.remove()
+		console.log('b')
+		this._getView().remove()
 	}
 
 	display(condition) {
-		this._view.display(condition)
+		console.log('a')
+		console.log(this._getView())
+		this._getView().display(condition)
 	}
 }

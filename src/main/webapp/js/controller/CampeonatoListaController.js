@@ -18,4 +18,8 @@ export class CampeonatoListaController extends ListaController {
 		}
 	}
 	
+	_getView(){
+		return this._view
+	}
+	
 }

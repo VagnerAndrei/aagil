@@ -62,7 +62,8 @@ export class View {
 		div.id = this._viewName
 		div.innerHTML = !template ? this.template() : template
 		div.classList.add('container-view')
-		this._main.append(div)
+		//this._main.append(div)
+		this._main.innerHTML = div.outerHTML
 	}
 
 	template() {

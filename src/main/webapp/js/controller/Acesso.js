@@ -32,7 +32,7 @@ export class Acesso extends View {
 			<div>
 				<h1>Acesso</h1>
 				<div class="conta">
-					<small>ou</small><small> crie sua conta</small>
+					<small>ou </small><a href="?p=registro"><small>crie sua conta</small></a>
 				</div>
 		
 				<form>

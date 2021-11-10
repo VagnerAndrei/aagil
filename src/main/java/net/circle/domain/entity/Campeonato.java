@@ -18,6 +18,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -52,18 +53,22 @@ public class Campeonato extends AbstractEntity {
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinColumn(name="campeonato_id", referencedColumnName = "id", nullable = false)
+	@OrderBy("id ASC")
 	private List<CategoriaCampeonato> categorias = new ArrayList<CategoriaCampeonato>();
 
 	@OneToMany
 	@JoinTable(name = "arbitros_campeonato", joinColumns = @JoinColumn(name = "campeonato_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "atleta_id", referencedColumnName = "id"))
+	@OrderBy("nome ASC")
 	private List<Atleta> arbitros = new ArrayList<Atleta>();
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(name = "midias_divulgacao_campeonato", joinColumns = @JoinColumn(name = "campeonato_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
+	@OrderBy("id ASC")
 	private List<Foto> midiasDivulgacao = new ArrayList<Foto>();
 
 	@OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	@JoinTable(name = "fotos_campeonato", joinColumns = @JoinColumn(name = "campeonato_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "foto_id", referencedColumnName = "id"))
+	@OrderBy("id ASC")
 	private List<Foto> fotos = new ArrayList<Foto>();
 
 	@Lob

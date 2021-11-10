@@ -10,20 +10,22 @@ export class View2 {
 		this._onViewCreatedFn = onViewCreatedFn
 		this._viewName = `view-${this._titulo.toLowerCase().trim()}`
 		this._main = document.getElementsByTagName('main')[0]
-		this._adminElements = []
+		console.log(this._main)
+		this._roledElements = []
 		document.getElementsByTagName('title')[0].textContent = this._titulo;
 		this.update()
 	}
 	
-	_addAdminElement({id, className}){
-		this._adminElements.push({id, className})
+	_addRoledElement({id, className, role='ADMIN'}){
+		this._roledElements.push({id, className, role})
 	}
 
 	_applyRole(isAdmin) {
-		this._adminElements.forEach(element => document.getElementById(element.id).className = isAdmin ? element.className : 'display-none')
+		this._roledElements.forEach(element => document.getElementById(element.id).className = isAdmin ? element.className : 'display-none')
 	}
 
 	display(condition) {
+		console.log('display')
 		if (condition) {
 			document.getElementsByTagName('title')[0].textContent = this._titulo
 			document.getElementById(this._viewName).style.display = ''
@@ -58,11 +60,12 @@ export class View2 {
 	init() { }
 
 	update({ html , status = 200 }) {
+		console.log(html, status, this._main)
 		const div = document.createElement('div')
 		div.id = this._viewName
 		div.innerHTML = !html ? this.template() : html
 		div.classList.add('container-view')
-		this._main.append(div)
+		this._main.innerHTML = div.outerHTML
 		if (status && status == 200) {
 			this.init()
 			this._onViewCreatedFn()

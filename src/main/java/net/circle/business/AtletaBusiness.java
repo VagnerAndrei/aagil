@@ -59,7 +59,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 
 	@Override
 	public List<Atleta> consultarLista() {
-		return dao.findAll();
+		return dao.findAll("nome ASC");
 	}
 
 	@Override

@@ -4,6 +4,7 @@
 import { ListaView } from '../components/ListaView.js'
 import { Campeonato } from '../model/Campeonato.js'
 import { campeonato, campeonatoRegistro } from '../navegacao.js'
+import { isAdmin } from './../sessao.js'
 
 export class CampeonatoListaView extends ListaView {
 
@@ -18,6 +19,9 @@ export class CampeonatoListaView extends ListaView {
 		this._buttonCriarCampeonato.addEventListener('click', () => {
 			campeonatoRegistro('clickEvent')
 		})
+		
+		this._addRoledElement({id : 'button-criar-campeonato' , className : 'botao-inserir'})
+		this._applyRole(isAdmin())
 	}
 
 	async update() {

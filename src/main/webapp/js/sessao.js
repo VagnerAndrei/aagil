@@ -80,11 +80,15 @@ export function loginHandler(value, event) {
 }
 
 export function isAdmin() {
-	if (!atletaLogado) return false
-	return atletaLogado.usuario.perfis.includes('ADMIN')
+	return atletaLogado ? atletaLogado.usuario.perfis.includes('ADMIN') : false
 }
 
 export function isUser(){
-	if (!atletaLogado) return false
-	return atletaLogado.usuario.perfis.includes('USER')
+	return atletaLogado ? atletaLogado.usuario.perfis.includes('USER') : false
 }
+
+export function userRoles(){
+	return atletaLogado ? atletaLogado.usuario.perfis : [] 
+}
+
+export let ROLES = { ADMIN : 'ADMIN' , USER: 'USER'}

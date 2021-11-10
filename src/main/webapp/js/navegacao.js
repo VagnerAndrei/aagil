@@ -41,7 +41,7 @@ function verificaURL(event) {
 	switch (param) {
 		case null:
 			if (window.location != window.location.origin + window.location.pathname) pagina_nao_encontrada()
-			else home();
+			//else home();
 			break;
 		case views.atleta:
 			if (id && !isNaN(id) && id > 0) perfil(event, id);
@@ -123,30 +123,33 @@ function picoRegistro(e) {
 async function perfil(event, idAtleta) {
 	current_verify()
 	const idAtual = (idAtleta ? idAtleta : atletaLogado.id)
-	if (!instances.atleta)
-		instances.atleta = new Atleta(idAtual)
-	else {
-		await instances.atleta.consultarAtleta(idAtual)
-		instances.atleta.applyRole(atletaLogado ? 'User' : undefined)
-		instances.atleta.display(true)
-	}
-	instances.current = instances.atleta
+//	if (!instances.atleta)
+//		instances.atleta = new Atleta(idAtual)
+//	else {
+//		await instances.atleta.consultarAtleta(idAtual)
+//		instances.atleta.applyRole(atletaLogado ? 'User' : undefined)
+//		instances.atleta.display(true)
+//	}
+//	instances.current = instances.atleta
+	instances.current = new Atleta(idAtual)
 	changeState({ view: views.atleta, event: event instanceof Event ? event.type : event, id: idAtleta })
 }
 
 function atletas(clickEvent) {
 	current_verify()
-	if (!instances.atletas) instances.atletas = new Atletas()
-	else instances.atletas.display(true)
-	instances.current = instances.atletas
+//	if (!instances.atletas) instances.atletas = new Atletas()
+//	else instances.atletas.display(true)
+//	instances.current = instances.atletas
+	instances.current = new Atletas()
 	if (clickEvent) changeState({ view: views.atletas })
 }
 
 function campeonatos(clickEvent) {
 	current_verify()
-	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
-	else instances.campeonatos.display(true)
-	instances.current = instances.campeonatos
+//	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
+//	else instances.campeonatos.display(true)
+//	instances.current = instances.campeonatos
+	instances.current = instances.campeonatos = new CampeonatoListaController()
 	if (clickEvent) changeState({ view: views.campeonatos })
 }
 
@@ -184,12 +187,12 @@ function current_verify() {
 	//isLogged('navigationEvent')
 	if (instances.current) {
 		switch (instances.current.constructor) {
-			case Atletas:
-			case Picos:
-			case Atleta:
-			case CampeonatoListaController:
-				instances.current.display(false)
-				break
+//			case Atletas:
+//			case Picos:
+//			case Atleta:
+//			case CampeonatoListaController:
+//				instances.current.display(false)
+//				break
 			default:
 				instances.current.remove()
 				break

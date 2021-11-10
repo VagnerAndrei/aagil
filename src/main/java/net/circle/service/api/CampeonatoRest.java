@@ -79,10 +79,9 @@ public class CampeonatoRest {
 	 * @param pessoa - Atleta
 	 * 
 	 * @returns Response: <br/>
-	 *          Status.BAD_REQUEST(400, "Bad Request")
-	 *          Status.BAD_REQUEST(403, "Forbidden")
-	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
-	 *          Status.ACCEPTED(202, "Accepted")
+	 *          Status.BAD_REQUEST(400, "Bad Request") Status.BAD_REQUEST(403,
+	 *          "Forbidden") Status.INTERNAL_SERVER_ERROR(500, "Internal Server
+	 *          Error") Status.ACCEPTED(202, "Accepted")
 	 */
 	@POST
 	@PUT
@@ -217,7 +216,7 @@ public class CampeonatoRest {
 	 *          Status.OK(200, "OK"),<br/>
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 */
-	@PUT
+	@GET
 	@RolesAllowed("ADMIN")
 	@Path("/exibirInscricoes/{idCategoria}/{exibirInscricoes}")
 	public Response exibirInscricoes(@PathParam("idCategoria") Integer idCategoria,
@@ -241,13 +240,13 @@ public class CampeonatoRest {
 	 *          Status.OK(200, "OK"),<br/>
 	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
 	 */
-	@PUT
+	@GET
 	@RolesAllowed("ADMIN")
 	@Path("/exibirClassificacao/{idCategoria}/{exibirClassificacao}")
 	public Response exibirClassificacao(@PathParam("idCategoria") Integer idCategoria,
 			@PathParam("exibirClassificacao") Boolean exibirClassificacao) {
 		try {
-			servicoCampeonato.setExibirInscricoes(exibirClassificacao, idCategoria);
+			servicoCampeonato.setExibirClassificacao(exibirClassificacao, idCategoria);
 			return Response.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -274,11 +273,10 @@ public class CampeonatoRest {
 			return Response.ok().build();
 		} catch (Exception e) {
 			e.printStackTrace();
-			
-			if(e.getMessage().equals("Número da volta inválida"))
-				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NUMERO_DA_VOLTA_INVALIDA))
-						.build();
-			
+
+			if (e.getMessage().equals("Número da volta inválida"))
+				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NUMERO_DA_VOLTA_INVALIDA)).build();
+
 			if (e.getCause().getCause().getMessage().contains("ERROR: duplicate key value violates unique constraint"))
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NOTA_JA_LANCADA_NESTA_VOLTA))
 						.build();
@@ -295,8 +293,8 @@ public class CampeonatoRest {
 	 * 
 	 * @returns Response: <br/>
 	 *          Status.OK(200, "OK"),<br/>
-	 *          Status.FORBIDDEN(403, "Forbidden") Status.INTERNAL_SERVER_ERROR(500,
-	 *          "Internal Server Error")
+	 *          Status.FORBIDDEN(403, "Forbidden"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, * "Internal Server Error")
 	 */
 	@POST
 	@RolesAllowed("USER")
@@ -406,13 +404,14 @@ public class CampeonatoRest {
 			var campeonato = servicoCampeonato.consultar(idCampeonato).get();
 
 			var regulamento = campeonato.getRegulamento().getBinaryStream().readAllBytes();
-			
+
 			if (regulamento.length == 0)
 				return Response.status(Status.NO_CONTENT).build();
 
 			ResponseBuilder response = Response.ok(regulamento).type("application/pdf"); // +
 			// atleta.getFoto().getExtensao()
-			response.header("Content-Disposition", "inline; filename=" + campeonato.getTitulo().trim() + "-regulamento.pdf");// +
+			response.header("Content-Disposition",
+					"inline; filename=" + campeonato.getTitulo().trim() + "-regulamento.pdf");// +
 			// atleta.getFoto().getExtensao()
 
 			return response.build();

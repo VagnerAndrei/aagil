@@ -33,7 +33,7 @@ export class Registro extends View {
 		<div>
 			<h1>Registre-se</h1>
 			<div class="conta">
-			<small>ou</small><small> acesse sua conta</small>
+			<small>ou </small><a href="?p=acesso"><small>acesse sua conta</small></a>
 			</div>
 	
 			<form class="form-acesso" autocomplete="off">

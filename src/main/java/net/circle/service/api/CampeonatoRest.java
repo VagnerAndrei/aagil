@@ -262,15 +262,16 @@ public class CampeonatoRest {
 	 * 
 	 * @returns Response: <br/>
 	 *          Status.OK(200, "OK"),<br/>
-	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error"),<br/>
+	 *          Status.BAD_REQUEST(400, "Bad Request")
 	 */
 	@POST
 	@RolesAllowed("ADMIN")
 	@Path("/notas/{idInscricao}")
 	public Response setNota(NotaCampeonatoModel notaModel, @PathParam("idInscricao") Integer idInscricao) {
 		try {
-			servicoCampeonato.setNota(parseEntity(notaModel), idInscricao);
-			return Response.ok().build();
+			var nota = servicoCampeonato.setNota(parseEntity(notaModel), idInscricao);
+			return Response.ok().entity(parseModel(nota)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 
@@ -278,7 +279,7 @@ public class CampeonatoRest {
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NUMERO_DA_VOLTA_INVALIDA)).build();
 
 			if (e.getCause().getCause().getMessage().contains("ERROR: duplicate key value violates unique constraint"))
-				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NOTA_JA_LANCADA_NESTA_VOLTA))
+				return Response.status(Status.BAD_REQUEST).entity(new ErroModel(CampeonatoExcecao.NOTA_JA_LANCADA_NESTA_VOLTA))
 						.build();
 
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
@@ -486,13 +487,9 @@ public class CampeonatoRest {
 				inscricaoModel.setId(inscricaoCampeonato.getId());
 				inscricaoModel.setAtleta(ParseModelUtil.parseModel(inscricaoCampeonato.getAtleta(), false));
 				inscricaoModel.setStatusPagamento(inscricaoCampeonato.getStatusPagamento().name());
+				inscricaoModel.setData(inscricaoCampeonato.getData());
 				for (NotaCampeonato notaCampeonato : inscricaoCampeonato.getNotas()) {
-					var notaModel = new NotaCampeonatoModel();
-					notaModel.setId(notaCampeonato.getId());
-					notaModel.setVolta(notaCampeonato.getVolta());
-					notaModel.setNota(notaCampeonato.getNota());
-					notaModel.setArbitro(ParseModelUtil.parseModel(notaCampeonato.getArbitro(), true));
-					inscricaoModel.getNotas().add(notaModel);
+					inscricaoModel.getNotas().add(parseModel(notaCampeonato));
 				}
 				categoriaModel.getInscricoes().add(inscricaoModel);
 			}
@@ -501,6 +498,15 @@ public class CampeonatoRest {
 		}
 
 		return model;
+	}
+	
+	private NotaCampeonatoModel parseModel(NotaCampeonato notaCampeonato) {
+		var notaModel = new NotaCampeonatoModel();
+		notaModel.setId(notaCampeonato.getId());
+		notaModel.setVolta(notaCampeonato.getVolta());
+		notaModel.setNota(notaCampeonato.getNota());
+		notaModel.setArbitro(ParseModelUtil.parseModel(notaCampeonato.getArbitro(), true));
+		return notaModel;
 	}
 
 	private Campeonato parseEntity(CampeonatoModel model) {

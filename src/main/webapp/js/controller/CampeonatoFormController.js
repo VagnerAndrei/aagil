@@ -178,6 +178,10 @@ export class CampeonatoFormController extends Controller {
 	_cancelarUpload() {
 		this._xhr?.abort()
 	}
+	
+	_getView(){
+		return this._view
+	}
 
 
 }

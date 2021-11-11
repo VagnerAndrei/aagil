@@ -5,6 +5,7 @@ import { Controller } from './../components/Controller.js'
 import { CampeonatoView } from './../view/CampeonatoView.js'
 import { get, post } from './../fetch.js'
 import { Campeonato } from './../model/Campeonato.js'
+import { NotaCampeonato } from './../model/NotaCampeonato.js'
 import { atletaLogado } from './../sessao.js'
 import { pagina_nao_encontrada } from './../navegacao.js'
 
@@ -20,23 +21,34 @@ export class CampeonatoController extends Controller {
 
 	init() {
 		return async () => {
-			this._consultarCampeonato()
+			this._consultarCampeonato({isUpdateNotas:false})
 			this._view.configureInscreverSeFunction(this._inscreverSe())
 			this._view.configureInscreverAtletaFunction(this._inscreverAtleta())
 			this._view.configureSetExibirInscricoes(this._setExibirInscricoes())
 			this._view.configureSetPermitirInscricoes(this._setPermitirInscricoes())
 			this._view.configureSetExibirClassificacao(this._setExibirClassificacao())
+			this._view.configureLancarNota(this._lancarNota())
+			this._view.configureUpdateNotas(this._updateNotas())
+		}
+	}
+	
+	_updateNotas(){
+		return async () => {
+			await this._consultarCampeonato({isUpdateNotas:true})
 		}
 	}
 
-	async _consultarCampeonato() {
+	async _consultarCampeonato({isUpdateNotas}) {
 		const response = await get(`api/campeonatos/${this._idCampeonato}`)
 
 		switch (response.status) {
 			case 302:
 				const json = await response.json()
 				const campeonato = new Campeonato(json)
-				this._view.setCampeonato(campeonato)
+				if (!isUpdateNotas)
+					this._view.setCampeonato(campeonato)
+				else
+					this._view.updateNotasCampeonato(campeonato)
 				break
 			case 404:
 			case 500:
@@ -99,15 +111,15 @@ export class CampeonatoController extends Controller {
 			}
 		}
 	}
-	
-	_setPermitirInscricoes(){
+
+	_setPermitirInscricoes() {
 		return async (idCategoria, permitir) => {
 			const response =
 				await
 					get(`api/campeonatos/permitirInscricoes/${idCategoria}/${permitir}`)
 			switch (response.status) {
 				case 200:
-					alert(permitir ? 'Inscrições abertas' : 'Inscrições fechadas' )
+					alert(permitir ? 'Inscrições abertas' : 'Inscrições fechadas')
 					break
 				case 403:
 					console.log(response)
@@ -119,15 +131,15 @@ export class CampeonatoController extends Controller {
 			}
 		}
 	}
-	
-	_setExibirInscricoes(){
+
+	_setExibirInscricoes() {
 		return async (idCategoria, exibir) => {
 			const response =
 				await
 					get(`api/campeonatos/exibirInscricoes/${idCategoria}/${exibir}`)
 			switch (response.status) {
 				case 200:
-					alert(exibir ? 'Exibindo Inscrições publicamente' : 'Inscrições ocultadas ao público' )
+					alert(exibir ? 'Exibindo Inscrições publicamente' : 'Inscrições ocultadas ao público')
 					break
 				case 403:
 					console.log(response)
@@ -139,8 +151,8 @@ export class CampeonatoController extends Controller {
 			}
 		}
 	}
-	
-	_setExibirClassificacao(){
+
+	_setExibirClassificacao() {
 		return async (idCategoria, exibir) => {
 			const response =
 				await
@@ -160,11 +172,41 @@ export class CampeonatoController extends Controller {
 		}
 	}
 
+	_lancarNota() {
+		return async (idCategoria, idInscricao, nota) => {
+
+			const model = nota.id ?
+				{ id: nota.id } :
+				{ volta: nota.volta, arbitro: { id: nota.arbitro.id } }
+			model.nota = nota.nota
+
+			const response = await post(`http://localhost:8080/aagil/api/campeonatos/notas/${idInscricao}`, model)
+			switch (response.status) {
+				case 200:
+					const nota = await response.json()
+					this._view.setNota(idCategoria, idInscricao, nota)
+					break
+				case 403:
+					console.log(response)
+					break
+				case 400:
+					const badrequest = await response.json()
+					alert(badrequest.mensagem + '. A tabela de notas será recarregada.')
+					await this._consultarCampeonato({isUpdateNotas:true})
+					break
+				case 500:
+					const erro = await response.json()
+					alert(erro.mensagem)
+					break
+			}
+		}
+	}
+
 	applyRole() {
 		this._view.applyRole()
 	}
-	
-	_getView(){
+
+	_getView() {
 		return this._view
 	}
 

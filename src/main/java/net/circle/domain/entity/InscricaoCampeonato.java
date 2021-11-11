@@ -1,5 +1,6 @@
 package net.circle.domain.entity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +40,8 @@ public class InscricaoCampeonato extends AbstractEntity {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(nullable = false, name = "categoria_campeonato_id")
 	private CategoriaCampeonato categoria;
+	
+	private LocalDateTime data; 
 
 	public Integer getId() {
 		return id;
@@ -78,6 +81,14 @@ public class InscricaoCampeonato extends AbstractEntity {
 
 	public void setCategoria(CategoriaCampeonato categoria) {
 		this.categoria = categoria;
+	}
+
+	public LocalDateTime getData() {
+		return data;
+	}
+
+	public void setData(LocalDateTime data) {
+		this.data = data;
 	}
 	
 }

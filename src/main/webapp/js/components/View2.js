@@ -10,7 +10,6 @@ export class View2 {
 		this._onViewCreatedFn = onViewCreatedFn
 		this._viewName = `view-${this._titulo.toLowerCase().trim()}`
 		this._main = document.getElementsByTagName('main')[0]
-		console.log(this._main)
 		this._roledElements = []
 		document.getElementsByTagName('title')[0].textContent = this._titulo;
 		this.update()
@@ -25,7 +24,6 @@ export class View2 {
 	}
 
 	display(condition) {
-		console.log('display')
 		if (condition) {
 			document.getElementsByTagName('title')[0].textContent = this._titulo
 			document.getElementById(this._viewName).style.display = ''
@@ -60,7 +58,6 @@ export class View2 {
 	init() { }
 
 	update({ html , status = 200 }) {
-		console.log(html, status, this._main)
 		const div = document.createElement('div')
 		div.id = this._viewName
 		div.innerHTML = !html ? this.template() : html

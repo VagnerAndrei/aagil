@@ -1,5 +1,6 @@
 package net.circle.business;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -118,7 +119,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 
 	@Override
 	public List<Campeonato> consultarLista() {
-		return dao.findAll("data DESC");
+		return dao.findAll("data ASC");
 	}
 
 	@Override
@@ -149,7 +150,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 	}
 
 	@Override
-	public void setNota(NotaCampeonato notaEntity, Integer idInscricao) throws Exception {
+	public NotaCampeonato setNota(NotaCampeonato notaEntity, Integer idInscricao) throws Exception {
 		var nota = notaEntity.getId() != null ? notaCampeonatoDAO.findById(notaEntity.getId()).get()
 				: new NotaCampeonato();
 
@@ -163,7 +164,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 		if (nota.getInscricao().getCategoria().getVoltas() < nota.getVolta())
 			throw new Exception("Número da volta inválida");
 		
-		notaCampeonatoDAO.merge(nota);
+		return notaCampeonatoDAO.merge(nota);
 
 	}
 
@@ -173,6 +174,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 		inscricao.setAtleta(atletaDAO.findById(idAtleta).get());
 		inscricao.setStatusPagamento(StatusPagamento.PENDENTE);
 		inscricao.setCategoria(categoriaCampeonatoDAO.findById(idCategoria).get());
+		inscricao.setData(LocalDateTime.now());
 		inscricaoCampeonatoDAO.merge(inscricao);
 	}
 

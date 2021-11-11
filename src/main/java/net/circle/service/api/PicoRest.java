@@ -61,7 +61,6 @@ public class PicoRest {
 
 	public final static String[] fotoFormatos = { "PNG", "JPG", "JPEG", "BMP" };
 
-	
 	/**
 	 * Realiza o registro de pico com upload de imagens
 	 *
@@ -76,7 +75,7 @@ public class PicoRest {
 	@POST
 	@Path("/")
 	@RolesAllowed({ "ADMIN", "USER" })
-	@Consumes({ MediaType.MULTIPART_FORM_DATA, MediaType.APPLICATION_JSON })
+	@Consumes({ MediaType.MULTIPART_FORM_DATA})
 	public Response adicionarPico(@Context HttpServletRequest request, MultipartFormDataInput input) {
 		try {
 			Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
@@ -114,14 +113,17 @@ public class PicoRest {
 						var foto = new Foto();
 						foto.setOriginal(new SerialBlob(inputStream.readAllBytes()));
 						foto.setExtensao(extensao);
-						foto.setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto.getOriginal().getBinaryStream().readAllBytes())));
-						foto.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(foto.getArquivo().getBinaryStream().readAllBytes())));
+						foto.setArquivo(new SerialBlob(
+								ImagemUtil.getTratamentoJPG(foto.getOriginal().getBinaryStream().readAllBytes())));
+						foto.setThumbnail(new SerialBlob(
+								ImagemUtil.getThumbnailFromJPG(foto.getArquivo().getBinaryStream().readAllBytes())));
 						registro.getPicoNovo().getFotos().add(foto);
 
 					}
 
 			var picoRegistro = picoRegistroBusiness.salvar(registro);
 			String mensagem = "O Registro do pico foi efetuado com sucesso.";
+
 			switch (picoRegistro.getStatus()) {
 			case PENDENTE:
 				mensagem = "O Registro do pico foi efetuado com sucesso, e será avaliado por um administrador. Obrigado pela colaboração.";
@@ -130,7 +132,7 @@ public class PicoRest {
 				break;
 			}
 			return Response.accepted().entity(mensagem).build();
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().build();
@@ -142,13 +144,13 @@ public class PicoRest {
 	public List<PicoModel> consultarPicos() {
 		return parseModel(picoBusiness.consultarLista(), false);
 	}
-	
+
 	@GET
 	@Path("/simple")
 	public List<PicoModel> consultarPicosSimple() {
 		return parseModel(picoBusiness.consultarLista(), true);
 	}
-	
+
 	/**
 	 * Realiza a obtenção da lista de atletas paginada
 	 *
@@ -204,16 +206,16 @@ public class PicoRest {
 		PicoModel model = new PicoModel();
 		model.setId(pico.getId());
 		model.setTitulo(pico.getTitulo());
-		
-		if(!simple) {
+
+		if (!simple) {
 			model.setEndereco(ParseModelUtil.parseModel(pico.getEndereco()));
 			pico.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
 			pico.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
 		}
-		
+
 		return model;
 	}
-	
+
 	private PaginacaoModel parseModelPaginacao(List<Pico> lista) {
 		var paginacao = new PaginacaoModel();
 		paginacao.setPagina(lista.stream().map(pico -> parseModel(pico, false)).collect(Collectors.toList()));

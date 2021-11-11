@@ -131,7 +131,7 @@
 }
 
 .tabela-campeonato-classificacao input[type=number]{
-	width: 40px;
+	width: 42px;
 	height: 20px;
 	font-size: 12px;
 	text-align: right;
@@ -159,5 +159,37 @@
 .tabela-campeonato-inscricao tr td,
 .tabela-campeonato-classificacao tbody tr td{
 	text-align: center;
+}
+
+.link-atleta {
+	color: var(--blue-300);
+	text-decoration: none;
+}
+
+
+.link-atleta:hover {
+	cursor: pointer;
+	color: var(--blue-200);
+	text-decoration: none;
+}
+
+.input-nota-change:focus{
+	outline: none !important;
+    border:3px solid red;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.input-nota-change{
+	border:3px solid red;
+}
+
+.input-nota-commited:focus{
+	outline: none !important;
+    border:3px solid #0000ff;
+    box-shadow: 0 0 10px #719ECE;
+}
+
+.input-nota-commited{
+	   border:3px solid #0000ff;
 }
 

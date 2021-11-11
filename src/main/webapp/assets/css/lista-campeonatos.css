@@ -17,7 +17,7 @@
 	font-family: sans-serif;
 }
 
-#ul-campeonatos li a {
+#ul-campeonatos li a , .link-atleta{
 	color: var(--blue-300);
 	text-decoration: none;
 }
@@ -27,7 +27,7 @@
 	text-decoration: none;
 }
 
-#ul-campeonatos li a:hover {
+#ul-campeonatos li a:hover , .link-atleta:hover{
 	cursor: pointer;
 	color: var(--blue-200);
 	text-decoration: none;

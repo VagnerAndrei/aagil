@@ -13,7 +13,7 @@ public enum CampeonatoExcecao implements INegocioExcecao {
 	FORMATO_MIDIA_INVALIDO("InputMidiaDivugacao",
 			"Formato de mídia de divulgação inválido. Formatos aceitos: " + Arrays.asList(InputPartUtil.fotoFormatos)),
 	ATLETA_JA_INSCRITO("Atleta/Categoria",	"Atleta já inscrito nesta categoria"),
-	NOTA_JA_LANCADA_NESTA_VOLTA("Nota",	"Uma nota deste árbitro ja foi lançada nesta volta"),
+	NOTA_JA_LANCADA_NESTA_VOLTA("Nota",	"Uma nota deste árbitro já foi lançada nesta volta"),
 	NUMERO_DA_VOLTA_INVALIDA("Volta",	"Número da volta inválida"),
 	INSCRICAO_NAO_EXISTE("Inscrição",	"Esta inscrição não existe"),
 	FORMATO_FOTO_INVALIDO("InputFoto",

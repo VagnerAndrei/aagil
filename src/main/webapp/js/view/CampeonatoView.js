@@ -5,8 +5,9 @@ import { View2 } from './../components/View2.js'
 import { Campeonato } from './../model/Campeonato.js'
 import { Endereco } from './../model/Endereco.js'
 import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
+import { NotaCampeonato } from './../model/NotaCampeonato.js'
 import { isAdmin, isUser, ROLES } from './../sessao.js'
-import { registrar } from './../navegacao.js'
+import { registrar, perfil } from './../navegacao.js'
 
 export class CampeonatoView extends View2 {
 
@@ -44,6 +45,9 @@ export class CampeonatoView extends View2 {
 		this._setPermitirInscricoesFn = {}
 		this._setExibirInscricoesFn = {}
 		this._setExibirClassificacaoFn = {}
+
+		this._updateNotasFn = {}
+		this._lancarNotaFn = {}
 	}
 
 	_setRoledElements() {
@@ -90,9 +94,12 @@ export class CampeonatoView extends View2 {
 						<th>Atleta</th>
 						<th>Idade</th>
 						<th>Apelido</th>
+						${isAdmin() ? `
 						<th>Telefone</th>
 						<th>Pagamento</th>
-						<th>Remover</th>
+						<th>Data</th>
+						<th>Remover</th>						
+						` : ''}
 					</tr>
 				</thead>
 				<tbody id="tbody-inscricoes-${categoria.id}">
@@ -100,7 +107,7 @@ export class CampeonatoView extends View2 {
 				</tbody>
 			</table>
 			<br/>
-			` : '' }
+			` : ''}
 			
 			
 			<div class="controle-categoria-campeonato" id="div-controle-classificacao-${categoria.id}">
@@ -137,12 +144,17 @@ export class CampeonatoView extends View2 {
 		if (categoria.inscricoes)
 			return categoria.inscricoes.map(inscricao => `
 			<tr>
-				<td><a href="">${inscricao.atleta.nome}</a></td>
+				<td><a class="link-atleta" 
+				id="a-link-atleta-${inscricao.id}-${inscricao.atleta.id}"
+				title="Acessar perfil">${inscricao.atleta.nome}</a></td>
 				<td>${inscricao.atleta.nascimento ? inscricao.atleta.getIdade() : ''}</td>
 				<td>${inscricao.atleta.apelido ?? ''}</td>
+				${isAdmin() ? `
 				<td>${inscricao.atleta.telefone ?? ''}</td>
 				<td><a href="">${inscricao.statusPagamento}</a></td>
+				<td>${inscricao.data ?? ''}</td>
 				<td><img id="img-remover-inscricao-${inscricao.id}" class="icon-remover icon-remover-arbitro" title="Remover"></td>
+				` : ''}
 			</tr>
 		`).join('')
 		return ''
@@ -181,10 +193,10 @@ export class CampeonatoView extends View2 {
 		let html = ''
 		for (let i = 1; i <= voltasLength; i++) {
 			for (let j = 0; j < this._campeonato.arbitros.length; j++)
-				html += `<td><input id="input-inscricao-${inscricao.id}-volta-${i}-arbitro-${this._campeonato.arbitros[j].id}" type="number" max="10" min="0" step="0.1"></td>`
-			html += `<td>${inscricao.getTotalVolta()}</td>`
+				html += `<td><input id="input-inscricao-${inscricao.id}-volta-${i}-arbitro-${this._campeonato.arbitros[j].id}" type="number" max="10" min="0" step="0.1" ${isAdmin() ? '' : 'disabled'}></td>`
+			html += `<td id="td-total-volta-${i}-inscricao-${inscricao.id}">${inscricao.getTotalVolta(i)}</td>`
 		}
-		html += `<td>${inscricao.getTotalGeral()}</td>
+		html += `<td id="td-total-geral-${inscricao.id}">${inscricao.getTotalGeral()}</td>
 				 <td>2º</td>`
 		return html
 	}
@@ -215,11 +227,50 @@ export class CampeonatoView extends View2 {
 		this._setExibirClassificacaoFn = command
 	}
 
-	setCampeonato(campeonato = new Campeonato()) {
-		this._campeonato = campeonato
+	configureLancarNota(command) {
+		this._lancarNotaFn = command
+	}
+
+	configureUpdateNotas(command) {
+		this._updateNotasFn = command
+	}
+
+	setCampeonato(campeonato) {
+		this._campeonato = new Campeonato(campeonato)
 		this._setRoledElements()
-		console.log(this._campeonato)
 		this._setupCampeonato()
+	}
+
+	updateNotasCampeonato(campeonato) {
+		this._campeonato = new Campeonato(campeonato)
+		this._setNotasInput()
+	}
+
+	setNota(idCategoria, idInscricao, notaJson) {
+		const nota = new NotaCampeonato(notaJson)
+
+		const input = document.querySelector(`#input-inscricao-${idInscricao}-volta-${nota.volta}-arbitro-${nota.arbitro.id}`)
+		input.classList.remove('input-nota-change')
+		input.classList.add('input-nota-commited')
+
+		const indexCategoria = this._findIndexCategoria(idCategoria)
+		const indexInscricao = this._findIndexInscricao(indexCategoria, idInscricao)
+		const indexNota = this._findIndexNota(indexCategoria, indexInscricao, nota.volta, nota.arbitro.id)
+		if (!indexNota || indexNota == -1)
+			this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].notas.push(nota)
+		else
+			this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].notas[indexNota] = nota;
+
+		document.querySelector(`#td-total-volta-${nota.volta}-inscricao-${idInscricao}`).innerHTML = this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].getTotalVolta(nota.volta)
+		document.querySelector(`#td-total-geral-${idInscricao}`).innerHTML = this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].getTotalGeral()
+
+		let totalNotas = 0;
+		this._campeonato.categorias.forEach(categoria => {
+			categoria.inscricoes?.forEach(inscricao => {
+				inscricao.notas?.forEach(nota => { totalNotas++ })
+			})
+		})
+		console.log(totalNotas)
 	}
 
 	/*
@@ -260,19 +311,25 @@ export class CampeonatoView extends View2 {
 		})
 
 		this._configureInscricaoButtons()
-		this._configurePermissoesChecks()
+		this._configureLinksAtleta()
+
+		if (isAdmin()) {
+			this._configurePermissoesChecks()
+			this._configureInputsNota()
+		}
+		this._setNotasInput()
 		this.applyRole()
 	}
 
 	_configureInscricaoButtons() {
 		this._campeonato.categorias.forEach(categoria => {
 			document.querySelector(`#button-inscrever-se-${categoria.id}`)?.addEventListener('click', () => {
-				if (!isUser()){
+				if (!isUser()) {
 					alert('Você precisa estar logado para se inscrever em um campeonato')
-					registrar('registroCampEvent')					
+					registrar('registroCampEvent')
 				}
 				else
-					if (confirm(`Você está preste a inscrever-se no campeonato: \n${this._campeonato.titulo} categoria ${categoria.nome}. ${categoria.valorInscricao ? `\nValor da Inscrição: R$ ${new Number(categoria.valorInscricao).toFixed(2).toString().replace('.',',')}` : ''}\nClique em OK para confirmar.`))
+					if (confirm(`Você está preste a inscrever-se no campeonato: \n${this._campeonato.titulo} categoria ${categoria.nome}. ${categoria.valorInscricao ? `\nValor da Inscrição: R$ ${new Number(categoria.valorInscricao).toFixed(2).toString().replace('.', ',')}` : ''}\nClique em OK para confirmar.`))
 						this._inscreverSeFn(categoria.id)
 			})
 			document.querySelector(`#button-inscrever-atleta-${categoria.id}`).addEventListener('click', () => {
@@ -295,6 +352,103 @@ export class CampeonatoView extends View2 {
 		})
 	}
 
+	_configureLinksAtleta() {
+		this._campeonato.categorias.forEach(categoria => {
+			categoria.inscricoes?.forEach(inscricao => {
+				document.querySelector(`#a-link-atleta-${inscricao.id}-${inscricao.atleta.id}`).addEventListener('click', () => {
+					perfil('atletaClickEvent', inscricao.atleta.id)
+				})
+			})
+		})
+	}
+
+	_configureInputsNota() {
+		this._campeonato.categorias.forEach(categoria => {
+			categoria.inscricoes?.forEach(inscricao => {
+				for (let i = 1; i <= categoria.voltas; i++)
+					for (let j = 0; j < this._campeonato.arbitros.length; j++) {
+
+						const input = document.querySelector(`#input-inscricao-${inscricao.id}-volta-${i}-arbitro-${this._campeonato.arbitros[j].id}`)
+
+						input.addEventListener('blur', (event) => {
+							this._lancarNotaEventListener({ event, inscricaoId: inscricao.id, volta: i, arbitroId: this._campeonato.arbitros[j].id, categoriaId: categoria.id })
+						})
+						input.addEventListener('keyup', (event) => {
+							if (event.key == 'Enter')
+								this._lancarNotaEventListener({ event, inscricaoId: inscricao.id, volta: i, arbitroId: this._campeonato.arbitros[j].id, categoriaId: categoria.id })
+						})
+
+						this._oldValue = {}
+						input.addEventListener('focusin', (event) => {
+							this._oldValue = event.target.value
+						})
+
+						input.addEventListener('change', (event) => {
+							if (!event.target.value || event.target.value < 0 || event.target.value > 10)
+								input.value = this._oldValue
+							else {
+								input.classList.add('input-nota-change')
+								input.classList.remove('input-nota-commited')
+							}
+
+						})
+					}
+			})
+		})
+	}
+
+	_setNotasInput() {
+		this._campeonato.categorias.forEach(categoria => {
+			categoria.inscricoes?.forEach(inscricao => {
+				inscricao.notas?.forEach(nota => {
+					const input = document.querySelector(`#input-inscricao-${inscricao.id}-volta-${nota.volta}-arbitro-${nota.arbitro.id}`)
+					input.value = nota.nota
+					if (isAdmin())
+						input.classList.add('input-nota-commited')
+				})
+			})
+		})
+	}
+
+	_lancarNotaEventListener({ event, inscricaoId, volta, arbitroId, categoriaId }) {
+		const input = event.currentTarget
+		if (input.classList.contains('input-nota-change')) {
+			this._lancarNota({ inscricaoId, nota: input.value, arbitroId, volta, categoriaId })
+		}
+	}
+
+	_lancarNota({ inscricaoId, nota, arbitroId, volta, categoriaId }) {
+
+		const indexCategoria = this._findIndexCategoria(categoriaId)
+		const indexInscricao = this._findIndexInscricao(indexCategoria, inscricaoId)
+		const indexNota = this._findIndexNota(indexCategoria, indexInscricao, volta, arbitroId)
+
+		const notaCampeonato = new NotaCampeonato({
+			nota: nota ?? 0,
+			arbitro: { id: arbitroId },
+			volta: volta,
+			id: indexNota != -1 ? this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].notas[indexNota].id : undefined
+		})
+
+		this._lancarNotaFn(categoriaId, inscricaoId, notaCampeonato)
+	}
+
+	_findIndexCategoria(idCategoria) {
+		return this._campeonato.categorias.findIndex(categoria => categoria.id == idCategoria)
+	}
+
+	_findIndexInscricao(indexCategoria, idInscricao) {
+		return this._campeonato.categorias[indexCategoria].inscricoes.findIndex(inscricao => inscricao.id == idInscricao)
+	}
+
+	_findIndexNota(indexCategoria, indexInscricao, volta, arbitroId) {
+		return this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].notas.findIndex(n => (n.volta == volta && n.arbitro.id == arbitroId))
+	}
+
+	_updateNotas() {
+		this._updateNotasFn()
+
+	}
 
 
 	applyRole() {

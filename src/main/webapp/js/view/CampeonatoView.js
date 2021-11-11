@@ -48,6 +48,7 @@ export class CampeonatoView extends View2 {
 
 		this._updateNotasFn = {}
 		this._lancarNotaFn = {}
+
 	}
 
 	_setRoledElements() {
@@ -183,21 +184,21 @@ export class CampeonatoView extends View2 {
 			return categoria.inscricoes.map(inscricao => `
 			<tr>
 				<td>${inscricao.atleta.nome}</td>
-				${this._templateTBVoltasClassificacao(inscricao, categoria.voltas)}
+				${this._templateTBVoltasClassificacao(inscricao, categoria)}
 			</tr>
 		`).join('')
 		return ''
 	}
 
-	_templateTBVoltasClassificacao(inscricao, voltasLength) {
+	_templateTBVoltasClassificacao(inscricao, categoria) {
 		let html = ''
-		for (let i = 1; i <= voltasLength; i++) {
+		for (let i = 1; i <= categoria.voltas; i++) {
 			for (let j = 0; j < this._campeonato.arbitros.length; j++)
 				html += `<td><input id="input-inscricao-${inscricao.id}-volta-${i}-arbitro-${this._campeonato.arbitros[j].id}" type="number" max="10" min="0" step="0.1" ${isAdmin() ? '' : 'disabled'}></td>`
 			html += `<td id="td-total-volta-${i}-inscricao-${inscricao.id}">${inscricao.getTotalVolta(i)}</td>`
 		}
 		html += `<td id="td-total-geral-${inscricao.id}">${inscricao.getTotalGeral()}</td>
-				 <td>2º</td>`
+				 <td id="td-inscricao-rank-${inscricao.id}"></td>`
 		return html
 	}
 
@@ -264,13 +265,7 @@ export class CampeonatoView extends View2 {
 		document.querySelector(`#td-total-volta-${nota.volta}-inscricao-${idInscricao}`).innerHTML = this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].getTotalVolta(nota.volta)
 		document.querySelector(`#td-total-geral-${idInscricao}`).innerHTML = this._campeonato.categorias[indexCategoria].inscricoes[indexInscricao].getTotalGeral()
 
-		let totalNotas = 0;
-		this._campeonato.categorias.forEach(categoria => {
-			categoria.inscricoes?.forEach(inscricao => {
-				inscricao.notas?.forEach(nota => { totalNotas++ })
-			})
-		})
-		console.log(totalNotas)
+		this._setRank(idCategoria)
 	}
 
 	/*
@@ -319,6 +314,29 @@ export class CampeonatoView extends View2 {
 		}
 		this._setNotasInput()
 		this.applyRole()
+		this._setRank()
+	}
+
+	_setRank(categoriaId) {
+		if (categoriaId)
+			this._setupRank(this._campeonato.categorias.find(categoria => categoria.id == categoriaId))
+		else
+			this._campeonato.categorias.forEach(categoria => {
+				this._setupRank(categoria)
+			})
+
+	}
+
+	_setupRank(categoria) {
+		const rank = this._getRank(categoria)
+		rank.forEach(ranked => {
+			document.querySelector(`#td-inscricao-rank-${ranked.idInscricao}`).innerHTML = ranked.posicao
+		})
+	}
+
+	_getRank(categoria) {
+		const rank = categoria.getRankAtleta()
+		return rank
 	}
 
 	_configureInscricaoButtons() {
@@ -447,7 +465,6 @@ export class CampeonatoView extends View2 {
 
 	_updateNotas() {
 		this._updateNotasFn()
-
 	}
 
 

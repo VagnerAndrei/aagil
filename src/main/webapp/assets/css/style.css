@@ -253,7 +253,7 @@ iframe{
 	height: 65px;
 	padding: 0 ;
 	margin: auto;
-	max-width: 1024px;
+	max-width: 800px;
 }
 
 #img-logo{
@@ -277,7 +277,7 @@ iframe{
 #img-topo {
 	width: 100%;
 	height: 100%;
-	content: url("../img/bg/tony-elevado.jpg");
+	content: url("../img/bg/final-campeonato.png");
 	position: relative;
 	margin: auto;
 }
@@ -285,15 +285,14 @@ iframe{
 .header-index-img {
 	height: auto;
 	width: auto;
-	border: 1px solid;
 	border-radius: 5px;
 	max-width: 1024px;
-	min-height: 540px;
-	margin: 45px auto 0 auto ;
+	min-height: 300px;
+	margin: 100px auto 50px auto ;
 	background-position: center;
-	background-size: cover;
+	background-size: inherit;
 	background-repeat: no-repeat;
-	background-image: url("../img/bg/tony-elevado.jpg");
+	background-image: url("../img/bg/final-campeonato.png");
 }
 
 /* 		HOME.HTML */

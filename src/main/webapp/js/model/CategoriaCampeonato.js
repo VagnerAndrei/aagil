@@ -14,6 +14,16 @@ export class CategoriaCampeonato {
 		this.valorInscricao = valorInscricao
 		this.premiacoes = premiacoes
 		this.inscricoes = inscricoes ? inscricoes.map(inscricao => new InscricaoCampeonato(inscricao)) : []
+		this.inscricoes = this.inscricoes.sort(function(a, b) {
+			if (a.atleta.nome > b.atleta.nome) {
+				return 1
+			}
+			if (a.atleta.nome < b.atleta.nome) {
+				return -1
+			}
+			// a must be equal to b
+			return 0
+		})
 		this.permitirInscricoes = permitirInscricoes;
 		this.exibirInscricoes = exibirInscricoes;
 		this.exibirClassificacao = exibirClassificacao;

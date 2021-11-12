@@ -1105,3 +1105,19 @@ main p {
 	height: var(--semi-button-heigth);
 	background-color: var(--blue-400);
 }
+
+#button-campeonato-index{
+	background-color: var(--blue-200);
+	font-size: 20px;
+	height: 100px;
+	width: 30vw;
+	align-self: center;
+	margin: 20px 0;
+	border-radius: 50px;
+	font-family: conteudo-serio;
+	box-shadow: 2px 2px var(--blue-400);
+}
+
+#a-campeonato-index{
+	align-self: center;
+}

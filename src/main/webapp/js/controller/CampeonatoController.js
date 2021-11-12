@@ -21,7 +21,7 @@ export class CampeonatoController extends Controller {
 
 	init() {
 		return async () => {
-			this._consultarCampeonato({isUpdateNotas:false})
+			this._consultarCampeonato({ isUpdateNotas: false })
 			this._view.configureInscreverSeFunction(this._inscreverSe())
 			this._view.configureInscreverAtletaFunction(this._inscreverAtleta())
 			this._view.configureSetExibirInscricoes(this._setExibirInscricoes())
@@ -29,26 +29,36 @@ export class CampeonatoController extends Controller {
 			this._view.configureSetExibirClassificacao(this._setExibirClassificacao())
 			this._view.configureLancarNota(this._lancarNota())
 			this._view.configureUpdateNotas(this._updateNotas())
+			this._view.configureUpdateCampeonato(this._updateCampeonato())
 		}
 	}
-	
-	_updateNotas(){
+
+	_updateNotas() {
 		return async () => {
-			await this._consultarCampeonato({isUpdateNotas:true})
+			await this._consultarCampeonato({ isUpdateNotas: true })
 		}
 	}
 
-	async _consultarCampeonato({isUpdateNotas}) {
-		const response = await get(`api/campeonatos/${this._idCampeonato}`)
+	_updateCampeonato() {
+		return async () => {
+			await this._consultarCampeonato({ isUpdateCampeonato: true })
+		}
+	}
 
+	async _consultarCampeonato({ isUpdateNotas, isUpdateCampeonato }) {
+		const response = await get(`api/campeonatos/${this._idCampeonato}`)
+		console.log('isUpdateNota', isUpdateNotas, 'isUpdateCampeonat', isUpdateCampeonato)
 		switch (response.status) {
 			case 302:
 				const json = await response.json()
 				const campeonato = new Campeonato(json)
-				if (!isUpdateNotas)
-					this._view.setCampeonato(campeonato)
-				else
+				if (isUpdateNotas) {
 					this._view.updateNotasCampeonato(campeonato)
+				} else
+					if (isUpdateCampeonato) {
+						this._view.updateCampeonato(campeonato)
+					} else
+						this._view.setCampeonato(campeonato)
 				break
 			case 404:
 			case 500:
@@ -74,6 +84,7 @@ export class CampeonatoController extends Controller {
 			switch (response.status) {
 				case 200:
 					alert('Inscrição realizada com sucesso !!!\n\nFique ligado, em breve atualizaremos o site com novidades sobre o campeonato.\n\nDesde já agradecemos sua participação.\n\nAté breve.')
+					this._updateCampeonato()()
 					break
 				case 403:
 					console.log(response)
@@ -120,6 +131,7 @@ export class CampeonatoController extends Controller {
 			switch (response.status) {
 				case 200:
 					alert(permitir ? 'Inscrições abertas' : 'Inscrições fechadas')
+					this._updateCampeonato()()
 					break
 				case 403:
 					console.log(response)
@@ -192,7 +204,7 @@ export class CampeonatoController extends Controller {
 				case 400:
 					const badrequest = await response.json()
 					alert(badrequest.mensagem + '. A tabela de notas será recarregada.')
-					await this._consultarCampeonato({isUpdateNotas:true})
+					await this._consultarCampeonato({ isUpdateNotas: true })
 					break
 				case 500:
 					const erro = await response.json()

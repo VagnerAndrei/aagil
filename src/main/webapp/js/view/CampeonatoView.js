@@ -49,6 +49,8 @@ export class CampeonatoView extends View2 {
 		this._updateNotasFn = {}
 		this._lancarNotaFn = {}
 
+		this._updateCampeonatoFn = {}
+
 	}
 
 	_setRoledElements() {
@@ -236,9 +238,20 @@ export class CampeonatoView extends View2 {
 		this._updateNotasFn = command
 	}
 
+	configureUpdateCampeonato(command) {
+		this._updateCampeonatoFn = command
+	}
+
 	setCampeonato(campeonato) {
+		console.log('setcampeonato')
 		this._campeonato = new Campeonato(campeonato)
 		this._setRoledElements()
+		this._setupCampeonato()
+	}
+
+	updateCampeonato(campeonato) {
+		this._campeonato = new Campeonato(campeonato?? this._campeonato)
+		this._clearDivCategorias()
 		this._setupCampeonato()
 	}
 
@@ -313,8 +326,12 @@ export class CampeonatoView extends View2 {
 			this._configureInputsNota()
 		}
 		this._setNotasInput()
-		this.applyRole()
+		this._applyRole(isAdmin())
 		this._setRank()
+	}
+
+	_clearDivCategorias() {
+		this._divCategoriasCampeonato.innerHTML = ''
 	}
 
 	_setRank(categoriaId) {
@@ -330,7 +347,8 @@ export class CampeonatoView extends View2 {
 	_setupRank(categoria) {
 		const rank = this._getRank(categoria)
 		rank.forEach(ranked => {
-			document.querySelector(`#td-inscricao-rank-${ranked.idInscricao}`).innerHTML = ranked.posicao
+			const input = document.querySelector(`#td-inscricao-rank-${ranked.idInscricao}`)
+			if (input) input.innerHTML = ranked.posicao
 		})
 	}
 
@@ -373,7 +391,7 @@ export class CampeonatoView extends View2 {
 	_configureLinksAtleta() {
 		this._campeonato.categorias.forEach(categoria => {
 			categoria.inscricoes?.forEach(inscricao => {
-				document.querySelector(`#a-link-atleta-${inscricao.id}-${inscricao.atleta.id}`).addEventListener('click', () => {
+				document.querySelector(`#a-link-atleta-${inscricao.id}-${inscricao.atleta.id}`)?.addEventListener('click', () => {
 					perfil('atletaClickEvent', inscricao.atleta.id)
 				})
 			})
@@ -402,6 +420,7 @@ export class CampeonatoView extends View2 {
 						})
 
 						input.addEventListener('change', (event) => {
+							console.log(event.target.value)
 							if (!event.target.value || event.target.value < 0 || event.target.value > 10)
 								input.value = this._oldValue
 							else {
@@ -420,9 +439,11 @@ export class CampeonatoView extends View2 {
 			categoria.inscricoes?.forEach(inscricao => {
 				inscricao.notas?.forEach(nota => {
 					const input = document.querySelector(`#input-inscricao-${inscricao.id}-volta-${nota.volta}-arbitro-${nota.arbitro.id}`)
-					input.value = nota.nota
-					if (isAdmin())
-						input.classList.add('input-nota-commited')
+					if (input) {
+						input.value = nota.nota
+						if (isAdmin())
+							input.classList.add('input-nota-commited')
+					}
 				})
 			})
 		})
@@ -469,6 +490,6 @@ export class CampeonatoView extends View2 {
 
 
 	applyRole() {
-		this._applyRole(isAdmin())
+		this.updateCampeonato()
 	}
 }

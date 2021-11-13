@@ -12,20 +12,20 @@ import { registrar, perfil } from './../navegacao.js'
 export class CampeonatoView extends View2 {
 
 
-	constructor({ onViewCreatedFn }) {
-		super({ titulo: 'Campeonato', onViewCreatedFn })
+	constructor({ onViewCreatedFn}) {
+		super({ titulo: 'Campeonato' , onViewCreatedFn })
 		this._campeonato = {}
 	}
 
-	async update() {
-		super.update(await this.template())
+	async _update() {
+		super._update(await this._template())
 	}
 
-	async template() {
-		return this.getHTML('pages/public/campeonato.html')
+	async _template() {
+		return this._getHTML('pages/public/campeonato.html')
 	}
 
-	init() {
+	_init() {
 		this._labelTitulo = document.querySelector('#label-titulo')
 		this._pDescricao = document.querySelector('#p-descricao')
 		this._aRegulamento = document.querySelector('#a-regulamento')
@@ -50,7 +50,6 @@ export class CampeonatoView extends View2 {
 		this._lancarNotaFn = {}
 
 		this._updateCampeonatoFn = {}
-
 	}
 
 	_setRoledElements() {
@@ -243,7 +242,6 @@ export class CampeonatoView extends View2 {
 	}
 
 	setCampeonato(campeonato) {
-		console.log('setcampeonato')
 		this._campeonato = new Campeonato(campeonato)
 		this._setRoledElements()
 		this._setupCampeonato()
@@ -309,7 +307,7 @@ export class CampeonatoView extends View2 {
 		}
 
 
-		this._labelDataHoraCampeonato.innerText = this._campeonato.getData()
+		this._labelDataHoraCampeonato.innerText = this._campeonato.getDataToLocaleTimeString()
 		this._campeonato.categorias.forEach(categoria => {
 			const divCategoria = document.createElement('div')
 			divCategoria.id = `div-categoria-${categoria.id}`

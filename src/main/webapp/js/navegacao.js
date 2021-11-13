@@ -70,10 +70,10 @@ function verificaURL(event) {
 		case views.campeonatos: campeonatos()
 			break
 		case views.campeonato:
-			if (id && !isNaN(id) && id > 0) campeonato({ event, id })
+			if (id && !isNaN(id) && id > 0) campeonato({ event, idCampeonato : id })
 			else pagina_nao_encontrada();
 			break
-		case views.campeonato_registro: campeonatoRegistro()
+		case views.campeonato_registro: campeonatoRegistro({})
 			break
 		default: pagina_nao_encontrada();
 			break;
@@ -153,16 +153,16 @@ function campeonatos(clickEvent) {
 	if (clickEvent) changeState({ view: views.campeonatos })
 }
 
-function campeonato({ event, id }) {
+function campeonato({ event, idCampeonato }) {
 	current_verify()
-	instances.current = new CampeonatoController({ idCampeonato: id })
-	if (event) changeState({ view: views.campeonato, id })
+	instances.current = new CampeonatoController({ idCampeonato })
+	if (event) changeState({ view: views.campeonato, id: idCampeonato })
 }
 
-function campeonatoRegistro(clickEvent) {
+function campeonatoRegistro({event, idCampeonato}) {
 	current_verify()
-	instances.current = new CampeonatoFormController()
-	if (clickEvent) changeState({ view: views.campeonato_registro })
+	instances.current = new CampeonatoFormController({idCampeonato})
+	if (event) changeState({ view: views.campeonato_registro })
 }
 
 function sobre(clickEvent) {

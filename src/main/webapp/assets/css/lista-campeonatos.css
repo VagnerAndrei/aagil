@@ -15,11 +15,14 @@
 	font-size: 55px;
 	font-weight: bold;
 	font-family: sans-serif;
+	display: flex;
+	align-items: center;
 }
 
 #ul-campeonatos li a , .link-atleta{
 	color: var(--blue-300);
 	text-decoration: none;
+	margin-right: 40px;
 }
 
 #ul-campeonatos li a:visited {

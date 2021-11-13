@@ -8,18 +8,23 @@ export class CampeonatoListaController extends ListaController {
 
 	constructor() {
 		super({ url: 'api/campeonatos' })
-		this._view = new CampeonatoListaView({ onViewCreatedFn: this.init() });
+		this._view = new CampeonatoListaView({ onViewCreatedFn: this._init() });
 	}
 
-	init() {
+	_init() {
 		return async () => {
-			await super.atualizarLista()
+			await super._atualizarLista()
 			this._view.updateList(this._lista)
 		}
 	}
 	
 	_getView(){
 		return this._view
+	}
+	
+	applyRole(){
+		this._view.updateList(this._lista)
+		this._view.applyRole()
 	}
 	
 }

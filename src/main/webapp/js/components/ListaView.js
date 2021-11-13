@@ -10,11 +10,11 @@ export class ListaView extends View2 {
 		this._idLista = idLista
 	}
 
-	init() {
+	_init() {
 		this._ulLista = document.querySelector(`#${this._idLista}`)
 	}
 
-	liTemplate() {
+	_liTemplate() {
 		throw new Error('Not Yet Implemented')
 	}
 
@@ -22,17 +22,17 @@ export class ListaView extends View2 {
 		this._ulLista.innerHTML = ''
 		list.forEach(item => {
 			const li = document.createElement('li')
-			li.innerHTML = this.liTemplate(item)
+			li.innerHTML = this._liTemplate(item)
 			this._ulLista.appendChild(li)
-			this.adicionarClickEvent(item)
+			this._adicionarClickEvent(item)
 		})
 	}
 
-	update(template) {
-		super.update(template ? template : { html: super.template(), status: 203 })
+	_update(template) {
+		super._update(template ? template : { html: super._template(), status: 203 })
 	}
 
-	adicionarClickEvent() {
+	_adicionarClickEvent() {
 		throw new Error('Not Yet Implemented')
 	}
 

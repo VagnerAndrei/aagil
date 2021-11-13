@@ -91,4 +91,4 @@ export function userRoles(){
 	return atletaLogado ? atletaLogado.usuario.perfis : [] 
 }
 
-export let ROLES = { ADMIN : 'ADMIN' , USER: 'USER'}
+export const ROLES = { ADMIN : 'ADMIN' , USER: 'USER'}

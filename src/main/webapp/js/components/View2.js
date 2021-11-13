@@ -12,7 +12,7 @@ export class View2 {
 		this._main = document.getElementsByTagName('main')[0]
 		this._roledElements = []
 		document.getElementsByTagName('title')[0].textContent = this._titulo;
-		this.update()
+		this._update()
 	}
 	
 	_addRoledElement({id, className, role='ADMIN'}){
@@ -35,7 +35,7 @@ export class View2 {
 		this._main.removeChild(document.getElementById(this._viewName))
 	}
 
-	async getHTML(url) {
+	async _getHTML(url) {
 		//{ status , html}
 		const retorno = {}
 		const response = await get(url)
@@ -55,21 +55,21 @@ export class View2 {
 		return retorno;
 	}
 
-	init() { }
+	_init() { }
 
-	update({ html , status = 200 }) {
+	_update({ html , status = 200 }) {
 		const div = document.createElement('div')
 		div.id = this._viewName
 		div.innerHTML = !html ? this.template() : html
 		div.classList.add('container-view')
 		this._main.innerHTML = div.outerHTML
 		if (status && status == 200) {
-			this.init()
+			this._init()
 			this._onViewCreatedFn()
 		}
 	}
 
-	template() {
+	_template() {
 		return `<h2>${this._titulo}</h2>`
 	}
 

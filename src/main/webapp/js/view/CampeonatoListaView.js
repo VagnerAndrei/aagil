@@ -12,37 +12,49 @@ export class CampeonatoListaView extends ListaView {
 		super({ idLista: "ul-campeonatos", titulo: "Campeonatos", onViewCreatedFn })
 	}
 
-	init() {
-		super.init()
+	_init() {
+		super._init()
 		this._buttonCriarCampeonato = document.querySelector("#button-criar-campeonato")
 
 		this._buttonCriarCampeonato.addEventListener('click', () => {
-			campeonatoRegistro('clickEvent')
+			campeonatoRegistro({event: 'clickEvent'})
 		})
 		
 		this._addRoledElement({id : 'button-criar-campeonato' , className : 'botao-inserir'})
 		this._applyRole(isAdmin())
 	}
 
-	async update() {
-		super.update(await this.template())
+	async _update() {
+		super._update(await this._template())
 	}
 
-	async template() {
-		return this.getHTML('pages/public/campeonatos.html')
+	async _template() {
+		return this._getHTML('pages/public/campeonatos.html')
 	}
 
 
-	liTemplate(model = new Campeonato()) {
+	_liTemplate(model = new Campeonato()) {
 		return `
 			<a id="a-campeonato-${model.id}">${model.titulo}</a>
+			<img id="img-editar-campeonato-${model.id}"
+				src="assets/img/icon-editar.png" class="botao-editar ${isAdmin() ? '' : 'display-none'}"
+				title="Editar informações">
 		`
 	}
 
-	adicionarClickEvent(model) {
+	_adicionarClickEvent(model) {
 		document.querySelector(`#a-campeonato-${model.id}`).addEventListener('click', () => {
-			campeonato({ event: 'campeonatoClickEvent', id: model.id})
+			campeonato({ event: 'campeonatoClickEvent', idCampeonato: model.id})
 		})
+		
+		if(isAdmin())
+			document.querySelector(`#img-editar-campeonato-${model.id}`).addEventListener('click', () => {
+			campeonatoRegistro({ event: 'editarCampeonatoClickEvent', idCampeonato: model.id})
+		})
+	}
+	
+	applyRole(){
+		this._applyRole(isAdmin())
 	}
 
 }

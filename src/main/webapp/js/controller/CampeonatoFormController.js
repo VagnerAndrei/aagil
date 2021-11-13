@@ -8,27 +8,48 @@ import { FotosUpload } from '../controller/FotosUpload.js'
 import { get } from './../fetch.js'
 import { Pista } from './../model/Pista.js'
 import { Atleta } from './../model/Atleta.js'
-import { campeonato } from './../navegacao.js'
+import { campeonato, pagina_nao_encontrada } from './../navegacao.js'
 
 export class CampeonatoFormController extends Controller {
 
-	constructor() {
+	constructor({ idCampeonato }) {
 		super()
 		this._view = new CampeonatoFormView({
-			onViewCreatedFn: this.init()
+			onViewCreatedFn: this._init(), isEdicaoMode: idCampeonato != undefined
 		})
-
+		this._idCampeonato = idCampeonato
 	}
 
-	init() {
+	_init() {
 		return async () => {
-			this._view.configureRefreshListaPista(this.consultarPistas())
-			this._view.configureRefreshListaArbitro(this.consultarArbitros())
-			this._view.configureEnviarFormulario(this.salvarCampeonato())
+			this._view.configureRefreshListaPista(this._consultarPistas())
+			this._view.configureRefreshListaArbitro(this._consultarArbitros())
+			this._view.configureEnviarFormulario(this._salvarCampeonato())
+			if (this._idCampeonato)
+				this._consultarCampeonato()
 		}
 	}
 
-	consultarPistas() {
+	async _consultarCampeonato() {
+		const response = await get(`api/campeonatos/${this._idCampeonato}`)
+
+		switch (response.status) {
+			case 302:
+				const json = await response.json()
+				this._view.setCampeonato(json)
+				break
+			case 404:
+				console.log(response)
+				pagina_nao_encontrada()
+				break
+			case 500:
+				console.log(response)
+				break
+		}
+
+	}
+
+	_consultarPistas() {
 		return async () => {
 			const response = await get('api/picos/simple')
 
@@ -47,7 +68,7 @@ export class CampeonatoFormController extends Controller {
 		}
 	}
 
-	consultarArbitros() {
+	_consultarArbitros() {
 		return async () => {
 			const response = await get('api/atletas/simple')
 
@@ -66,7 +87,7 @@ export class CampeonatoFormController extends Controller {
 		}
 	}
 
-	salvarCampeonato() {
+	_salvarCampeonato() {
 		return async () => {
 			const formData = new FormData()
 
@@ -178,8 +199,8 @@ export class CampeonatoFormController extends Controller {
 	_cancelarUpload() {
 		this._xhr?.abort()
 	}
-	
-	_getView(){
+
+	_getView() {
 		return this._view
 	}
 

@@ -11,8 +11,7 @@ export class ListaController extends Controller {
 		this._url = url
 	}
 
-	async atualizarLista() {
-//		console.log(this._url)
+	async _atualizarLista() {
 		const response = await get(this._url)
 
 		switch (response.status) {

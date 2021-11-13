@@ -10,19 +10,21 @@ import { Atleta } from './../model/Atleta.js'
 
 export class CampeonatoFormView extends View2 {
 
-	constructor({ onViewCreatedFn }) {
-		super({ titulo: 'Criar campeonato', onViewCreatedFn })
+	constructor({ onViewCreatedFn, isEdicaoMode }) {
+		super({ titulo: `${isEdicaoMode ? 'Editar' : 'Criar'} Campeonato`, onViewCreatedFn })
+		this._isEdicaoMode = isEdicaoMode
 	}
 
-	async update() {
-		super.update(await this.template())
+	async _update() {
+		super._update(await this._template())
 	}
 
-	async template() {
-		return this.getHTML('pages/admin/campeonato-registro.html')
+	async _template() {
+		return this._getHTML('pages/admin/campeonato-registro.html')
 	}
 
-	init() {
+	_init() {
+		this._h2TituloForm = document.querySelector('#h2-titulo-form')
 		this._form = document.querySelector('#form-campeonato')
 		this._inputTitulo = document.querySelector('#input-titulo')
 		this._textareaDescricao = document.querySelector('#textarea-descricao')
@@ -56,6 +58,7 @@ export class CampeonatoFormView extends View2 {
 		this._labelErroFormulario = document.querySelector('#label-erro-formulario')
 		this._buttonEnviarFormulario = document.querySelector('#button-enviar-formulario')
 
+		this._h2TituloForm.innerHTML = this._titulo
 
 		this._configurePodiumChange()
 		this._configureAdicionarCategoria()
@@ -166,6 +169,26 @@ export class CampeonatoFormView extends View2 {
 		})
 	}
 
+	setCampeonato(campeonato) {
+		this._campeonato = new Campeonato(campeonato)
+		this._setupCampeonato()
+	}
+
+	_setupCampeonato() {
+		const campeonato = this._campeonato
+		this._inputTitulo.value = campeonato.titulo
+		this._textareaDescricao.value = campeonato.descricao
+		this._selectPista.value = campeonato.pico.id
+		const data = campeonato.getDataAsString()
+
+		this._inputData.value = data.slice(0, 10).replaceAll('/', '-')
+		this._inputHora.value = data.slice(11, 13)
+		this._inputMinuto.value = data.slice(14, 16)
+		
+//		campeonato.categorias.forEach(categoria => this._setupCategoria(categoria.id, categoria))
+
+	}
+
 	configureRefreshListaPista(command) {
 		this._buttonAtualizarPistas.addEventListener('click', () => { command() })
 		command()
@@ -178,31 +201,35 @@ export class CampeonatoFormView extends View2 {
 
 	configureEnviarFormulario(command) {
 		this._buttonEnviarFormulario.addEventListener('click', (event) => {
-			event.preventDefault()
-			const erros = this._validateFormulário()
-			if (this._form.checkValidity() && erros.length == 0){
-				this._labelErroFormulario.textContent = ''
-				
-				this._campeonato.titulo = this._inputTitulo.value
-				this._campeonato.descricao = this._textareaDescricao.value
-
-				let data = new Date(this._inputData.value.replace('-','/'))
-				data.setHours(this._inputHora.value)
-				data.setMinutes(this._inputMinuto.value)
-				this._campeonato.setData(data)
-				
-				this._campeonato.pico = { id: this._selectPista.value }
-				
-				this._campeonato.categorias = []
-				this._listCategoriasTemp.forEach(obj => this._campeonato.categorias.push(obj.categoria))
-				
-				command()
-			}
-			else{
-				this._form.reportValidity()
-				this._labelErroFormulario.textContent = `${erros.map(erro => erro).join('\n')}`
-			}
+			this._enviarFormulario(event, command)
 		})
+	}
+
+	_enviarFormulario(event, command) {
+		event.preventDefault()
+		const erros = this._validateFormulário()
+		if (this._form.checkValidity() && erros.length == 0) {
+			this._labelErroFormulario.textContent = ''
+
+			this._campeonato.titulo = this._inputTitulo.value
+			this._campeonato.descricao = this._textareaDescricao.value
+
+			let data = new Date(this._inputData.value.replace('-', '/'))
+			data.setHours(this._inputHora.value)
+			data.setMinutes(this._inputMinuto.value)
+			this._campeonato.setData(data)
+
+			this._campeonato.pico = { id: this._selectPista.value }
+
+			this._campeonato.categorias = []
+			this._listCategoriasTemp.forEach(obj => this._campeonato.categorias.push(obj.categoria))
+
+			command()
+		}
+		else {
+			this._form.reportValidity()
+			this._labelErroFormulario.textContent = `${erros.map(erro => erro).join('\n')}`
+		}
 	}
 
 	getCampeonatoModel() {
@@ -267,7 +294,8 @@ export class CampeonatoFormView extends View2 {
 		document.querySelector(`#icon-remover-categoria-${index}`).addEventListener('click', () => {
 			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${index}`))
 			this._listCategoriasTemp.splice(this._getIndexCategoriaByIdElement(index), 1)
-
+			this._setupEditarCategoria(false)
+			this._setCategoriaForm()
 		})
 	}
 
@@ -307,31 +335,36 @@ export class CampeonatoFormView extends View2 {
 			})
 
 
-			const li = this._edicaoCategoria ?
-				document.querySelector(`#li-categoria-${index}`) :
-				document.createElement('li')
-
-			li.id = `li-categoria-${index}`
-			li.innerHTML = this._templateLiCategoria({ model: categoria, index })
-
-
-			if (!this._edicaoCategoria) {
-				this._listCategoriasTemp.push({ index, categoria })
-				this._ulCategorias.appendChild(li)
-			} else {
-				this._listCategoriasTemp[this._getIndexCategoriaByIdElement(index)] = { index, categoria }
-				this._setupEditarCategoria(false)
-			}
-
-
-			this._configureRemoverCategoria(index)
-			this._configureEditarCategoria(index)
+			this._setupCategoria(index, categoria)
 
 			this._setCategoriaForm()
 
 		} else {
 			this._labelErroCategoria.textContent = `${erros.map(erro => erro).join('\n')}`
 		}
+	}
+
+	_setupCategoria(index, categoria) {
+		
+		const li = this._edicaoCategoria ?
+			document.querySelector(`#li-categoria-${index}`) :
+			document.createElement('li')
+
+		li.innerHTML = this._templateLiCategoria({ model: categoria, index })
+
+		if (!this._edicaoCategoria) {
+			li.id = `li-categoria-${index}`
+			if (!categoria.id)
+				this._listCategoriasTemp.push({ index, categoria })
+			this._ulCategorias.appendChild(li)
+		} else {
+			this._listCategoriasTemp[this._getIndexCategoriaByIdElement(index)] = { index, categoria }
+			this._setupEditarCategoria(false)
+		}
+
+
+		this._configureRemoverCategoria(index)
+		this._configureEditarCategoria(index)
 	}
 
 	_setCategoriaForm(model) {

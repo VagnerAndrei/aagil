@@ -5,7 +5,6 @@ import { Controller } from './../components/Controller.js'
 import { CampeonatoView } from './../view/CampeonatoView.js'
 import { get, post } from './../fetch.js'
 import { Campeonato } from './../model/Campeonato.js'
-import { NotaCampeonato } from './../model/NotaCampeonato.js'
 import { atletaLogado } from './../sessao.js'
 import { pagina_nao_encontrada } from './../navegacao.js'
 
@@ -47,7 +46,6 @@ export class CampeonatoController extends Controller {
 
 	async _consultarCampeonato({ isUpdateNotas, isUpdateCampeonato }) {
 		const response = await get(`api/campeonatos/${this._idCampeonato}`)
-		console.log('isUpdateNota', isUpdateNotas, 'isUpdateCampeonat', isUpdateCampeonato)
 		switch (response.status) {
 			case 302:
 				const json = await response.json()

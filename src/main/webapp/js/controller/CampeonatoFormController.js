@@ -108,7 +108,7 @@ export class CampeonatoFormController extends Controller {
 			/*		MIDIAS DIVULGACAO ATTACHMENT		*/
 			const midiasDivulgacaoFiles = this._view.getMidiasDivulgacaoFileList()
 			for (let i = 0; i < midiasDivulgacaoFiles.length; i++) {
-				formData.append('midia-divulgacao', midiasDivulgacaoFiles[i])
+				formData.append('midiaDivulgacao', midiasDivulgacaoFiles[i])
 			}
 
 			/*		FOTOS CAMPEONATO ATTACHMENT			*/
@@ -128,7 +128,7 @@ export class CampeonatoFormController extends Controller {
 			if (this._upload)
 				this._configureXHRUpload()
 			this._configureXHRResponse()
-
+			console.log(formData)
 			this._xhr.send(formData)
 		}
 	}

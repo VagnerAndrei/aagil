@@ -46,53 +46,81 @@ export class UploadFormItem {
 				if (file.size / 1024 / 1024 > this._maxSize)
 					continue
 
-				let li = document.createElement('li')
 
-				const fileSize = `${(file.size / 1024 / 1024).toFixed(2)} MB`
-				const fileName = file.name
+				this._setupFile({ file })
 
-				li.title = `Clique para remover esta arquivo${this._isTypeImage? `:\n${fileName}\n${fileSize}` : ''}`
-
-				li.addEventListener('click', (event) => {
-					this._ulUploads.removeChild(event.currentTarget)
-					this._buttonSelecionarArquivos.disabled = false;
-					this._setSpanText()
-				})
-
-				if (this._isTypeImage) {
-					let img = document.createElement('img')
-					img.height = 60
-					img.classList.add(`uploadFileObject-${this._name}`)
-					img.file = file;
-
-					/*img.src = window.URL.createObjectURL(file)
-					img.onload = function() {
-						window.URL.revokeObjectURL(this.src)
-					}*/
-
-					const reader = new FileReader()
-					reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result } })(img)
-					reader.readAsDataURL(file)
-
-					li.appendChild(img)
-				}else{
-					const strong = document.createElement('strong')
-					strong.innerText = fileName
-					strong.classList.add(`uploadFileObject-${this._name}`)
-					strong.file = file;
-					li.appendChild(strong)
-				}
-				this._ulUploads.appendChild(li)
-				if (this._ulUploads.children.length == this._maxFiles) {
-					this._buttonSelecionarArquivos.disabled = true;
+				if (!this._validateAvaiableUploadsLength())
 					break
-				}
 			}
-			this._input.value = ''
-			this._setSpanText()
 
+			this._setupForm()
 		}
 
+	}
+
+	_validateAvaiableUploadsLength() {
+		if (this._ulUploads.children.length == this._maxFiles) {
+			this._buttonSelecionarArquivos.disabled = true;
+			return false
+		}
+		return true
+	}
+
+	_setupForm() {
+		this._input.value = ''
+		this._setSpanText()
+	}
+
+	_setupFile({ id, src, file }) {
+		const li = document.createElement('li')
+
+		li.addEventListener('click', (event) => {
+			this._ulUploads.removeChild(event.currentTarget)
+			this._buttonSelecionarArquivos.disabled = false;
+			this._setSpanText()
+		})
+
+		let element, fileSize, fileName
+
+		if (file) {
+			fileSize = `${(file.size / 1024 / 1024).toFixed(2)} MB`
+		}
+		fileName = file?.name ?? this._name
+
+		if (this._isTypeImage) {
+
+			const img = document.createElement('img')
+			img.height = 80
+
+			/*img.src = window.URL.createObjectURL(file)
+			img.onload = function() {
+				window.URL.revokeObjectURL(this.src)
+			}*/
+
+			if (file) {
+				const reader = new FileReader()
+				reader.onload = (function(aImg) { return function(e) { aImg.src = e.target.result } })(img)
+				reader.readAsDataURL(file)
+			}
+			else
+				if (src)
+					img.src = src
+
+			element = img
+		} else {
+			const strong = document.createElement('strong')
+			strong.innerText = fileName
+			element = strong
+		}
+
+		li.title = `Clique para remover este arquivo${this._isTypeImage && !id ? `:\n${fileName}\n${fileSize}` : ''}`
+		if (id) element.id = id
+		element.file = file
+		element.classList.add(`${id ? 'srcFileObject' : 'uploadFileObject'}-${this._name}`)
+
+		li.appendChild(element)
+
+		this._ulUploads.appendChild(li)
 	}
 
 	_setSpanText() {
@@ -130,5 +158,23 @@ export class UploadFormItem {
 		}
 
 		return listFiles;
+	}
+
+	getListIdsSrcFiles() {
+		const files = document.querySelectorAll(`.srcFileObject-${this._name}`)
+
+		const listFiles = []
+
+		for (let i = 0; i < files.length; i++) {
+			listFiles.push(files[i].file)
+		}
+
+		return listFiles;
+	}
+
+	addFile({ id, src }) {
+		this._setupFile({ id, src })
+		this._validateAvaiableUploadsLength()
+		this._setupForm()
 	}
 }

@@ -185,6 +185,9 @@ export class CampeonatoFormView extends View2 {
 
 		campeonato.categorias.forEach(categoria => this._setupCategoria(categoria))
 		campeonato.arbitros.forEach(arbitro => this._setupArbitro({ id: arbitro.id, nome: arbitro.nome }))
+		
+		this._setupRegulamento()
+		this._setupMidiasDivulgacao()
 
 	}
 
@@ -235,6 +238,7 @@ export class CampeonatoFormView extends View2 {
 	}
 
 	getMidiasDivulgacaoFileList() {
+		console.log(this._uploadMidiasDivulgacao.getListFiles())
 		return this._uploadMidiasDivulgacao.getListFiles()
 	}
 
@@ -461,6 +465,19 @@ export class CampeonatoFormView extends View2 {
 			this._ulArbitros.removeChild(document.querySelector(`#li-arbitro-${id}`))
 			this._campeonato.arbitros.splice(this._campeonato.arbitros.findIndex(arbitro => arbitro.id == id), 1)
 		})
+	}
+	
+	/*
+										UPLOADS
+																						*/
+	
+	_setupRegulamento(){
+		if(this._campeonato.regulamento)
+			this._uploadRegulamento.addFile({id : this._campeonato.id, src : `api/campeonatos/${this._campeonato.id}/regulamento`})
+	}
+	
+	_setupMidiasDivulgacao(){
+		this._campeonato.midiasDivulgacao?.forEach(midia => this._uploadMidiasDivulgacao.addFile({id: midia.id, src : `api/fotos/${midia.id}/thumb`}))
 	}
 
 

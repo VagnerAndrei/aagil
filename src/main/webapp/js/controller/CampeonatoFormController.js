@@ -172,11 +172,12 @@ export class CampeonatoFormController extends Controller {
 						this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
 						this._modalUpload.fecharModal()
 						break
+					case 201:
 					case 202:
 						json = JSON.parse(this._xhr.response)
 						this._idCampeonato = json.id
 						if (!this._upload) this._modalUpload = new FotosUpload('Campeonato', () => this._uploadedHandler())
-						this._modalUpload.setResult('Campeonato criado com sucesso!')
+						this._modalUpload.setResult(`Campeonato ${this._xhr.status == 201 ? 'criado' : 'atualizado'} com sucesso!`)
 						break
 					case 500:
 						this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
@@ -192,7 +193,7 @@ export class CampeonatoFormController extends Controller {
 	}
 
 	_uploadedHandler() {
-		campeonato({ event: 'campeonatoRegistroEvent', id: this._idCampeonato })
+		campeonato({ event: 'campeonatoRegistroEvent', idCampeonato: this._idCampeonato })
 		window.scroll(0, 500)
 	}
 

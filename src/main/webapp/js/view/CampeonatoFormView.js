@@ -65,9 +65,7 @@ export class CampeonatoFormView extends View2 {
 		this._configureSalvarCategoria()
 		this._configureCancelarCategoria()
 
-		this._listCategoriasTemp = []
-		this._edicaoCategoria = false
-		this._idIndexElementCategoriaEmEdicao = undefined
+		this._idCategoriaEmEdicao = undefined
 
 		this._configureAdicionarArbitro()
 
@@ -111,11 +109,11 @@ export class CampeonatoFormView extends View2 {
 		`
 	}
 
-	_templateLiCategoria({ model = new CategoriaCampeonato(), index }) {
+	_templateLiCategoria(model = new CategoriaCampeonato()) {
 		return `
 			<p class="icon-label titulo-categoria-label"><img class="icon-categoria">${model.nome}</p>
-			<img class="icon-editar icon-editar-categoria" title="Editar" id="icon-editar-categoria-${index}">
-			<img class="icon-remover icon-remover-categoria" title="Remover" id="icon-remover-categoria-${index}">
+			<img class="icon-editar icon-editar-categoria" title="Editar" id="icon-editar-categoria-${model.id ?? model.idElement}">
+			<img class="icon-remover icon-remover-categoria" title="Remover" id="icon-remover-categoria-${model.id ?? model.idElement}">
 			<br/>
 			<p class="icon-label"><img class="icon-descricao">${model.descricao}</p>
 			<br/>
@@ -184,8 +182,9 @@ export class CampeonatoFormView extends View2 {
 		this._inputData.value = data.slice(0, 10).replaceAll('/', '-')
 		this._inputHora.value = data.slice(11, 13)
 		this._inputMinuto.value = data.slice(14, 16)
-		
-//		campeonato.categorias.forEach(categoria => this._setupCategoria(categoria.id, categoria))
+
+		campeonato.categorias.forEach(categoria => this._setupCategoria(categoria))
+		campeonato.arbitros.forEach(arbitro => this._setupArbitro({ id: arbitro.id, nome: arbitro.nome }))
 
 	}
 
@@ -221,9 +220,6 @@ export class CampeonatoFormView extends View2 {
 
 			this._campeonato.pico = { id: this._selectPista.value }
 
-			this._campeonato.categorias = []
-			this._listCategoriasTemp.forEach(obj => this._campeonato.categorias.push(obj.categoria))
-
 			command()
 		}
 		else {
@@ -233,7 +229,9 @@ export class CampeonatoFormView extends View2 {
 	}
 
 	getCampeonatoModel() {
-		return this._campeonato
+		const camp = new Campeonato(this._campeonato)
+		camp.categorias.forEach(categoria => categoria.idElement = undefined)
+		return camp
 	}
 
 	getMidiasDivulgacaoFileList() {
@@ -290,21 +288,23 @@ export class CampeonatoFormView extends View2 {
 		})
 	}
 
-	_configureRemoverCategoria(index) {
-		document.querySelector(`#icon-remover-categoria-${index}`).addEventListener('click', () => {
-			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${index}`))
-			this._listCategoriasTemp.splice(this._getIndexCategoriaByIdElement(index), 1)
+	_configureRemoverCategoria(id) {
+		document.querySelector(`#icon-remover-categoria-${id}`).addEventListener('click', () => {
+			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${id}`))
+			this._campeonato.categorias.splice(this._getIndexCategoriaByIdElement(id), 1)
 			this._setupEditarCategoria(false)
 			this._setCategoriaForm()
 		})
 	}
 
-	_configureEditarCategoria(idIndexElement) {
-		document.querySelector(`#icon-editar-categoria-${idIndexElement}`).addEventListener('click', () => {
+	_configureEditarCategoria(categoria) {
+		const id = categoria.id ?? categoria.idElement
+		document.querySelector(`#icon-editar-categoria-${id}`).addEventListener('click', () => {
 			this._setupEditarCategoria(true)
-			const { categoria, index } = this._listCategoriasTemp[this._getIndexCategoriaByIdElement(idIndexElement)]
-			this._idIndexElementCategoriaEmEdicao = index
+			const categoria = this._campeonato.categorias[this._getIndexCategoriaByIdElement(id)]
+			this._idCategoriaEmEdicao = id
 			this._setCategoriaForm(categoria)
+			this._inputCategoria.focus({ preventScroll: false })
 		})
 	}
 
@@ -321,10 +321,6 @@ export class CampeonatoFormView extends View2 {
 		if (erros.length == 0) {
 			this._labelErroCategoria.textContent = ''
 
-			const index = this._edicaoCategoria ?
-				this._idIndexElementCategoriaEmEdicao :
-				Math.floor(Math.random() * 100000)
-
 			const categoria = new CategoriaCampeonato({
 				nome: this._inputCategoria.value,
 				descricao: this._textareaDescricaoCategoria.value,
@@ -334,8 +330,16 @@ export class CampeonatoFormView extends View2 {
 				premiacoes: this._getPremiacoesCategoria()
 			})
 
+			if (this._idCategoriaEmEdicao) {
+				if (isNaN(this._idCategoriaEmEdicao))
+					categoria.idElement = this._idCategoriaEmEdicao
+				else
+					categoria.id = this._idCategoriaEmEdicao
+			} else
+				categoria.idElement = self.crypto.randomUUID()
 
-			this._setupCategoria(index, categoria)
+
+			this._setupCategoria(categoria)
 
 			this._setCategoriaForm()
 
@@ -344,27 +348,31 @@ export class CampeonatoFormView extends View2 {
 		}
 	}
 
-	_setupCategoria(index, categoria) {
-		
-		const li = this._edicaoCategoria ?
-			document.querySelector(`#li-categoria-${index}`) :
+	_setupCategoria(categoria) {
+		const id = categoria.id ?? categoria.idElement
+
+		if (!categoria.id)
+			categoria.idElementHTML = id
+
+		const li = this._idCategoriaEmEdicao ?
+			document.querySelector(`#li-categoria-${id}`) :
 			document.createElement('li')
 
-		li.innerHTML = this._templateLiCategoria({ model: categoria, index })
+		li.innerHTML = this._templateLiCategoria(categoria)
 
 		if (!this._edicaoCategoria) {
-			li.id = `li-categoria-${index}`
+			li.id = `li-categoria-${id}`
 			if (!categoria.id)
-				this._listCategoriasTemp.push({ index, categoria })
+				this._campeonato.categorias.push(categoria)
 			this._ulCategorias.appendChild(li)
 		} else {
-			this._listCategoriasTemp[this._getIndexCategoriaByIdElement(index)] = { index, categoria }
+			this._campeonato.categorias[this._getIndexCategoriaByIdElement(id)] = categoria
 			this._setupEditarCategoria(false)
 		}
 
 
-		this._configureRemoverCategoria(index)
-		this._configureEditarCategoria(index)
+		this._configureRemoverCategoria(id)
+		this._configureEditarCategoria(categoria)
 	}
 
 	_setCategoriaForm(model) {
@@ -373,6 +381,8 @@ export class CampeonatoFormView extends View2 {
 		this._inputVoltasCategoria.value = model ? model.voltas : 1
 		this._inputPodiumCategoria.value = model ? model.podium : 3
 		this._inputValorInscricao.value = model ? model.valorInscricao : ''
+
+		this._idCategoriaEmEdicao = model ? model.id ?? model.idElement : undefined
 
 		this._inputPodiumCategoria.dispatchEvent(new Event('change'))
 
@@ -396,9 +406,13 @@ export class CampeonatoFormView extends View2 {
 		return erros
 	}
 
-	_getIndexCategoriaByIdElement(index) {
-		return this._listCategoriasTemp.findIndex(item => item.index == index)
+	_getIndexCategoriaByIdElement(id) {
+		return isNaN(id) ?
+			this._campeonato.categorias.findIndex(item => item.idElement == id) :
+			this._campeonato.categorias.findIndex(item => item.id == id)
+
 	}
+
 
 	_setupEditarCategoria(boolean) {
 		this._edicaoCategoria = boolean
@@ -428,14 +442,18 @@ export class CampeonatoFormView extends View2 {
 		const id = this._selectArbitro.value
 		const nome = this._selectArbitro[this._selectArbitro.selectedIndex].label
 		if (id && !this._campeonato.arbitros.find(arbitro => arbitro.id == id)) {
-			const arbitro = new Atleta({ id, nome })
-			const li = document.createElement('li')
-			li.innerHTML = this._templateLiArbitro(arbitro)
-			li.id = `li-arbitro-${id}`
-			this._ulArbitros.appendChild(li)
-			this._configureRemoverArbitro(id)
+			this._setupArbitro({ id, nome })
 			this._campeonato.arbitros.push(new Atleta({ id }))
 		}
+	}
+
+	_setupArbitro({ id, nome }) {
+		const arbitro = new Atleta({ id, nome })
+		const li = document.createElement('li')
+		li.innerHTML = this._templateLiArbitro(arbitro)
+		li.id = `li-arbitro-${id}`
+		this._ulArbitros.appendChild(li)
+		this._configureRemoverArbitro(id)
 	}
 
 	_configureRemoverArbitro(id) {
@@ -452,7 +470,7 @@ export class CampeonatoFormView extends View2 {
 
 	_validateFormulário() {
 		const erros = []
-		if (this._listCategoriasTemp.length == 0)
+		if (this._campeonato.categorias.length == 0)
 			erros.push('Categoria é obrigatório')
 		if (this._campeonato.arbitros.length == 0)
 			erros.push('Arbitragem é obrigatório')

@@ -11,7 +11,7 @@ export class CategoriaCampeonato {
 		this.descricao = descricao
 		this.voltas = voltas
 		this.podium = podium
-		this.valorInscricao = valorInscricao
+		this.valorInscricao = valorInscricao ? new Number(valorInscricao).toFixed(2) : 0
 		this.premiacoes = premiacoes
 		this.inscricoes = inscricoes ? inscricoes.map(inscricao => new InscricaoCampeonato(inscricao)) : []
 		this.inscricoes = this.inscricoes.sort(function(a, b) {

@@ -43,6 +43,7 @@ import net.circle.domain.entity.InscricaoCampeonato;
 import net.circle.domain.entity.NotaCampeonato;
 import net.circle.domain.entity.Pico;
 import net.circle.domain.entity.PremiacaoCampeonato;
+import net.circle.domain.entity.StatusPagamento;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.CampeonatoModel;
 import net.circle.service.model.CategoriaCampeonatoModel;
@@ -79,9 +80,11 @@ public class CampeonatoRest {
 	 * @param pessoa - Atleta
 	 * 
 	 * @returns Response: <br/>
-	 *          Status.BAD_REQUEST(400, "Bad Request") Status.BAD_REQUEST(403,
-	 *          "Forbidden") Status.INTERNAL_SERVER_ERROR(500, "Internal Server
-	 *          Error") Status.ACCEPTED(202, "Accepted")
+	 *          Status.BAD_REQUEST(400, "Bad Request") ,<br/>
+	 *          Status.BAD_REQUEST(403, "Forbidden"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error"),<br/>
+	 *          Status.CREATED(201, "Created"),<br/>
+	 *          Status.ACCEPTED(202, "Accepted")
 	 */
 	@POST
 	@PUT
@@ -99,7 +102,7 @@ public class CampeonatoRest {
 			ObjectMapper mapper = new ObjectMapper();
 
 			CampeonatoModel campeonatoModel = mapper.readValue(json.get(0).getBodyAsString(), CampeonatoModel.class);
-
+			var edicao = campeonatoModel.getId() != null;
 			var campeonato = parseEntity(campeonatoModel);
 
 			if (midiasDivulgacao != null)
@@ -150,7 +153,8 @@ public class CampeonatoRest {
 			}
 
 			campeonato = servicoCampeonato.salvar(campeonato);
-			return Response.accepted(parseModel(campeonato)).build();
+			return edicao ? Response.accepted(parseModel(campeonato)).build()
+					: Response.status(Status.CREATED).entity(parseModel(campeonato)).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
@@ -279,8 +283,8 @@ public class CampeonatoRest {
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.NUMERO_DA_VOLTA_INVALIDA)).build();
 
 			if (e.getCause().getCause().getMessage().contains("ERROR: duplicate key value violates unique constraint"))
-				return Response.status(Status.BAD_REQUEST).entity(new ErroModel(CampeonatoExcecao.NOTA_JA_LANCADA_NESTA_VOLTA))
-						.build();
+				return Response.status(Status.BAD_REQUEST)
+						.entity(new ErroModel(CampeonatoExcecao.NOTA_JA_LANCADA_NESTA_VOLTA)).build();
 
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
@@ -499,7 +503,7 @@ public class CampeonatoRest {
 
 		return model;
 	}
-	
+
 	private NotaCampeonatoModel parseModel(NotaCampeonato notaCampeonato) {
 		var notaModel = new NotaCampeonatoModel();
 		notaModel.setId(notaCampeonato.getId());

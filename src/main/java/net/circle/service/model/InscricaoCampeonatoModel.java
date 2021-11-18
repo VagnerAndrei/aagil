@@ -5,12 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 
+@JsonIgnoreProperties(value = {"data"}, allowGetters = true)
 public class InscricaoCampeonatoModel {
 
 	private Integer id;
@@ -20,7 +22,7 @@ public class InscricaoCampeonatoModel {
 	@JsonInclude(value = Include.NON_EMPTY)
 	private List<NotaCampeonatoModel> notas = new ArrayList<NotaCampeonatoModel>();
 	
-	@JsonFormat(shape = Shape.STRING, pattern = "MM/dd/yyyy HH:mm:ss")
+	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
 	private LocalDateTime data;
 

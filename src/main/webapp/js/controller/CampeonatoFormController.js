@@ -22,8 +22,8 @@ export class CampeonatoFormController extends Controller {
 
 	_init() {
 		return async () => {
-			this._view.configureRefreshListaPista(this._consultarPistas())
-			this._view.configureRefreshListaArbitro(this._consultarArbitros())
+			await this._view.configureRefreshListaPista(this._consultarPistas())
+			await this._view.configureRefreshListaArbitro(this._consultarArbitros())
 			this._view.configureEnviarFormulario(this._salvarCampeonato())
 			if (this._idCampeonato)
 				this._consultarCampeonato()
@@ -101,9 +101,13 @@ export class CampeonatoFormController extends Controller {
 
 			/*		REGULAMENTO	 ATTACHMENT				*/
 			const regulamentoFile = this._view.getRegulamentoFile()
-			for (let i = 0; i < regulamentoFile.length; i++) {
-				formData.append('regulamento', regulamentoFile[i])
-			}
+			if (!this._view.isRegulamentoNotModified())
+				if (regulamentoFile.length == 0 && campeonato.regulamento)
+					formData.append('regulamento', '')
+				else
+					for (let i = 0; i < regulamentoFile.length; i++) {
+						formData.append('regulamento', regulamentoFile[i])
+					}
 
 			/*		MIDIAS DIVULGACAO ATTACHMENT		*/
 			const midiasDivulgacaoFiles = this._view.getMidiasDivulgacaoFileList()
@@ -128,7 +132,6 @@ export class CampeonatoFormController extends Controller {
 			if (this._upload)
 				this._configureXHRUpload()
 			this._configureXHRResponse()
-			console.log(formData)
 			this._xhr.send(formData)
 		}
 	}
@@ -161,16 +164,18 @@ export class CampeonatoFormController extends Controller {
 
 		this._xhr.onreadystatechange = () => {
 			if (this._xhr.readyState === 4) {
-				let json = {}
+				let json = {}, erro
 				switch (this._xhr.status) {
 					case 403:
-						this._labelErro.textContent = 'Acesso negado!'
-						this._modalUpload.fecharModal()
+						erro = 'Acesso negado!'
+						if (this._upload) this._modalUpload.setResult(erro)
+						this._view.setErroLabel(erro)
 						break
 					case 400:
 						json = JSON.parse(this._xhr.response)
-						this._labelErro.textContent = `Erro: [${json.campo}] ${json.mensagem}.`
-						this._modalUpload.fecharModal()
+						erro = `Erro: [${json.campo}] ${json.mensagem}.`
+						if (this._upload) this._modalUpload.setResult(erro)
+						this._view.setErroLabel(erro)
 						break
 					case 201:
 					case 202:
@@ -180,8 +185,9 @@ export class CampeonatoFormController extends Controller {
 						this._modalUpload.setResult(`Campeonato ${this._xhr.status == 201 ? 'criado' : 'atualizado'} com sucesso!`)
 						break
 					case 500:
-						this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
-						this._modalUpload?.fecharModal()
+						const erro = 'Ocorreu um erro no servidor, contate um administrador.'
+						if (this._upload) this._modalUpload.setResult(erro)
+						this._view.setErroLabel(erro)
 				}
 			}
 		}
@@ -193,8 +199,10 @@ export class CampeonatoFormController extends Controller {
 	}
 
 	_uploadedHandler() {
-		campeonato({ event: 'campeonatoRegistroEvent', idCampeonato: this._idCampeonato })
-		window.scroll(0, 500)
+		if (this._xhr.status == 200 || this._xhr.status == 202) {
+			campeonato({ event: 'campeonatoRegistroEvent', idCampeonato: this._idCampeonato })
+			window.scroll(0, 500)
+		}
 	}
 
 	_cancelarUpload() {

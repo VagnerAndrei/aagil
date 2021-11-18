@@ -162,11 +162,10 @@ export class UploadFormItem {
 
 	getListIdsSrcFiles() {
 		const files = document.querySelectorAll(`.srcFileObject-${this._name}`)
-
 		const listFiles = []
 
 		for (let i = 0; i < files.length; i++) {
-			listFiles.push(files[i].file)
+			listFiles.push(new Number(files[i].id))
 		}
 
 		return listFiles;

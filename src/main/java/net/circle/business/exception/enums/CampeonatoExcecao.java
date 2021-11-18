@@ -1,5 +1,6 @@
 package net.circle.business.exception.enums;
 
+
 import java.util.Arrays;
 
 import net.circle.business.exception.interfaces.INegocioExcecao;
@@ -25,7 +26,6 @@ public enum CampeonatoExcecao implements INegocioExcecao {
 	private CampeonatoExcecao(String campo, String mensagem) {
 		this.campo = campo;
 		this.mensagem = mensagem;
-
 	}
 
 	public String toString() {

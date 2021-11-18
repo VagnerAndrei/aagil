@@ -210,7 +210,9 @@ public class ImagemUtil {
 	private static Rotation getRotation(Metadata metadata) throws Exception {
 		ExifIFD0Directory exifIFD0 = metadata.getFirstDirectoryOfType(ExifIFD0Directory.class);
 
-		int orientation = exifIFD0 != null ? exifIFD0.getInt(ExifIFD0Directory.TAG_ORIENTATION) : 0;
+		int orientation = exifIFD0 != null ? exifIFD0.containsTag(ExifIFD0Directory.TAG_ORIENTATION)
+				? exifIFD0.getInt(ExifIFD0Directory.TAG_ORIENTATION)
+				: 0 : 0;
 
 		switch (orientation) {
 		case 6: // [Exif IFD0] Orientation - Right side, top (Rotate 90 CW)

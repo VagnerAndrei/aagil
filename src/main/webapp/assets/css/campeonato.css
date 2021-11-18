@@ -14,8 +14,10 @@
 	font-size: 13px;
 	font-family: sans-serif;
 }
+
 #a-regulamento{
-	align-self: flex-end;
+	margin: 50px 0 0 0;
+	align-self: center;
 }
 #button-regulamento{
 	text-align:right;

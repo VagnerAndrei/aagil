@@ -43,7 +43,6 @@ import net.circle.domain.entity.InscricaoCampeonato;
 import net.circle.domain.entity.NotaCampeonato;
 import net.circle.domain.entity.Pico;
 import net.circle.domain.entity.PremiacaoCampeonato;
-import net.circle.domain.entity.StatusPagamento;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.CampeonatoModel;
 import net.circle.service.model.CategoriaCampeonatoModel;
@@ -153,8 +152,8 @@ public class CampeonatoRest {
 			}
 
 			campeonato = servicoCampeonato.salvar(campeonato);
-			return edicao ? Response.accepted(parseModel(campeonato)).build()
-					: Response.status(Status.CREATED).entity(parseModel(campeonato)).build();
+			return edicao ? Response.accepted(new IDModel(campeonato.getId())).build()
+					: Response.status(Status.CREATED).entity(new IDModel(campeonato.getId())).build();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
@@ -317,7 +316,7 @@ public class CampeonatoRest {
 			e.printStackTrace();
 
 			if (e.getCause().getCause().getMessage()
-					.contains(" duplicate key value violates unique constraint \"unique\""))
+					.contains("ERROR: duplicate key value violates unique constraint"))
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
 
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
@@ -554,7 +553,7 @@ public class CampeonatoRest {
 		campeonato.setArbitros(model.getArbitros().stream().map(arbitroModel -> new Atleta(arbitroModel.getId()))
 				.collect(Collectors.toList()));
 		campeonato.setMidiasDivulgacao(model.getMidiasDivulgacao().stream()
-				.map(midiaDivulgacaoModeo -> new Foto(midiaDivulgacaoModeo.getId())).collect(Collectors.toList()));
+				.map(midiaDivulgacaoModel -> new Foto(midiaDivulgacaoModel.getId())).collect(Collectors.toList()));
 		campeonato.setFotos(
 				model.getFotos().stream().map(fotoModel -> new Foto(fotoModel.getId())).collect(Collectors.toList()));
 

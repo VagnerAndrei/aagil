@@ -185,20 +185,21 @@ export class CampeonatoFormView extends View2 {
 
 		campeonato.categorias.forEach(categoria => this._setupCategoria(categoria))
 		campeonato.arbitros.forEach(arbitro => this._setupArbitro({ id: arbitro.id, nome: arbitro.nome }))
-		
+
 		this._setupRegulamento()
 		this._setupMidiasDivulgacao()
+		this._setupFotosCampeonato()
 
 	}
 
-	configureRefreshListaPista(command) {
+	async configureRefreshListaPista(command) {
 		this._buttonAtualizarPistas.addEventListener('click', () => { command() })
-		command()
+		await command()
 	}
 
-	configureRefreshListaArbitro(command) {
+	async configureRefreshListaArbitro(command) {
 		this._buttonAtualizarArbitros.addEventListener('click', () => { command() })
-		command()
+		await command()
 	}
 
 	configureEnviarFormulario(command) {
@@ -222,6 +223,8 @@ export class CampeonatoFormView extends View2 {
 			this._campeonato.setData(data)
 
 			this._campeonato.pico = { id: this._selectPista.value }
+			this._campeonato.midiasDivulgacao = this._uploadMidiasDivulgacao.getListIdsSrcFiles().map(id => ({ id }))
+			this._campeonato.fotos = this._uploadFotosCampeonato.getListIdsSrcFiles().map(id => ({ id }))
 
 			command()
 		}
@@ -238,7 +241,6 @@ export class CampeonatoFormView extends View2 {
 	}
 
 	getMidiasDivulgacaoFileList() {
-		console.log(this._uploadMidiasDivulgacao.getListFiles())
 		return this._uploadMidiasDivulgacao.getListFiles()
 	}
 
@@ -248,6 +250,14 @@ export class CampeonatoFormView extends View2 {
 
 	getRegulamentoFile() {
 		return this._uploadRegulamento.getListFiles()
+	}
+
+	isRegulamentoNotModified() {
+		return this._uploadRegulamento.getListIdsSrcFiles().length == 1
+	}
+
+	setErroLabel(value) {
+		this._labelErroFormulario.innerHTML = value
 	}
 
 
@@ -294,10 +304,18 @@ export class CampeonatoFormView extends View2 {
 
 	_configureRemoverCategoria(id) {
 		document.querySelector(`#icon-remover-categoria-${id}`).addEventListener('click', () => {
-			this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${id}`))
-			this._campeonato.categorias.splice(this._getIndexCategoriaByIdElement(id), 1)
-			this._setupEditarCategoria(false)
-			this._setCategoriaForm()
+			const index = this._campeonato.categorias.findIndex(item => item.id == id)
+			let remove = true
+
+			if (index != -1 && this._campeonato.categorias[index].inscricoes.length != 0)
+				remove = confirm("Está categoria já possui atletas inscritos, OK para remover mesmo assim.")
+
+			if (remove) {
+				this._ulCategorias.removeChild(document.querySelector(`#li-categoria-${id}`))
+				this._campeonato.categorias.splice(this._getIndexCategoriaByIdElement(id), 1)
+				this._setupEditarCategoria(false)
+				this._setCategoriaForm()
+			}
 		})
 	}
 
@@ -325,22 +343,20 @@ export class CampeonatoFormView extends View2 {
 		if (erros.length == 0) {
 			this._labelErroCategoria.textContent = ''
 
-			const categoria = new CategoriaCampeonato({
-				nome: this._inputCategoria.value,
-				descricao: this._textareaDescricaoCategoria.value,
-				voltas: this._inputVoltasCategoria.value,
-				podium: this._inputPodiumCategoria.value,
-				valorInscricao: this._inputValorInscricao.value ? new Number(this._inputValorInscricao.value).toFixed(2) : null,
-				premiacoes: this._getPremiacoesCategoria()
-			})
+			let categoria
 
-			if (this._idCategoriaEmEdicao) {
-				if (isNaN(this._idCategoriaEmEdicao))
-					categoria.idElement = this._idCategoriaEmEdicao
-				else
-					categoria.id = this._idCategoriaEmEdicao
-			} else
+			if (this._idCategoriaEmEdicao)
+				categoria = this._campeonato.categorias[this._getIndexCategoriaByIdElement(this._idCategoriaEmEdicao)]
+			else {
+				categoria = new CategoriaCampeonato({})
 				categoria.idElement = self.crypto.randomUUID()
+			}
+			categoria.nome = this._inputCategoria.value
+			categoria.descricao = this._textareaDescricaoCategoria.value
+			categoria.voltas = this._inputVoltasCategoria.value
+			categoria.podium = this._inputPodiumCategoria.value
+			categoria.valorInscricao = this._inputValorInscricao.value ? new Number(this._inputValorInscricao.value).toFixed(2) : null
+			categoria.premiacoes = this._getPremiacoesCategoria()
 
 
 			this._setupCategoria(categoria)
@@ -369,10 +385,8 @@ export class CampeonatoFormView extends View2 {
 			if (!categoria.id)
 				this._campeonato.categorias.push(categoria)
 			this._ulCategorias.appendChild(li)
-		} else {
-			this._campeonato.categorias[this._getIndexCategoriaByIdElement(id)] = categoria
+		} else
 			this._setupEditarCategoria(false)
-		}
 
 
 		this._configureRemoverCategoria(id)
@@ -466,20 +480,23 @@ export class CampeonatoFormView extends View2 {
 			this._campeonato.arbitros.splice(this._campeonato.arbitros.findIndex(arbitro => arbitro.id == id), 1)
 		})
 	}
-	
+
 	/*
 										UPLOADS
 																						*/
-	
-	_setupRegulamento(){
-		if(this._campeonato.regulamento)
-			this._uploadRegulamento.addFile({id : this._campeonato.id, src : `api/campeonatos/${this._campeonato.id}/regulamento`})
-	}
-	
-	_setupMidiasDivulgacao(){
-		this._campeonato.midiasDivulgacao?.forEach(midia => this._uploadMidiasDivulgacao.addFile({id: midia.id, src : `api/fotos/${midia.id}/thumb`}))
+
+	_setupRegulamento() {
+		if (this._campeonato.regulamento)
+			this._uploadRegulamento.addFile({ id: this._campeonato.id, src: `api/campeonatos/${this._campeonato.id}/regulamento` })
 	}
 
+	_setupMidiasDivulgacao() {
+		this._campeonato.midiasDivulgacao?.forEach(midia => this._uploadMidiasDivulgacao.addFile({ id: midia.id, src: `api/fotos/${midia.id}/thumb` }))
+	}
+
+	_setupFotosCampeonato() {
+		this._campeonato.fotos?.forEach(foto => this._uploadFotosCampeonato.addFile({ id: foto.id, src: `api/fotos/${foto.id}/thumb` }))
+	}
 
 	/*
 										FORMULÁRIO

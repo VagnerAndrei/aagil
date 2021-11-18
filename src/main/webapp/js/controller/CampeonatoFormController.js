@@ -199,7 +199,7 @@ export class CampeonatoFormController extends Controller {
 	}
 
 	_uploadedHandler() {
-		if (this._xhr.status == 200 || this._xhr.status == 202) {
+		if (this._xhr.status == 201 || this._xhr.status == 202) {
 			campeonato({ event: 'campeonatoRegistroEvent', idCampeonato: this._idCampeonato })
 			window.scroll(0, 500)
 		}

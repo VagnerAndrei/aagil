@@ -85,7 +85,7 @@ export class CampeonatoFormView extends View2 {
 		this._uploadRegulamento = new UploadFormItem({
 			elementID: 'div-regulamento',
 			label: 'Arquivo',
-			name: 'regulamento',
+			name: 'Regulamento',
 			acceptTypes: 'application/pdf',
 			maxFiles: 1,
 			isTypeImage: false

@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -267,6 +268,29 @@ public class AtletaRest {
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
+	
+	/**
+	 * Realiza atualização do atleta
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FORBIDDEN(403, "Forbidden"),<br/>
+	 *          Status.ACCEPTED(202, "Accepted"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@POST
+	@RolesAllowed("ADMIN")
+	@Path("/")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response criarAtleta(@Context HttpServletRequest request, Atleta atleta) {
+		try {
+			return Response.accepted().entity(parseModel(servicoAtleta.salvar(atleta), false)).build();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
+		}
+	}
 
 	/**
 	 * Realiza upload da foto do perfil do atleta
@@ -335,7 +359,7 @@ public class AtletaRest {
 	private AtletaModel parseModel(Atleta pessoa, Boolean simple) {
 		return simple ? new AtletaModel(pessoa.getId(),
 
-				pessoa.getNome()) :
+				pessoa.getNome() + (pessoa.getUsuario() == null ? " (sem login)" : "")) :
 
 				new AtletaModel(
 

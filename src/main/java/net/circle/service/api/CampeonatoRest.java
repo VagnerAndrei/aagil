@@ -313,12 +313,12 @@ public class CampeonatoRest {
 
 			return Response.ok().build();
 		} catch (Exception e) {
-			e.printStackTrace();
 
 			if (e.getCause().getCause().getMessage()
 					.contains("ERROR: duplicate key value violates unique constraint"))
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
 
+			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
@@ -347,12 +347,12 @@ public class CampeonatoRest {
 
 			return Response.ok().build();
 		} catch (Exception e) {
-			e.printStackTrace();
 
 			if (e.getCause().getCause().getMessage()
-					.contains(" duplicate key value violates unique constraint \"unique\""))
+					.contains("ERROR: duplicate key value violates unique constraint"))
 				return Response.serverError().entity(new ErroModel(CampeonatoExcecao.ATLETA_JA_INSCRITO)).build();
 
+			e.printStackTrace();
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}

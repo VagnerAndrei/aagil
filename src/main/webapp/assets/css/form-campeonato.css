@@ -22,6 +22,12 @@
 	display: inline-block;
 }
 
+#button-criar-arbitro{
+	height: 27px;
+	width: 110px;
+	display: inline-block;
+}
+
 #input-valor-inscricao{
 	width: 70px;
 }
@@ -95,7 +101,9 @@
 }
 
 #ul-uploads-midias-divulgacao,
-#ul-uploads-fotos-campeonato{
+#ul-uploads-fotos-campeonato,
+#ul-midias-divulgacao,
+#ul-fotos-campeonato{
 	max-width: 700px;
 	width: 70vw;
 	display: flex;

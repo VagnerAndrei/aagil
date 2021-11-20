@@ -35,10 +35,14 @@ public class AtletaBusiness implements IAtletaBusiness {
 
 	@Override
 	public Atleta salvar(Atleta atleta) throws Exception {
-		if (usuarioDAO.exist(atleta.getUsuario().getEmail()))
-			throw new UsuarioBusinessException(UsuarioExcecao.EMAIL_JA_CADASTRADO);
+
+		if (atleta.getUsuario() != null) {
+			if (usuarioDAO.exist(atleta.getUsuario().getEmail()))
+				throw new UsuarioBusinessException(UsuarioExcecao.EMAIL_JA_CADASTRADO);
 		atleta.getUsuario().getPerfis().add(Perfil.USER);
 		atleta.getUsuario().setSenha(Encriptador.MD5(atleta.getUsuario().getSenha()));
+		}
+		
 		return dao.merge(atleta);
 	}
 
@@ -89,8 +93,8 @@ public class AtletaBusiness implements IAtletaBusiness {
 			atleta.setFoto(new Foto());
 		atleta.getFoto().setOriginal(new SerialBlob(foto));
 		atleta.getFoto().setArquivo(new SerialBlob(ImagemUtil.getTratamentoJPG(foto)));
-		atleta.getFoto()
-				.setThumbnail(new SerialBlob(ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivo().getBinaryStream().readAllBytes())));
+		atleta.getFoto().setThumbnail(new SerialBlob(
+				ImagemUtil.getThumbnailFromJPG(atleta.getFoto().getArquivo().getBinaryStream().readAllBytes())));
 		atleta.getFoto().setExtensao(extensao);
 		return dao.merge(atleta);
 	}
@@ -110,7 +114,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 
 	@Override
 	public List<Atleta> consultarPagina(int... rowStartIdxAndCount) {
-		return dao.consultarPagina("nome", rowStartIdxAndCount);
+		return dao.findByPropertyNullable("usuario", "IS NOT NULL", "nome ASC", rowStartIdxAndCount);
 	}
 
 	@Override

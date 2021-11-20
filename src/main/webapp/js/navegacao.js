@@ -132,7 +132,7 @@ async function perfil(event, idAtleta) {
 //	}
 //	instances.current = instances.atleta
 	instances.current = new Atleta(idAtual)
-	changeState({ view: views.atleta, event: event instanceof Event ? event.type : event, id: idAtleta })
+	changeState({ view: views.atleta, event: event instanceof Event ? event.type : event, id: idAtual })
 }
 
 function atletas(clickEvent) {

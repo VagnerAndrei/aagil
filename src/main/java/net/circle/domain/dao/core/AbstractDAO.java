@@ -111,6 +111,32 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 		}
 		return query.getResultList();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<T> findByPropertyNullable(String propertyName, final Object value, final String orderBy,
+			final int... rowStartIdxAndCount) {
+		String queryString = "select model from " + getName() + " model where model." + propertyName
+				+ " " + value;
+
+		if (orderBy != null)
+			queryString += " ORDER BY " + orderBy;
+
+		Query query = em.createQuery(queryString);
+		if (rowStartIdxAndCount != null && rowStartIdxAndCount.length > 0) {
+			int rowStartIdx = Math.max(0, rowStartIdxAndCount[0]);
+			if (rowStartIdx > 0) {
+				query.setFirstResult(rowStartIdx);
+			}
+
+			if (rowStartIdxAndCount.length > 1) {
+				int rowCount = Math.max(0, rowStartIdxAndCount[1]);
+				if (rowCount > 0) {
+					query.setMaxResults(rowCount);
+				}
+			}
+		}
+		return query.getResultList();
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> findByPropertys(List<String> propertyNames, final List<Object> values, final String orderBy,

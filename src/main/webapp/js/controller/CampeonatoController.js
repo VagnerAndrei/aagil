@@ -109,6 +109,7 @@ export class CampeonatoController extends Controller {
 			switch (response.status) {
 				case 200:
 					alert('Inscrição realizada com sucesso')
+					this._updateCampeonato()()
 					break
 				case 403:
 					console.log(response)

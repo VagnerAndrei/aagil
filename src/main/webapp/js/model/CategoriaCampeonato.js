@@ -2,6 +2,7 @@
  * 
  */
 import { InscricaoCampeonato } from './../model/InscricaoCampeonato.js'
+import { Util } from './../util/Util.js'
 
 export class CategoriaCampeonato {
 
@@ -15,12 +16,10 @@ export class CategoriaCampeonato {
 		this.premiacoes = premiacoes
 		this.inscricoes = inscricoes ? inscricoes.map(inscricao => new InscricaoCampeonato(inscricao)) : []
 		this.inscricoes = this.inscricoes.sort(function(a, b) {
-			if (a.atleta.nome > b.atleta.nome) {
+			if (Util.padraoString(a.atleta.nome) > Util.padraoString(b.atleta.nome))
 				return 1
-			}
-			if (a.atleta.nome < b.atleta.nome) {
+			if (Util.padraoString(a.atleta.nome) < Util.padraoString(b.atleta.nome)) 
 				return -1
-			}
 			// a must be equal to b
 			return 0
 		})
@@ -29,7 +28,8 @@ export class CategoriaCampeonato {
 		this.exibirClassificacao = exibirClassificacao;
 
 	}
-
+	
+	
 	getRankAtleta() {
 		//		console.log('CATEGORIA')
 		let rank = []

@@ -8,6 +8,7 @@ import net.circle.service.model.EnderecoModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.LocalidadeModel;
 import net.circle.service.model.PicoModel;
+import net.circle.service.model.UsuarioModel;
 
 public class ParseModelUtil {
 
@@ -41,6 +42,11 @@ public class ParseModelUtil {
 
 	public static AtletaModel parseModel(Atleta atleta, Boolean simple) {
 		var model = new AtletaModel(atleta.getId(), atleta.getNome());
+		
+		if(atleta.getUsuario() != null) {
+			model.setUsuario(new UsuarioModel());
+		}
+		
 		if (!simple) {
 			model.setApelido(atleta.getApelido());
 			model.setNascimento(atleta.getNascimento());

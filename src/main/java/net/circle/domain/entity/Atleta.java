@@ -12,9 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -42,8 +40,6 @@ public class Atleta extends AbstractEntity {
 	private String biografia;
 
 	@OneToOne(cascade = CascadeType.MERGE)
-	@NotNull
-	@Valid
 	private Usuario usuario;
 
 	@JsonFormat(pattern = "yyyy-MM-dd")

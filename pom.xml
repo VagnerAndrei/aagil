@@ -241,9 +241,9 @@
                 <artifactId>flyway-maven-plugin</artifactId>
                 <version>7.7.1</version>
                 <configuration>
-                    <url>jdbc:postgresql://aagil.com.br:5432/${project.artifactId}</url>
-                    <user>aagil</user>
-                    <password>AAGIL@Postgres.d4t4b4s3</password>
+                    <url>jdbc:postgresql://localhost:5432/${project.artifactId}</url>
+                    <user>postgres</user>
+                    <password>postgres</password>
                 </configuration>
                 
             </plugin>

@@ -19,7 +19,7 @@
 	align-items: center;
 }
 
-#ul-campeonatos li a , .link-atleta{
+#ul-campeonatos li a{
 	color: var(--blue-300);
 	text-decoration: none;
 	margin-right: 40px;

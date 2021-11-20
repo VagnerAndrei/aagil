@@ -5,7 +5,7 @@ import { Modal } from '../components/Modal.js'
 
 export class AlbumViewer extends Modal {
 
-	constructor(title, listFotos) {
+	constructor(title, listFotos, index) {
 		super(title, true, true)
 		this._ulThumbnails = document.querySelector('#ul-av-thumbnails')
 		this._buttonAnterior = document.querySelector('#button-av-anterior')
@@ -15,14 +15,19 @@ export class AlbumViewer extends Modal {
 
 		this._buttonAnterior.addEventListener('click', () => this.anterior())
 		this._buttonProxima.addEventListener('click', () => this.proxima())
-		
+
 		this._listFotos = listFotos.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
 		this.thumbnailPopulate()
+		if (index){
+			this.thumbnailClickHandler(this._listFotos[index].id)
+			this._scrollIntoView(index)
+			
+		}
 
 	}
 
 	thumbnailPopulate() {
-		this._listFotos.map(foto => {
+		this._listFotos.forEach((foto, index) => {
 			const img = document.createElement('img')
 			img.src = `api/fotos/${foto.id}/thumb`
 			img.fotoID = foto.id
@@ -30,6 +35,7 @@ export class AlbumViewer extends Modal {
 			img.addEventListener('click', event => this.thumbnailClickHandler(event.target.fotoID))
 			const li = document.createElement('li')
 			li.appendChild(img)
+			img.id = `li-img-${index}`
 			this._ulThumbnails.appendChild(li)
 		})
 		this._img.src = `api/fotos/${this._listFotos[0].id}`
@@ -45,6 +51,7 @@ export class AlbumViewer extends Modal {
 		if (this._listFotos.length > this._currentIndex + 1) {
 			this._currentIndex++
 			this.thumbnailClickHandler(this._listFotos[this._currentIndex].id)
+			this._scrollIntoView(this._currentIndex)
 		}
 	}
 
@@ -52,7 +59,12 @@ export class AlbumViewer extends Modal {
 		if (this._currentIndex > 0) {
 			this._currentIndex--
 			this.thumbnailClickHandler(this._listFotos[this._currentIndex].id)
+			this._scrollIntoView(this._currentIndex)
 		}
+	}
+	
+	_scrollIntoView(index){
+		document.querySelector(`#li-img-${index}`).scrollIntoView()
 	}
 
 	template() {

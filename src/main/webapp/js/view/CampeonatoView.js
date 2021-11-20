@@ -8,12 +8,14 @@ import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
 import { NotaCampeonato } from './../model/NotaCampeonato.js'
 import { isAdmin, isUser, ROLES } from './../sessao.js'
 import { registrar, perfil } from './../navegacao.js'
+import { SelecionarAtletaModalController } from './../controller/SelecionarAtletaModalController.js'
+import { AlbumViewer } from '../controller/AlbumViewer.js'
 
 export class CampeonatoView extends View2 {
 
 
-	constructor({ onViewCreatedFn}) {
-		super({ titulo: 'Campeonato' , onViewCreatedFn })
+	constructor({ onViewCreatedFn }) {
+		super({ titulo: 'Campeonato', onViewCreatedFn })
 		this._campeonato = {}
 	}
 
@@ -36,7 +38,8 @@ export class CampeonatoView extends View2 {
 		this._imgUfPista = document.querySelector('#img-uf-pista')
 		this._labelDataHoraCampeonato = document.querySelector('#label-data-hora-campeonato')
 		this._divCategoriasCampeonato = document.querySelector('#categorias-campeonato')
-		//		this._= document.querySelector('#')
+		this._ulMidiasDivulgacao = document.querySelector('#ul-midias-divulgacao')
+		this._ulFotosCampeonato = document.querySelector('#ul-fotos-campeonato')
 		//		this._= document.querySelector('#')
 		//		this._= document.querySelector('#')
 
@@ -146,9 +149,11 @@ export class CampeonatoView extends View2 {
 		if (categoria.inscricoes)
 			return categoria.inscricoes.map(inscricao => `
 			<tr>
-				<td><a class="link-atleta" 
-				id="a-link-atleta-${inscricao.id}-${inscricao.atleta.id}"
-				title="Acessar perfil">${inscricao.atleta.nome}</a></td>
+				<td>
+				<a ${inscricao.atleta.usuario ? `class="link-atleta" id="a-link-atleta-${inscricao.id}-${inscricao.atleta.id}" title="Acessar perfil"` : ''}>
+				${inscricao.atleta.nome}
+				</a>
+				</td>
 				<td>${inscricao.atleta.nascimento ? inscricao.atleta.getIdade() : ''}</td>
 				<td>${inscricao.atleta.apelido ?? ''}</td>
 				${isAdmin() ? `
@@ -248,7 +253,7 @@ export class CampeonatoView extends View2 {
 	}
 
 	updateCampeonato(campeonato) {
-		this._campeonato = new Campeonato(campeonato?? this._campeonato)
+		this._campeonato = new Campeonato(campeonato ?? this._campeonato)
 		this._clearDivCategorias()
 		this._setupCampeonato()
 	}
@@ -326,6 +331,46 @@ export class CampeonatoView extends View2 {
 		this._setNotasInput()
 		this._applyRole(isAdmin())
 		this._setRank()
+
+		this._campeonato.midiasDivulgacao.forEach(midia => {
+			this._addMidiaDivulgacao(`api/fotos/${midia.id}/thumb`)
+		})
+		
+		this._campeonato.fotos.forEach(foto => {
+			this._addFotoCampeonato(`api/fotos/${foto.id}/thumb`)
+		})
+	}
+
+	_addMidiaDivulgacao(src) {
+		const li = this._templateLiImg(src)
+		this._ulMidiasDivulgacao.appendChild(li)
+		li.addEventListener('click', (event) => {
+			new AlbumViewer(
+				`${this._campeonato.titulo} - Mídias de divulgação`, 
+				this._campeonato.midiasDivulgacao, 
+				Array.prototype.indexOf.call(this._ulMidiasDivulgacao.childNodes, event.currentTarget)
+				)
+		})
+	}
+	
+	_addFotoCampeonato(src) {
+		const li = this._templateLiImg(src)
+		li.addEventListener('click', (event) => {
+			console.log(event.target)
+			new AlbumViewer(`${this._campeonato.titulo} - Fotos do campeonato`, 
+			this._campeonato.fotos,
+			Array.prototype.indexOf.call(this._ulFotosCampeonato.childNodes, event.currentTarget))
+		})
+		this._ulFotosCampeonato.appendChild(li)
+	}
+	
+	_templateLiImg(src){
+		const li = document.createElement('li')
+		const img = document.createElement('img')
+		img.height = 80
+		img.src = src
+		li.appendChild(img)
+		return li
 	}
 
 	_clearDivCategorias() {
@@ -367,7 +412,9 @@ export class CampeonatoView extends View2 {
 						this._inscreverSeFn(categoria.id)
 			})
 			document.querySelector(`#button-inscrever-atleta-${categoria.id}`).addEventListener('click', () => {
-
+				this._selecionarAtletaModal = new SelecionarAtletaModalController({
+					titulo: 'Inscrever Atleta', callBackHandlerFn: this._inscreverAtleta(categoria)
+				})
 			})
 		})
 	}
@@ -430,6 +477,14 @@ export class CampeonatoView extends View2 {
 					}
 			})
 		})
+	}
+
+	_inscreverAtleta(categoria) {
+		return async ({ id, nome }) => {
+			if (confirm(`Você está prestes a inscrever o atleta ${nome} na categoria ${categoria.nome}.`)) {
+				this._inscreverAtletaFn(categoria.id, id)
+			}
+		}
 	}
 
 	_setNotasInput() {

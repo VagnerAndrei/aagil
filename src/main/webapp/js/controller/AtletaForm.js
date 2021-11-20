@@ -2,16 +2,16 @@
  * 
  */
 import { Modal } from '../components/Modal.js'
-import { get, put } from '../fetch.js'
+import { get, put, post } from '../fetch.js'
 
 
 export class AtletaForm extends Modal {
 
-	constructor(atleta, callbackHandler) {
-		super('Editar informações')
+	constructor(atleta, callbackHandler, isAdminForm, titulo) {
+		super(titulo ? titulo : isAdminForm ? 'Registrar Atleta' : 'Editar informações')
 		this._atleta = atleta
 		this._callbackHandler = callbackHandler
-		
+
 		this._labelErro = document.querySelector('#label-erro');
 		this._inputNome = document.querySelector('#input-nome');
 		this._inputApelido = document.querySelector('#input-apelido');
@@ -20,11 +20,24 @@ export class AtletaForm extends Modal {
 		this._radioCategoria = document.getElementsByName('radio-categoria');
 		this._selectUfs = document.querySelector('#select-ufs');
 		this._selectLocalidades = document.querySelector('#select-localidades');
+		this._divAtletaPessoal = document.querySelector('#div-atleta-pessoal')
+		this._isAdminForm = isAdminForm
 
 		document.forms.namedItem('form-atualizar-atleta').addEventListener('submit', event => this.enviarAtualizacao(event));
+		if (this._isAdminForm) {
+			this._inputNascimento.required = false
+			this._selectUfs.required = false
+			this._selectLocalidades.required = false
+			this._divAtletaPessoal.classList.add('display-none')
+			document.querySelector('#input-categoria-iniciante').required = false
+			document.querySelector('#input-categoria-amador').required = false
+			document.querySelector('#input-categoria-profissional').required = false
+		} else {
+			this.setAtleta()
+		}
+
 		this._selectUfs.addEventListener('change', event => this.carregarLocalidades(event))
-		
-		this.setAtleta()
+
 		this.carregarUFs()
 	}
 
@@ -55,24 +68,26 @@ export class AtletaForm extends Modal {
 				</select>
 			</div>
 	
-	
-			<div class="flex-row">
-				<label for="categoria">Categoria:</label> <input
-					id="input-categoria-iniciante" type="radio" name="radio-categoria"
-					value="Iniciante" required> <label
-					for="input-categoria-iniciante">Iniciante</label> <input
-					id="input-categoria-amador" type="radio" name="radio-categoria"
-					value="Amador" required> <label for="input-categoria-amador">Amador</label>
-	
-				<input id="input-categoria-profissional" type="radio"
-					name="radio-categoria" value="Profissional" required> <label
-					for="input-categoria-profissional">Profissional</label>
-			</div>
-	
-			<div>
-				<label for="nome">Biografia:</label>
-				<textarea id="textarea-biografia" rows="20" cols="48"
-					style="resize: none" maxlength="5000"></textarea>
+			<div id="div-atleta-pessoal">
+				<div class="flex-row">
+					
+					<label for="categoria">Categoria:</label> 
+					
+					<input id="input-categoria-iniciante" type="radio" name="radio-categoria" value="Iniciante" required>
+					<label for="input-categoria-iniciante">Iniciante</label> 
+					
+					<input id="input-categoria-amador" type="radio" name="radio-categoria" value="Amador" required> 
+					<label for="input-categoria-amador">Amador</label>
+
+					<input id="input-categoria-profissional" type="radio" name="radio-categoria" value="Profissional" required> 
+					<label for="input-categoria-profissional">Profissional</label>
+				</div>
+		
+				<div>
+					<label for="nome">Biografia:</label>
+					<textarea id="textarea-biografia" rows="20" cols="48"
+						style="resize: none" maxlength="5000"></textarea>
+				</div>
 			</div>
 			<label id="label-erro" for="Email" class="mensagem-erro"></label>
 			<button id="botao-enviar" type="submit">Enviar</button>
@@ -103,7 +118,7 @@ export class AtletaForm extends Modal {
 				this._selectUfs.add(element, null)
 			})
 
-			if (this._atleta.localidade) {
+			if (this._atleta && this._atleta.localidade) {
 				this._selectUfs.value = this._atleta.localidade.idUf;
 				this.carregarLocalidades();
 			}
@@ -149,17 +164,26 @@ export class AtletaForm extends Modal {
 
 	async enviarAtualizacao(event) {
 		event.preventDefault();
-		const response = await put('api/atletas', {
-			id: this._atleta.id,
+
+		const atleta = {
 			nome: this._inputNome.value,
-			apelido: this._inputApelido.value,
-			biografia: this._textareaBiografia.value,
-			nascimento: this._inputNascimento.value,
-			categoria: Array.from(this._radioCategoria).find(radio => radio.checked).value,
-			localidade: {
-				id: this._selectLocalidades.value,
-			}
-		})
+		}
+
+		if (this._isAdminForm) {
+			if (this._inputNascimento.value) atleta.nascimento = this._inputNascimento.value
+			if (this._selectLocalidades.value) atleta.localidade = { id: this._selectLocalidades.value }
+			if (this._inputApelido.value) atleta.apelido = this._inputApelido.value
+		}
+		else {
+			atleta.id = this._atleta.id
+			atleta.biografia = this._textareaBiografia.value
+			atleta.nascimento = this._inputNascimento.value
+			atleta.apelido = this._inputApelido.value
+			atleta.categoria = Array.from(this._radioCategoria).find(radio => radio.checked).value
+			atleta.localidade = { id: this._selectLocalidades.value }
+		}
+
+		const response = this._isAdminForm ? await post('api/atletas', atleta) : await put('api/atletas', atleta)
 		switch (response.status) {
 			case 202:
 				const atleta = await response.json()

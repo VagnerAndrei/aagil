@@ -7,6 +7,7 @@ import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
 import { PremiacaoCampeonato } from './../model/PremiacaoCampeonato.js'
 import { Campeonato } from './../model/Campeonato.js'
 import { Atleta } from './../model/Atleta.js'
+import { AtletaForm } from './../controller/AtletaForm.js'
 
 export class CampeonatoFormView extends View2 {
 
@@ -47,6 +48,7 @@ export class CampeonatoFormView extends View2 {
 		this._ulCategorias = document.querySelector('#ul-categorias')
 		this._buttonAtualizarArbitros = document.querySelector('#button-atualizar-arbitros')
 		this._buttonAdicionarArbitro = document.querySelector('#button-adicionar-arbitro')
+		this._buttonCriarArbitro = document.querySelector('#button-criar-arbitro')
 		this._selectArbitro = document.querySelector('#select-arbitro')
 		this._ulArbitros = document.querySelector('#ul-arbitros')
 		this._ulFotos = document.querySelector('#ul-midias-divulgacao')
@@ -68,6 +70,7 @@ export class CampeonatoFormView extends View2 {
 		this._idCategoriaEmEdicao = undefined
 
 		this._configureAdicionarArbitro()
+		this._configureCriarArbitro()
 
 
 		/*								FILE UPLOADS										*/
@@ -454,6 +457,20 @@ export class CampeonatoFormView extends View2 {
 		this._buttonAdicionarArbitro.addEventListener('click', () => {
 			this._addArbitro()
 		})
+	}
+	
+	_configureCriarArbitro() {
+		this._buttonCriarArbitro.addEventListener('click', () => {
+			this._adicionarArbitro = new AtletaForm(undefined, this._criarArbitroCallBackHandler(), true, 'Criar Atleta Árbitro' )
+		})
+	}
+	
+	_criarArbitroCallBackHandler(){
+		return ({id, nome}) => {
+			this._setupArbitro({ id, nome })
+			this._campeonato.arbitros.push(new Atleta({ id }))
+			this._buttonAtualizarArbitros.dispatchEvent(new Event('click'))
+		}
 	}
 
 	_addArbitro() {

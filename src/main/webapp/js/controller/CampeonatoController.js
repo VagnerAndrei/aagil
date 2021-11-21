@@ -191,7 +191,7 @@ export class CampeonatoController extends Controller {
 				{ volta: nota.volta, arbitro: { id: nota.arbitro.id } }
 			model.nota = nota.nota
 
-			const response = await post(`http://localhost:8080/aagil/api/campeonatos/notas/${idInscricao}`, model)
+			const response = await post(`api/campeonatos/notas/${idInscricao}`, model)
 			switch (response.status) {
 				case 200:
 					const nota = await response.json()

@@ -352,7 +352,7 @@ export class CampeonatoFormView extends View2 {
 				categoria = this._campeonato.categorias[this._getIndexCategoriaByIdElement(this._idCategoriaEmEdicao)]
 			else {
 				categoria = new CategoriaCampeonato({})
-				categoria.idElement = self.crypto.randomUUID()
+				categoria.idElement = `${new Date().getTime()}-eee`
 			}
 			categoria.nome = this._inputCategoria.value
 			categoria.descricao = this._textareaDescricaoCategoria.value

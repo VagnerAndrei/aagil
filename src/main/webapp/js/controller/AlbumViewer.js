@@ -16,17 +16,21 @@ export class AlbumViewer extends Modal {
 		this._buttonAnterior.addEventListener('click', () => this.anterior())
 		this._buttonProxima.addEventListener('click', () => this.proxima())
 
-		this._listFotos = listFotos.sort((a, b) => a.id > b.id ? 1 : a.id < b.id ? -1 : 0);
-		this.thumbnailPopulate()
-		if (index){
-			this.thumbnailClickHandler(this._listFotos[index].id)
-			this._scrollIntoView(index)
-			
+		this._listFotos = listFotos
+		this._clickIndex = index
+		this.init()
+	}
+	
+	async init(){
+		await this.thumbnailPopulate()
+		
+		if (this._clickIndex){
+			this.thumbnailClickHandler(this._listFotos[this._clickIndex].id)
+			this._scrollIntoView(this._clickIndex)
 		}
-
 	}
 
-	thumbnailPopulate() {
+	async thumbnailPopulate() {
 		this._listFotos.forEach((foto, index) => {
 			const img = document.createElement('img')
 			img.src = `api/fotos/${foto.id}/thumb`

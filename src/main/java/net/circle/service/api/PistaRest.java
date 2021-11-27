@@ -26,35 +26,35 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import net.circle.business.exception.enums.PicoExcecao;
+import net.circle.business.exception.enums.PistaExcecao;
 import net.circle.business.interfaces.IAtletaBusiness;
-import net.circle.business.interfaces.IPicoBusiness;
-import net.circle.business.interfaces.IPicoRegistroBusiness;
+import net.circle.business.interfaces.IPistaBusiness;
+import net.circle.business.interfaces.IPistaRegistroBusiness;
 import net.circle.business.util.ImagemUtil;
 import net.circle.domain.entity.Atleta;
 import net.circle.domain.entity.Endereco;
 import net.circle.domain.entity.Foto;
-import net.circle.domain.entity.Pico;
-import net.circle.domain.entity.PicoRegistro;
+import net.circle.domain.entity.Pista;
+import net.circle.domain.entity.PistaRegistro;
 import net.circle.domain.entity.Tag;
 import net.circle.service.model.ErroModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.PaginacaoModel;
-import net.circle.service.model.PicoModel;
-import net.circle.service.model.PicoRegistroModel;
+import net.circle.service.model.PistaModel;
+import net.circle.service.model.PistaRegistroModel;
 import net.circle.service.model.util.ParseModelUtil;
 import net.circle.service.util.InputPartUtil;
 
-@Path("/picos")
+@Path("/pistas")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-public class PicoRest {
+public class PistaRest {
 
 	@Inject
-	private IPicoRegistroBusiness picoRegistroBusiness;
+	private IPistaRegistroBusiness pistaRegistroBusiness;
 
 	@Inject
-	private IPicoBusiness picoBusiness;
+	private IPistaBusiness pistaBusiness;
 
 	@Inject
 	private IAtletaBusiness atletaBusiness;
@@ -62,7 +62,7 @@ public class PicoRest {
 	public final static String[] fotoFormatos = { "PNG", "JPG", "JPEG", "BMP" };
 
 	/**
-	 * Realiza o registro de pico com upload de imagens
+	 * Realiza o registro de pista com upload de imagens
 	 *
 	 * @param idAtleta
 	 * 
@@ -76,7 +76,7 @@ public class PicoRest {
 	@Path("/")
 	@RolesAllowed({ "ADMIN", "USER" })
 	@Consumes({ MediaType.MULTIPART_FORM_DATA})
-	public Response adicionarPico(@Context HttpServletRequest request, MultipartFormDataInput input) {
+	public Response adicionarPista(@Context HttpServletRequest request, MultipartFormDataInput input) {
 		try {
 			Map<String, List<InputPart>> uploadForm = input.getFormDataMap();
 
@@ -84,7 +84,7 @@ public class PicoRest {
 			List<InputPart> json = uploadForm.get("json");
 
 			ObjectMapper mapper = new ObjectMapper();
-			PicoRegistroModel model = mapper.readValue(json.get(0).getBodyAsString(), PicoRegistroModel.class);
+			PistaRegistroModel model = mapper.readValue(json.get(0).getBodyAsString(), PistaRegistroModel.class);
 
 			var atleta = atletaBusiness.findByKey("id", model.getAtleta().getId());
 
@@ -96,7 +96,7 @@ public class PicoRest {
 			if (fotos != null)
 				if (fotos.size() > 10)
 					return Response.status(Status.BAD_REQUEST)
-							.entity(new ErroModel(PicoExcecao.LIMITE_DE_FOTOS_EXCEDIDO)).build();
+							.entity(new ErroModel(PistaExcecao.LIMITE_DE_FOTOS_EXCEDIDO)).build();
 				else
 					for (InputPart inputPart : fotos) {
 
@@ -106,7 +106,7 @@ public class PicoRest {
 
 						if (!Arrays.asList(fotoFormatos).contains(extensao))
 							return Response.status(Status.BAD_REQUEST)
-									.entity(new ErroModel(PicoExcecao.FORMATO_INVALIDO)).build();
+									.entity(new ErroModel(PistaExcecao.FORMATO_INVALIDO)).build();
 
 						// convert the uploaded file to inputstream
 						InputStream inputStream = inputPart.getBody(InputStream.class, null);
@@ -117,16 +117,16 @@ public class PicoRest {
 								ImagemUtil.getTratamentoJPG(foto.getOriginal().getBinaryStream().readAllBytes())));
 						foto.setThumbnail(new SerialBlob(
 								ImagemUtil.getThumbnailFromJPG(foto.getArquivo().getBinaryStream().readAllBytes())));
-						registro.getPicoNovo().getFotos().add(foto);
+						registro.getPistaNova().getFotos().add(foto);
 
 					}
 
-			var picoRegistro = picoRegistroBusiness.salvar(registro);
-			String mensagem = "O Registro do pico foi efetuado com sucesso.";
+			var pistaRegistro = pistaRegistroBusiness.salvar(registro);
+			String mensagem = "O Registro do pista foi efetuado com sucesso.";
 
-			switch (picoRegistro.getStatus()) {
+			switch (pistaRegistro.getStatus()) {
 			case PENDENTE:
-				mensagem = "O Registro do pico foi efetuado com sucesso, e será avaliado por um administrador. Obrigado pela colaboração.";
+				mensagem = "O Registro do pista foi efetuado com sucesso, e será avaliado por um administrador. Obrigado pela colaboração.";
 				break;
 			default:
 				break;
@@ -141,14 +141,14 @@ public class PicoRest {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<PicoModel> consultarPicos() {
-		return parseModel(picoBusiness.consultarLista(), false);
+	public List<PistaModel> consultarPistas() {
+		return parseModel(pistaBusiness.consultarLista(), false);
 	}
 
 	@GET
 	@Path("/simple")
-	public List<PicoModel> consultarPicosSimple() {
-		return parseModel(picoBusiness.consultarLista(), true);
+	public List<PistaModel> consultarPistasSimple() {
+		return parseModel(pistaBusiness.consultarLista(), true);
 	}
 
 	/**
@@ -163,62 +163,62 @@ public class PicoRest {
 	@GET
 	@Path("/{indice}/{tamanho}")
 	public PaginacaoModel getListaPaginada(@PathParam("indice") Integer indice, @PathParam("tamanho") Integer tamanho) {
-		var paginacao = parseModelPaginacao(picoBusiness.consultarPagina(indice, tamanho));
-		paginacao.setTotal(picoBusiness.count());
+		var paginacao = parseModelPaginacao(pistaBusiness.consultarPagina(indice, tamanho));
+		paginacao.setTotal(pistaBusiness.count());
 		return paginacao;
 	}
 
-	private PicoRegistro parseEntity(PicoRegistroModel model) {
-		PicoRegistro registro = new PicoRegistro();
+	private PistaRegistro parseEntity(PistaRegistroModel model) {
+		PistaRegistro registro = new PistaRegistro();
 
 		registro.setAtleta(new Atleta());
 		registro.getAtleta().setId(model.getAtleta().getId());
 
 		registro.setObservacoes(model.getObservacoes());
 
-		if (model.getPicoAtual() != null) {
-			registro.setPicoAtual(new Pico());
-			registro.getPicoAtual().setId(model.getPicoAtual().getId());
+		if (model.getPistaAtual() != null) {
+			registro.setPistaAtual(new Pista());
+			registro.getPistaAtual().setId(model.getPistaAtual().getId());
 		}
 
-		registro.setPicoNovo(new Pico());
-		registro.getPicoNovo().setEndereco(new Endereco());
-		registro.getPicoNovo().getEndereco().setBairro(model.getPicoNovo().getEndereco().getBairro());
-		registro.getPicoNovo().getEndereco().setCep(model.getPicoNovo().getEndereco().getCep());
-		registro.getPicoNovo().getEndereco().setComplemento(model.getPicoNovo().getEndereco().getComplemento());
-		registro.getPicoNovo().getEndereco().setUF(model.getPicoNovo().getEndereco().getUF());
-		registro.getPicoNovo().getEndereco().setLocalidade(model.getPicoNovo().getEndereco().getLocalidade());
-		registro.getPicoNovo().getEndereco().setLogradouro(model.getPicoNovo().getEndereco().getLogradouro());
-		registro.getPicoNovo().getEndereco().setPerimetro(model.getPicoNovo().getEndereco().getPerimetro());
-		registro.getPicoNovo().getEndereco().setReferencia(model.getPicoNovo().getEndereco().getReferencia());
-		registro.getPicoNovo().setTitulo(model.getPicoNovo().getTitulo());
+		registro.setPistaNova(new Pista());
+		registro.getPistaNova().setEndereco(new Endereco());
+		registro.getPistaNova().getEndereco().setBairro(model.getPistaNovo().getEndereco().getBairro());
+		registro.getPistaNova().getEndereco().setCep(model.getPistaNovo().getEndereco().getCep());
+		registro.getPistaNova().getEndereco().setComplemento(model.getPistaNovo().getEndereco().getComplemento());
+		registro.getPistaNova().getEndereco().setUF(model.getPistaNovo().getEndereco().getUF());
+		registro.getPistaNova().getEndereco().setLocalidade(model.getPistaNovo().getEndereco().getLocalidade());
+		registro.getPistaNova().getEndereco().setLogradouro(model.getPistaNovo().getEndereco().getLogradouro());
+		registro.getPistaNova().getEndereco().setPerimetro(model.getPistaNovo().getEndereco().getPerimetro());
+		registro.getPistaNova().getEndereco().setReferencia(model.getPistaNovo().getEndereco().getReferencia());
+		registro.getPistaNova().setTitulo(model.getPistaNovo().getTitulo());
 
-		model.getPicoNovo().getTags().forEach(tag -> registro.getPicoNovo().getTags().add(new Tag(tag)));
+		model.getPistaNovo().getTags().forEach(tag -> registro.getPistaNova().getTags().add(new Tag(tag)));
 
 		return registro;
 	}
 
-	private List<PicoModel> parseModel(List<Pico> consultarLista, Boolean simple) {
-		return consultarLista.stream().map(pico -> parseModel(pico, simple)).collect(Collectors.toList());
+	private List<PistaModel> parseModel(List<Pista> consultarLista, Boolean simple) {
+		return consultarLista.stream().map(pista -> parseModel(pista, simple)).collect(Collectors.toList());
 	}
 
-	private PicoModel parseModel(Pico pico, Boolean simple) {
-		PicoModel model = new PicoModel();
-		model.setId(pico.getId());
-		model.setTitulo(pico.getTitulo());
+	private PistaModel parseModel(Pista pista, Boolean simple) {
+		PistaModel model = new PistaModel();
+		model.setId(pista.getId());
+		model.setTitulo(pista.getTitulo());
 
 		if (!simple) {
-			model.setEndereco(ParseModelUtil.parseModel(pico.getEndereco()));
-			pico.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
-			pico.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
+			model.setEndereco(ParseModelUtil.parseModel(pista.getEndereco()));
+			pista.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
+			pista.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
 		}
 
 		return model;
 	}
 
-	private PaginacaoModel parseModelPaginacao(List<Pico> lista) {
+	private PaginacaoModel parseModelPaginacao(List<Pista> lista) {
 		var paginacao = new PaginacaoModel();
-		paginacao.setPagina(lista.stream().map(pico -> parseModel(pico, false)).collect(Collectors.toList()));
+		paginacao.setPagina(lista.stream().map(pista -> parseModel(pista, false)).collect(Collectors.toList()));
 		return paginacao;
 
 	}

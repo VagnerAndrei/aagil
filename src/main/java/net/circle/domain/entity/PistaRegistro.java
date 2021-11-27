@@ -16,20 +16,20 @@ import javax.persistence.Table;
 import net.circle.domain.entity.core.AbstractEntity;
 
 @Entity
-@Table(name = "pico_registro")
-public class PicoRegistro extends AbstractEntity {
+@Table(name = "pista_registro")
+public class PistaRegistro extends AbstractEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
 	@ManyToOne
-	@JoinColumn(name = "pico_atual_id")
-	private Pico picoAtual;
+	@JoinColumn(name = "pista_atual_id")
+	private Pista pistaAtual;
 
 	@ManyToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "pico_novo_id")
-	private Pico picoNovo;
+	@JoinColumn(name = "pista_nova_id")
+	private Pista pistaNova;
 
 	private LocalDate data;
 
@@ -37,7 +37,7 @@ public class PicoRegistro extends AbstractEntity {
 	private Atleta atleta;
 
 	@Enumerated(EnumType.STRING)
-	private PicoRegistroStatus status;
+	private PistaRegistroStatus status;
 
 	private String observacoes;
 
@@ -49,20 +49,20 @@ public class PicoRegistro extends AbstractEntity {
 		this.id = id;
 	}
 
-	public Pico getPicoAtual() {
-		return picoAtual;
+	public Pista getPistaAtual() {
+		return pistaAtual;
 	}
 
-	public void setPicoAtual(Pico picoAtual) {
-		this.picoAtual = picoAtual;
+	public void setPistaAtual(Pista pistaAtual) {
+		this.pistaAtual = pistaAtual;
 	}
 
-	public Pico getPicoNovo() {
-		return picoNovo;
+	public Pista getPistaNova() {
+		return pistaNova;
 	}
 
-	public void setPicoNovo(Pico picoNovo) {
-		this.picoNovo = picoNovo;
+	public void setPistaNova(Pista pistaNovo) {
+		this.pistaNova = pistaNovo;
 	}
 
 	public LocalDate getData() {
@@ -81,11 +81,11 @@ public class PicoRegistro extends AbstractEntity {
 		this.atleta = atleta;
 	}
 
-	public PicoRegistroStatus getStatus() {
+	public PistaRegistroStatus getStatus() {
 		return status;
 	}
 
-	public void setStatus(PicoRegistroStatus status) {
+	public void setStatus(PistaRegistroStatus status) {
 		this.status = status;
 	}
 

@@ -294,12 +294,12 @@ export class CampeonatoView extends View2 {
 		this._aRegulamento.href = `api/campeonatos/${this._campeonato.id}/regulamento`
 		this._campeonato.regulamento ? this._buttonRegulamento.classList.remove('display-none') : this._buttonRegulamento.classList.add('display-none')
 
-		this._strongPistaNome.innerText = this._campeonato.pico.titulo
-		if (this._campeonato.pico.fotos?.length) {
-			this._imgPista.src = `api/fotos/${this._campeonato.pico.fotos[0].id}/thumb`
+		this._strongPistaNome.innerText = this._campeonato.pista.titulo
+		if (this._campeonato.pista.fotos?.length) {
+			this._imgPista.src = `api/fotos/${this._campeonato.pista.fotos[0].id}/thumb`
 		}
-		if (this._campeonato.pico.endereco) {
-			const endereco = new Endereco(this._campeonato.pico.endereco)
+		if (this._campeonato.pista.endereco) {
+			const endereco = new Endereco(this._campeonato.pista.endereco)
 			this._divInformacoesPista.innerText = `
 				${endereco.logradouro}
 				${endereco.bairro}
@@ -356,7 +356,6 @@ export class CampeonatoView extends View2 {
 	_addFotoCampeonato(src) {
 		const li = this._templateLiImg(src)
 		li.addEventListener('click', (event) => {
-			console.log(event.target)
 			new AlbumViewer(`${this._campeonato.titulo} - Fotos do campeonato`, 
 			this._campeonato.fotos,
 			Array.prototype.indexOf.call(this._ulFotosCampeonato.childNodes, event.currentTarget))

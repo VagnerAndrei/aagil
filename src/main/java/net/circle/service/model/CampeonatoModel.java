@@ -31,7 +31,7 @@ public class CampeonatoModel {
 
 	private String descricao;
 
-	private PicoModel pico;
+	private PistaModel pista;
 
 	@JsonFormat(shape = Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
 	@JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -77,12 +77,12 @@ public class CampeonatoModel {
 		this.descricao = descricao;
 	}
 
-	public PicoModel getPico() {
-		return pico;
+	public PistaModel getPista() {
+		return pista;
 	}
 
-	public void setPico(PicoModel pico) {
-		this.pico = pico;
+	public void setPista(PistaModel pista) {
+		this.pista = pista;
 	}
 
 	public LocalDateTime getData() {

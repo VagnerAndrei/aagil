@@ -119,7 +119,7 @@ public class AtletaBusiness implements IAtletaBusiness {
 
 	@Override
 	public int count() {
-		return dao.consultarCount();
+		return dao.consultarCountByPropertyNullable("usuario", "IS NOT NULL");
 	}
 
 }

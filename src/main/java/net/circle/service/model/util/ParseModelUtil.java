@@ -2,12 +2,12 @@ package net.circle.service.model.util;
 
 import net.circle.domain.entity.Atleta;
 import net.circle.domain.entity.Endereco;
-import net.circle.domain.entity.Pico;
+import net.circle.domain.entity.Pista;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.EnderecoModel;
 import net.circle.service.model.IDModel;
 import net.circle.service.model.LocalidadeModel;
-import net.circle.service.model.PicoModel;
+import net.circle.service.model.PistaModel;
 import net.circle.service.model.UsuarioModel;
 
 public class ParseModelUtil {
@@ -26,16 +26,16 @@ public class ParseModelUtil {
 		return model;
 	}
 
-	public static PicoModel parseModel(Pico pico, Boolean tags) {
-		var model = new PicoModel();
-		model.setId(pico.getId());
-		model.setTitulo(pico.getTitulo());
-		model.setEndereco(parseModel(pico.getEndereco()));
+	public static PistaModel parseModel(Pista pista, Boolean tags) {
+		var model = new PistaModel();
+		model.setId(pista.getId());
+		model.setTitulo(pista.getTitulo());
+		model.setEndereco(parseModel(pista.getEndereco()));
 
-		pico.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
+		pista.getFotos().forEach(foto -> model.getFotos().add(new IDModel(foto.getId())));
 
 		if (tags)
-			pico.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
+			pista.getTags().forEach(tag -> model.getTags().add(tag.getNome()));
 
 		return model;
 	}

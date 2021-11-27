@@ -179,7 +179,7 @@ export class CampeonatoFormView extends View2 {
 		const campeonato = this._campeonato
 		this._inputTitulo.value = campeonato.titulo
 		this._textareaDescricao.value = campeonato.descricao
-		this._selectPista.value = campeonato.pico.id
+		this._selectPista.value = campeonato.pista.id
 		const data = campeonato.getDataAsString()
 
 		this._inputData.value = data.slice(0, 10).replaceAll('/', '-')
@@ -225,7 +225,7 @@ export class CampeonatoFormView extends View2 {
 			data.setMinutes(this._inputMinuto.value)
 			this._campeonato.setData(data)
 
-			this._campeonato.pico = { id: this._selectPista.value }
+			this._campeonato.pista = { id: this._selectPista.value }
 			this._campeonato.midiasDivulgacao = this._uploadMidiasDivulgacao.getListIdsSrcFiles().map(id => ({ id }))
 			this._campeonato.fotos = this._uploadFotosCampeonato.getListIdsSrcFiles().map(id => ({ id }))
 

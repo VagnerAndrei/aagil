@@ -5,12 +5,12 @@ import { View } from '../components/View.js'
 import { get } from '../fetch.js'
 import { atletaLogado } from '../sessao.js'
 import { FotosUpload } from '../controller/FotosUpload.js'
-import { picos } from '../navegacao.js'
+import { pistas } from '../navegacao.js'
 
-export class PicoRegistro extends View {
+export class PistaRegistro extends View {
 
 	constructor() {
-		super('Registro de pico')
+		super('Registro de pista')
 		this._maxFiles = 10
 		this._maxSize = 10
 		this._tags = []
@@ -59,9 +59,9 @@ export class PicoRegistro extends View {
 
 		this._buttonEnviar.addEventListener('click', event => this.enviar(event))
 
-		this._formPico = document.querySelector('#form-pico')
+		this._formPista = document.querySelector('#form-pista')
 
-		this._formPico.addEventListener('submit', e => e.preventDefault())
+		this._formPista.addEventListener('submit', e => e.preventDefault())
 
 		this._inputTag.addEventListener('keypress', (event) => {
 			if (event.keyCode == 13) {
@@ -82,7 +82,7 @@ export class PicoRegistro extends View {
 	}
 
 	async template() {
-		return this.getHTML('pages/user/pico-registro.html')
+		return this.getHTML('pages/user/pista-registro.html')
 	}
 
 	async consultaCEP(cep) {
@@ -107,7 +107,7 @@ export class PicoRegistro extends View {
 
 
 	enviar() {
-		if (this._formPico.checkValidity() && this._validCEP) {
+		if (this._formPista.checkValidity() && this._validCEP) {
 			const imgs = document.querySelectorAll('.imgFileObject')
 
 			const formData = new FormData()
@@ -133,7 +133,7 @@ export class PicoRegistro extends View {
 				"atleta": {
 					"id": atletaLogado.id
 				},
-				"picoNovo": {
+				"pistaNovo": {
 					"titulo": this._inputTitulo.value,
 					"endereco": {
 						"cep": this._inputCEP.value.replace('-', ''),
@@ -160,7 +160,7 @@ export class PicoRegistro extends View {
 
 			this._xhr = new XMLHttpRequest();
 
-			this._xhr.open('POST', 'api/picos')
+			this._xhr.open('POST', 'api/pistas')
 
 			const upload = imgs.length != 0
 			if (upload) {
@@ -168,7 +168,7 @@ export class PicoRegistro extends View {
 				})
 
 				this._xhr.upload.addEventListener('loadstart', () => {
-					this._modalUpload = new FotosUpload('Registro de Pico - Upload', () => this.uploadedHandler(), () => this.cancelarUpload())
+					this._modalUpload = new FotosUpload('Registro de Pista - Upload', () => this.uploadedHandler(), () => this.cancelarUpload())
 				})
 
 				this._xhr.upload.addEventListener('abort', () => {
@@ -201,7 +201,7 @@ export class PicoRegistro extends View {
 							this._modalUpload.fecharModal()
 							break
 						case 202:
-							if (!upload) this._modalUpload = new FotosUpload('Registro de Pico', () => this.uploadedHandler())
+							if (!upload) this._modalUpload = new FotosUpload('Registro de Pista', () => this.uploadedHandler())
 							this._modalUpload.setResult(this._xhr.responseText)
 							break
 						case 500:
@@ -221,12 +221,12 @@ export class PicoRegistro extends View {
 		} else {
 			if (!this._validCEP)
 				this._inputCEP.focus()
-			this._formPico.reportValidity()
+			this._formPista.reportValidity()
 		}
 	}
 
 	uploadedHandler() {
-		picos('picoRegistroEvent')
+		pistas('pistaRegistroEvent')
 		window.scroll(0, 500)
 	}
 

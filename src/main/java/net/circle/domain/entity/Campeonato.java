@@ -44,7 +44,7 @@ public class Campeonato extends AbstractEntity {
 
 	@ManyToOne
 	@JoinColumn(nullable = false)
-	private Pico pico;
+	private Pista pista;
 	
 	@JsonFormat(pattern = "MM/dd/yyyy HH:mm:ss")
 	@JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -102,12 +102,12 @@ public class Campeonato extends AbstractEntity {
 		this.descricao = descricao;
 	}
 
-	public Pico getPico() {
-		return pico;
+	public Pista getPista() {
+		return pista;
 	}
 
-	public void setPico(Pico pico) {
-		this.pico = pico;
+	public void setPista(Pista pista) {
+		this.pista = pista;
 	}
 
 	public LocalDateTime getData() {

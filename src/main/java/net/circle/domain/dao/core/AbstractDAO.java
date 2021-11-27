@@ -219,5 +219,13 @@ public abstract class AbstractDAO<T extends AbstractEntity> implements IDAO<T> {
 		return ((Long) (query.getSingleResult())).intValue();
 
 	}
+	
+	public int consultarCountByPropertyNullable(String propertyName, final Object value) {
+		final String queryString = "select count(model) from " + getName() + " model where model." + propertyName
+				+ " " + value;
+		Query query = em.createQuery(queryString);
+		return ((Long) (query.getSingleResult())).intValue();
+
+	}
 
 }

@@ -7,21 +7,21 @@ import { Atleta } from './controller/Atleta.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
 import { Manobras } from './controller/Manobras.js';
-import { Picos } from './controller/Picos.js';
-import { PicoRegistro } from './controller/PicoRegistro.js';
+import { Pistas } from './controller/Pistas.js';
+import { PistaRegistro } from './controller/PistaRegistro.js';
 import { View } from './components/View.js';
 import { CampeonatoListaController } from './controller/CampeonatoListaController.js'
 import { CampeonatoFormController } from './controller/CampeonatoFormController.js'
 import { CampeonatoController } from './controller/CampeonatoController.js'
 
-const instances = { current: undefined, atletas: undefined, picos: undefined }
+const instances = { current: undefined, atletas: undefined, pistas: undefined }
 
 const views = {
 	home: "home",
 	postagem: "postagem",
 	manobras: "manobras",
-	picos: "picos",
-	pico_registro: "pico-registro",
+	pistas: "pistas",
+	pista_registro: "pista-registro",
 	campeonatos: "campeonatos",
 	campeonato: "campeonato",
 	campeonato_registro: "campeonato-registro",
@@ -63,9 +63,9 @@ function verificaURL(event) {
 			break;
 		case views.atletas: atletas()
 			break;
-		case views.picos: picos()
+		case views.pistas: pistas()
 			break
-		case views.pico_registro: picoRegistro()
+		case views.pista_registro: pistaRegistro()
 			break
 		case views.campeonatos: campeonatos()
 			break
@@ -103,21 +103,21 @@ function postagem(e) {
 	if (e) changeState({ view: views.postagem })
 }
 
-function picos(e) {
+function pistas(e) {
 	current_verify()
-	if (!instances.picos) instances.picos = new Picos()
+	if (!instances.pistas) instances.pistas = new Pistas()
 	else {
-		instances.picos.display(true)
-		instances.picos.applyRole()
+		instances.pistas.display(true)
+		instances.pistas.applyRole()
 	}
-	instances.current = instances.picos
-	if (e) changeState({ view: views.picos })
+	instances.current = instances.pistas
+	if (e) changeState({ view: views.pistas })
 }
 
-function picoRegistro(e) {
+function pistaRegistro(e) {
 	current_verify()
-	instances.current = new PicoRegistro()
-	if (e) changeState({ view: views.pico_registro })
+	instances.current = new PistaRegistro()
+	if (e) changeState({ view: views.pista_registro })
 }
 
 async function perfil(event, idAtleta) {
@@ -188,7 +188,7 @@ function current_verify() {
 	if (instances.current) {
 		switch (instances.current.constructor) {
 //			case Atletas:
-//			case Picos:
+//			case Pistas:
 //			case Atleta:
 //			case CampeonatoListaController:
 //				instances.current.display(false)
@@ -264,4 +264,4 @@ function debounce(fn) {
 	timer = setTimeout(fn, 1);
 }
 
-export { views, verificaURL, registrar, acessar, home, postagem, manobras, picos, picoRegistro, campeonatos, campeonato, campeonatoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }
+export { views, verificaURL, registrar, acessar, home, postagem, manobras, pistas, pistaRegistro, campeonatos, campeonato, campeonatoRegistro, sobre, perfil, atletas, pagina_nao_encontrada, applyRole }

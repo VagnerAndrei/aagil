@@ -15,7 +15,7 @@ import net.circle.domain.dao.CategoriaCampeonatoDAO;
 import net.circle.domain.dao.FotoDAO;
 import net.circle.domain.dao.InscricaoCampeonatoDAO;
 import net.circle.domain.dao.NotaCampeonatoDAO;
-import net.circle.domain.dao.PicoDAO;
+import net.circle.domain.dao.PistaDAO;
 import net.circle.domain.dao.PremiacaoCampeonatoDAO;
 import net.circle.domain.entity.Atleta;
 import net.circle.domain.entity.Campeonato;
@@ -45,7 +45,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 	private NotaCampeonatoDAO notaCampeonatoDAO;
 
 	@Inject
-	private PicoDAO picoDAO;
+	private PistaDAO pistaDAO;
 
 	@Inject
 	private FotoDAO fotoDAO;
@@ -61,7 +61,7 @@ public class CampeonatoBusiness implements ICampeonatoBusiness {
 
 			entity.setTitulo(model.getTitulo());
 			entity.setDescricao(model.getDescricao());
-			entity.setPico(picoDAO.findById(model.getPico().getId()).get());
+			entity.setPista(pistaDAO.findById(model.getPista().getId()).get());
 			entity.setData(model.getData());
 
 			entity.setMidiasDivulgacao(model.getMidiasDivulgacao());

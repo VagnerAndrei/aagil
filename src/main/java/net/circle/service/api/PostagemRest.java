@@ -29,7 +29,7 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.circle.business.exception.enums.NegocioExcecao;
-import net.circle.business.exception.enums.PicoExcecao;
+import net.circle.business.exception.enums.PistaExcecao;
 import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.business.interfaces.IPostagemBusiness;
 import net.circle.business.util.ImagemUtil;
@@ -91,7 +91,7 @@ public class PostagemRest {
 					var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
 
 					if (!Arrays.asList(fotoFormatos).contains(extensao))
-						return Response.status(Status.BAD_REQUEST).entity(new ErroModel(PicoExcecao.FORMATO_INVALIDO))
+						return Response.status(Status.BAD_REQUEST).entity(new ErroModel(PistaExcecao.FORMATO_INVALIDO))
 								.build();
 
 					// convert the uploaded file to inputstream

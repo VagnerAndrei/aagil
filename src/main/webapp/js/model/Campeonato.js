@@ -4,12 +4,12 @@
 import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
 export class Campeonato {
 
-	constructor({ id, titulo, descricao, pico, data, categorias, arbitros, midiasDivulgacao, fotos, regulamento }) {
+	constructor({ id, titulo, descricao, pista, data, categorias, arbitros, midiasDivulgacao, fotos, regulamento }) {
 		this.id = id
 		this.titulo = titulo
 		this.descricao = descricao
 		this.data = data
-		this.pico = pico
+		this.pista = pista
 		this.categorias = categorias ? categorias.map(categoria => new CategoriaCampeonato(categoria)) : []
 		this.arbitros = arbitros || []
 		this.midiasDivulgacao = midiasDivulgacao || []

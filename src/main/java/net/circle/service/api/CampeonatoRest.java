@@ -41,7 +41,7 @@ import net.circle.domain.entity.CategoriaCampeonato;
 import net.circle.domain.entity.Foto;
 import net.circle.domain.entity.InscricaoCampeonato;
 import net.circle.domain.entity.NotaCampeonato;
-import net.circle.domain.entity.Pico;
+import net.circle.domain.entity.Pista;
 import net.circle.domain.entity.PremiacaoCampeonato;
 import net.circle.service.model.AtletaModel;
 import net.circle.service.model.CampeonatoModel;
@@ -447,7 +447,7 @@ public class CampeonatoRest {
 		model.setTitulo(campeonato.getTitulo());
 		model.setDescricao(campeonato.getDescricao());
 		model.setData(campeonato.getData());
-		model.setPico(ParseModelUtil.parseModel(campeonato.getPico(), false));
+		model.setPista(ParseModelUtil.parseModel(campeonato.getPista(), false));
 		model.setData(campeonato.getData());
 
 		model.setArbitros(campeonato.getArbitros().stream().map(arbitro -> ParseModelUtil.parseModel(arbitro, true))
@@ -519,9 +519,9 @@ public class CampeonatoRest {
 		campeonato.setDescricao(model.getDescricao());
 		campeonato.setData(model.getData());
 
-		if (model.getPico() != null) {
-			campeonato.setPico(new Pico());
-			campeonato.getPico().setId(model.getPico().getId());
+		if (model.getPista() != null) {
+			campeonato.setPista(new Pista());
+			campeonato.getPista().setId(model.getPista().getId());
 		}
 
 		for (CategoriaCampeonatoModel categoriaModel : model.getCategorias()) {

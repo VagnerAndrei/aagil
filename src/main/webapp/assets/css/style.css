@@ -279,7 +279,7 @@ iframe{
 #img-topo {
 	width: 100%;
 	height: 100%;
-	content: url("../img/bg/final-campeonato.png");
+	content: url("../img/bg/magno-marex.jpg");
 	position: relative;
 	margin: auto;
 }
@@ -289,12 +289,12 @@ iframe{
 	width: auto;
 	border-radius: 5px;
 	max-width: 1024px;
-	min-height: 300px;
-	margin: 100px auto 50px auto ;
+	min-height: 400px;
+	margin: 70px auto 10px auto ;
 	background-position: center;
-	background-size: inherit;
+	background-size: cover;
 	background-repeat: no-repeat;
-	background-image: url("../img/bg/final-campeonato.png");
+	background-image: url("../img/bg/magno-marex.jpg");
 }
 
 /* 		HOME.HTML */
@@ -526,21 +526,21 @@ main p {
 	opacity: 100%;
 	cursor: pointer;
 }
-/* PICOS */
+/* PISTAS */
 
 .form-item button{
 	height: var(--select-button-heigth);
 	background-color: var(--blue-400);
 }
 
-.botao-form-pico{
+.botao-form-pista{
 	margin: 50px auto ;
 	display: block;
 	width: 250px;
 }
 
 
-#form-pico{
+#form-pista{
 	width: 100vh;
 }
 
@@ -581,47 +581,47 @@ main p {
 .form-item strong{
 	color: red;
 }
-.pico-upload{
+.pista-upload{
 	width: 100%;
 }
 
-.pico-upload progress, .pico-upload label{
+.pista-upload progress, .pista-upload label{
 	display: block;
 	width: 100%;
 	margin-bottom: 10px;
 }
 
-.pico-upload label{
+.pista-upload label{
 	text-align: center;
 }
 
-.lista-picos {
+.lista-pistas {
 	display: block;
 	list-style: none;
 }
 
-.lista-picos li{
+.lista-pistas li{
 	cursor: pointer;
 	margin: 5px 0 5px -40px;
 }
 
-.lista-picos label{
+.lista-pistas label{
 	cursor: pointer;
 }
 
-.lista-picos li img{
+.lista-pistas li img{
 	margin: 5px 10px 5px 0;
 	max-width: 150px;
 	display: block;
 }
 
-.informacoes-pico{
+.informacoes-pista{
 	width: 100%;
 	display: flex;
 	flex-direction: column;
 }
 
-.lista-picos li strong{
+.lista-pistas li strong{
 	display: block;
 	margin: auto;
 	text-align: left;
@@ -657,7 +657,7 @@ main p {
 	margin: 5px auto 0 5px;
 }
 
-#form-pico ul li, #form-postagem ul li, .pico-campeonato{
+#form-pista ul li, #form-postagem ul li, .pista-campeonato{
 	padding: 10px;
 	border-radius: 10px;
 	background-color: var(--yellow-300);
@@ -693,7 +693,7 @@ main p {
 }
 
 .lista-imagens li{
-	opacity: 80%
+	opacity: 90%
 }
 
 .lista-imagens li:hover{
@@ -1151,4 +1151,11 @@ main p {
 	vertical-align: top !important;
 	display: inline-block !important;
 	width: auto !important;
+}
+
+.foto-index{
+	border-radius: 25px;
+	margin: 50px;
+	max-height: 85vh;
+	align-self: center;
 }

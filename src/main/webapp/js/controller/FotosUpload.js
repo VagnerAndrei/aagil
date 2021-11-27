@@ -41,7 +41,7 @@ export class FotosUpload extends Modal {
 
 	template() {
 		return `
-				<form class="pico-upload">
+				<form class="pista-upload">
 					<progress id="progress" value="0" max="100"></progress>
 					<label id="label-success"></label>
 					<label id="label-progress" class="mensagem-progress"></label>

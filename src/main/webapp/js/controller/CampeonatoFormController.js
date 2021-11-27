@@ -51,7 +51,7 @@ export class CampeonatoFormController extends Controller {
 
 	_consultarPistas() {
 		return async () => {
-			const response = await get('api/picos/simple')
+			const response = await get('api/pistas/simple')
 
 			switch (response.status) {
 				case 200:
@@ -132,6 +132,7 @@ export class CampeonatoFormController extends Controller {
 			if (this._upload)
 				this._configureXHRUpload()
 			this._configureXHRResponse()
+			console.log(campeonato)
 			this._xhr.send(formData)
 		}
 	}

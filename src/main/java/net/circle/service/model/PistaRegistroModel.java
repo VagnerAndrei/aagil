@@ -1,29 +1,29 @@
 package net.circle.service.model;
 
-public class PicoRegistroModel {
+public class PistaRegistroModel {
 	
-	private IDModel picoAtual;
+	private IDModel pistaAtual;
 
-	private PicoModel picoNovo;
+	private PistaModel pistaNovo;
 
 	private IDModel atleta;
 
 	private String observacoes;
 
-	public IDModel getPicoAtual() {
-		return picoAtual;
+	public IDModel getPistaAtual() {
+		return pistaAtual;
 	}
 
-	public void setPicoAtual(IDModel picoAtual) {
-		this.picoAtual = picoAtual;
+	public void setPistaAtual(IDModel pistaAtual) {
+		this.pistaAtual = pistaAtual;
 	}
 
-	public PicoModel getPicoNovo() {
-		return picoNovo;
+	public PistaModel getPistaNovo() {
+		return pistaNovo;
 	}
 
-	public void setPicoNovo(PicoModel picoNovo) {
-		this.picoNovo = picoNovo;
+	public void setPistaNovo(PistaModel pistaNovo) {
+		this.pistaNovo = pistaNovo;
 	}
 
 	public IDModel getAtleta() {

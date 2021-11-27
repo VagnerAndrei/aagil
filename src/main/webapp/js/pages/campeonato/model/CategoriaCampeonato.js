@@ -2,7 +2,7 @@
  * 
  */
 import { InscricaoCampeonato } from './../model/InscricaoCampeonato.js'
-import { Util } from './../util/Util.js'
+import { Util } from '../../../util/Util.js'
 
 export class CategoriaCampeonato {
 
@@ -15,10 +15,10 @@ export class CategoriaCampeonato {
 		this.valorInscricao = valorInscricao ? new Number(valorInscricao).toFixed(2) : 0
 		this.premiacoes = premiacoes
 		this.inscricoes = inscricoes ? inscricoes.map(inscricao => new InscricaoCampeonato(inscricao)) : []
-		this.inscricoes = this.inscricoes.sort(function(a, b) {
+		this.inscricoes = this.inscricoes.sort(function (a, b) {
 			if (Util.padraoString(a.atleta.nome) > Util.padraoString(b.atleta.nome))
 				return 1
-			if (Util.padraoString(a.atleta.nome) < Util.padraoString(b.atleta.nome)) 
+			if (Util.padraoString(a.atleta.nome) < Util.padraoString(b.atleta.nome))
 				return -1
 			// a must be equal to b
 			return 0
@@ -28,13 +28,13 @@ export class CategoriaCampeonato {
 		this.exibirClassificacao = exibirClassificacao;
 
 	}
-	
-	
+
+
 	getRankAtleta() {
 		//		console.log('CATEGORIA')
 		let rank = []
 		this.inscricoes.forEach(inscricao => rank.push({ idInscricao: inscricao.id, totalVolta1: inscricao.getTotalVolta(1), total: inscricao.getTotalGeral() }))
-		rank = rank.sort(function(a, b) {
+		rank = rank.sort(function (a, b) {
 			if (new Number(a.total) < new Number(b.total)) return 1
 			if (new Number(a.total) > new Number(b.total)) return -1
 			if (new Number(a.totalVolta1) < new Number(b.totalVolta1)) return 1

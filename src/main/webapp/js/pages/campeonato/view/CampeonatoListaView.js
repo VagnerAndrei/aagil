@@ -1,10 +1,10 @@
 /**
  * 		Lista de Campeonatos
  */
-import { ListaView } from '../components/ListaView.js'
+import { ListaView } from '../../../components/ListaView.js'
 import { Campeonato } from '../model/Campeonato.js'
-import { campeonato, campeonatoRegistro } from '../navegacao.js'
-import { isAdmin } from './../sessao.js'
+import { campeonato, campeonatoRegistro } from '../../../navegacao.js'
+import { isAdmin } from '../../../sessao.js'
 
 export class CampeonatoListaView extends ListaView {
 
@@ -17,10 +17,10 @@ export class CampeonatoListaView extends ListaView {
 		this._buttonCriarCampeonato = document.querySelector("#button-criar-campeonato")
 
 		this._buttonCriarCampeonato.addEventListener('click', () => {
-			campeonatoRegistro({event: 'clickEvent'})
+			campeonatoRegistro({ event: 'clickEvent' })
 		})
-		
-		this._addRoledElement({id : 'button-criar-campeonato' , className : 'botao-inserir'})
+
+		this._addRoledElement({ id: 'button-criar-campeonato', className: 'botao-inserir' })
 		this._applyRole(isAdmin())
 	}
 
@@ -44,16 +44,16 @@ export class CampeonatoListaView extends ListaView {
 
 	_adicionarClickEvent(model) {
 		document.querySelector(`#a-campeonato-${model.id}`).addEventListener('click', () => {
-			campeonato({ event: 'campeonatoClickEvent', idCampeonato: model.id})
+			campeonato({ event: 'campeonatoClickEvent', idCampeonato: model.id })
 		})
-		
-		if(isAdmin())
+
+		if (isAdmin())
 			document.querySelector(`#img-editar-campeonato-${model.id}`).addEventListener('click', () => {
-			campeonatoRegistro({ event: 'editarCampeonatoClickEvent', idCampeonato: model.id})
-		})
+				campeonatoRegistro({ event: 'editarCampeonatoClickEvent', idCampeonato: model.id })
+			})
 	}
-	
-	applyRole(){
+
+	applyRole() {
 		this._applyRole(isAdmin())
 	}
 

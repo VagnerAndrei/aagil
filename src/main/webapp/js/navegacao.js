@@ -3,16 +3,16 @@ import { Home } from './controller/Home.js';
 import { Postagem } from './controller/Postagem.js';
 import { Sobre } from './controller/Sobre.js';
 import { Atletas } from './controller/Atletas.js';
-import { Atleta } from './controller/Atleta.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
 import { Manobras } from './controller/Manobras.js';
 import { Pistas } from './controller/Pistas.js';
 import { PistaRegistro } from './controller/PistaRegistro.js';
 import { View } from './components/View.js';
-import { CampeonatoListaController } from './controller/CampeonatoListaController.js'
-import { CampeonatoFormController } from './controller/CampeonatoFormController.js'
-import { CampeonatoController } from './controller/CampeonatoController.js'
+import { CampeonatoListaController } from './pages/campeonato/controller/CampeonatoListaController.js'
+import { CampeonatoFormController } from './pages/campeonato/controller/CampeonatoFormController.js'
+import { CampeonatoController } from './pages/campeonato/controller/CampeonatoController.js'
+import { AtletaController } from './pages/atleta/controller/AtletaController.js'
 
 const instances = { current: undefined, atletas: undefined, pistas: undefined }
 
@@ -70,7 +70,7 @@ function verificaURL(event) {
 		case views.campeonatos: campeonatos()
 			break
 		case views.campeonato:
-			if (id && !isNaN(id) && id > 0) campeonato({ event, idCampeonato : id })
+			if (id && !isNaN(id) && id > 0) campeonato({ event, idCampeonato: id })
 			else pagina_nao_encontrada();
 			break
 		case views.campeonato_registro: campeonatoRegistro({})
@@ -123,32 +123,32 @@ function pistaRegistro(e) {
 async function perfil(event, idAtleta) {
 	current_verify()
 	const idAtual = (idAtleta ? idAtleta : atletaLogado.id)
-//	if (!instances.atleta)
-//		instances.atleta = new Atleta(idAtual)
-//	else {
-//		await instances.atleta.consultarAtleta(idAtual)
-//		instances.atleta.applyRole(atletaLogado ? 'User' : undefined)
-//		instances.atleta.display(true)
-//	}
-//	instances.current = instances.atleta
-	instances.current = new Atleta(idAtual)
+	//	if (!instances.atleta)
+	//		instances.atleta = new Atleta(idAtual)
+	//	else {
+	//		await instances.atleta.consultarAtleta(idAtual)
+	//		instances.atleta.applyRole(atletaLogado ? 'User' : undefined)
+	//		instances.atleta.display(true)
+	//	}
+	//	instances.current = instances.atleta
+	instances.current = new AtletaController({idAtleta : idAtual })
 	changeState({ view: views.atleta, event: event instanceof Event ? event.type : event, id: idAtual })
 }
 
 function atletas(clickEvent) {
 	current_verify()
-//	if (!instances.atletas) instances.atletas = new Atletas()
-//	else instances.atletas.display(true)
-//	instances.current = instances.atletas
+	//	if (!instances.atletas) instances.atletas = new Atletas()
+	//	else instances.atletas.display(true)
+	//	instances.current = instances.atletas
 	instances.current = new Atletas()
 	if (clickEvent) changeState({ view: views.atletas })
 }
 
 function campeonatos(clickEvent) {
 	current_verify()
-//	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
-//	else instances.campeonatos.display(true)
-//	instances.current = instances.campeonatos
+	//	if (!instances.campeonatos) instances.campeonatos = new CampeonatoListaController()
+	//	else instances.campeonatos.display(true)
+	//	instances.current = instances.campeonatos
 	instances.current = instances.campeonatos = new CampeonatoListaController()
 	if (clickEvent) changeState({ view: views.campeonatos })
 }
@@ -159,9 +159,9 @@ function campeonato({ event, idCampeonato }) {
 	if (event) changeState({ view: views.campeonato, id: idCampeonato })
 }
 
-function campeonatoRegistro({event, idCampeonato}) {
+function campeonatoRegistro({ event, idCampeonato }) {
 	current_verify()
-	instances.current = new CampeonatoFormController({idCampeonato})
+	instances.current = new CampeonatoFormController({ idCampeonato })
 	if (event) changeState({ view: views.campeonato_registro })
 }
 
@@ -187,12 +187,12 @@ function current_verify() {
 	//isLogged('navigationEvent')
 	if (instances.current) {
 		switch (instances.current.constructor) {
-//			case Atletas:
-//			case Pistas:
-//			case Atleta:
-//			case CampeonatoListaController:
-//				instances.current.display(false)
-//				break
+			//			case Atletas:
+			//			case Pistas:
+			//			case Atleta:
+			//			case CampeonatoListaController:
+			//				instances.current.display(false)
+			//				break
 			default:
 				instances.current.remove()
 				break

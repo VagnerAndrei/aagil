@@ -1,15 +1,15 @@
 /**
  * 
  */
-import { View2 } from './../components/View2.js'
-import { Campeonato } from './../model/Campeonato.js'
-import { Endereco } from './../model/Endereco.js'
-import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
+import { View2 } from '../../../components/View2.js'
+import { Campeonato } from '../model/Campeonato.js'
+import { Endereco } from '../../../model/Endereco.js'
+import { CategoriaCampeonato } from '../model/CategoriaCampeonato.js'
 import { NotaCampeonato } from './../model/NotaCampeonato.js'
-import { isAdmin, isUser, ROLES } from './../sessao.js'
-import { registrar, perfil } from './../navegacao.js'
-import { SelecionarAtletaModalController } from './../controller/SelecionarAtletaModalController.js'
-import { AlbumViewer } from '../controller/AlbumViewer.js'
+import { isAdmin, isUser, ROLES } from '../../../sessao.js'
+import { registrar, perfil } from '../../../navegacao.js'
+import { SelecionarAtletaModalController } from '../../../controller/SelecionarAtletaModalController.js'
+import { AlbumViewer } from '../../../controller/AlbumViewer.js'
 
 export class CampeonatoView extends View2 {
 
@@ -335,7 +335,7 @@ export class CampeonatoView extends View2 {
 		this._campeonato.midiasDivulgacao.forEach(midia => {
 			this._addMidiaDivulgacao(`api/fotos/${midia.id}/thumb`)
 		})
-		
+
 		this._campeonato.fotos.forEach(foto => {
 			this._addFotoCampeonato(`api/fotos/${foto.id}/thumb`)
 		})
@@ -346,24 +346,24 @@ export class CampeonatoView extends View2 {
 		this._ulMidiasDivulgacao.appendChild(li)
 		li.addEventListener('click', (event) => {
 			new AlbumViewer(
-				`${this._campeonato.titulo} - Mídias de divulgação`, 
-				this._campeonato.midiasDivulgacao, 
+				`${this._campeonato.titulo} - Mídias de divulgação`,
+				this._campeonato.midiasDivulgacao,
 				Array.prototype.indexOf.call(this._ulMidiasDivulgacao.childNodes, event.currentTarget)
-				)
+			)
 		})
 	}
-	
+
 	_addFotoCampeonato(src) {
 		const li = this._templateLiImg(src)
 		li.addEventListener('click', (event) => {
-			new AlbumViewer(`${this._campeonato.titulo} - Fotos do campeonato`, 
-			this._campeonato.fotos,
-			Array.prototype.indexOf.call(this._ulFotosCampeonato.childNodes, event.currentTarget))
+			new AlbumViewer(`${this._campeonato.titulo} - Fotos do campeonato`,
+				this._campeonato.fotos,
+				Array.prototype.indexOf.call(this._ulFotosCampeonato.childNodes, event.currentTarget))
 		})
 		this._ulFotosCampeonato.appendChild(li)
 	}
-	
-	_templateLiImg(src){
+
+	_templateLiImg(src) {
 		const li = document.createElement('li')
 		const img = document.createElement('img')
 		img.height = 80

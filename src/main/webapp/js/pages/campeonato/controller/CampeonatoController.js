@@ -1,12 +1,12 @@
 /**
  * 
  */
-import { Controller } from './../components/Controller.js'
+import { Controller } from './../../../components/Controller.js'
 import { CampeonatoView } from './../view/CampeonatoView.js'
-import { get, post } from './../fetch.js'
+import { get, post } from './../../../fetch.js'
 import { Campeonato } from './../model/Campeonato.js'
-import { atletaLogado } from './../sessao.js'
-import { pagina_nao_encontrada } from './../navegacao.js'
+import { atletaLogado } from './../../../sessao.js'
+import { pagina_nao_encontrada } from './../../../navegacao.js'
 
 export class CampeonatoController extends Controller {
 

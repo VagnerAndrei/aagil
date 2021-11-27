@@ -4,23 +4,30 @@
 export class Modal {
 
 	constructor(titulo, displayCloseButton = true, fullscreen = false) {
+
 		this._divModal = document.querySelector('#div-modal')
+
 		this._titulo = titulo
-		this._divModal.innerHTML = this.modal()
+		this._divModal.innerHTML = this._modal()
+
 		if (!displayCloseButton) document.querySelector('#span-botao-fechar-modal').style.display = 'none'
 		this._divBGModal = document.querySelector('#div-bg-modal')
+
 		document.querySelector('#span-botao-fechar-modal').addEventListener('click', event => this.fecharModal(event))
-		document.querySelector('#div-conteudo-modal').innerHTML = this.template()
+
+		document.querySelector('#div-conteudo-modal').innerHTML = this._template()
+
 		if (fullscreen) this._divBGModal.classList.add('modal-fullscreen')
+
 		document.body.style.overflow = 'hidden'
 		this._divBGModal.style.display = 'block'
 	}
 
-	template() {
+	_template() {
 		throw new Error('Not Yet Implemented')
 	}
 
-	modal() {
+	_modal() {
 		return `<div id="div-bg-modal" class="modal">
 					<div class="modal-content">
 						<header id="header" class="modal-container modal-header">

@@ -15,11 +15,22 @@ export class View2 {
 		this._update()
 	}
 	
-	_addRoledElement({id, className, role='ADMIN'}){
-		this._roledElements.push({id, className, role})
+	_focusSroll(component){
+		console.log(component, 'focus')
+		component.focus({ preventScroll: false })
+	}
+	
+	_scroll(y){
+		window.scroll(0, y)
+	}
+	
+	_addRoledElement({id, className, role='ADMIN', idUser}){
+		console.log('add', id, className)
+		this._roledElements.push({id, className, role, idUsuario})
 	}
 
 	_applyRole(isAdmin) {
+		console.log('apply', isAdmin, this._roledElements)
 		this._roledElements.forEach(element => document.getElementById(element.id).className = isAdmin ? element.className : 'display-none')
 	}
 

@@ -91,4 +91,8 @@ export function userRoles(){
 	return atletaLogado ? atletaLogado.usuario.perfis : [] 
 }
 
+export function getIdUser(){
+	return atletaLogado ? atletaLogado.id : undefined
+}
+
 export const ROLES = { ADMIN : 'ADMIN' , USER: 'USER'}

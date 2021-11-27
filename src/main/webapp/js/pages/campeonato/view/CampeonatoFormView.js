@@ -1,13 +1,13 @@
 /**
  * 
  */
-import { View2 } from './../components/View2.js'
-import { UploadFormItem } from './../components/UploadFormItem.js'
-import { CategoriaCampeonato } from './../model/CategoriaCampeonato.js'
-import { PremiacaoCampeonato } from './../model/PremiacaoCampeonato.js'
+import { View2 } from '../../../components/View2.js'
+import { UploadFormItem } from '../../../components/UploadFormItem.js'
+import { CategoriaCampeonato } from '../model/CategoriaCampeonato.js'
+import { PremiacaoCampeonato } from '../model/PremiacaoCampeonato.js'
 import { Campeonato } from './../model/Campeonato.js'
-import { Atleta } from './../model/Atleta.js'
-import { AtletaForm } from './../controller/AtletaForm.js'
+import { Atleta } from '../../atleta/model/Atleta.js'
+import { AtletaForm } from '../../../controller/AtletaForm.js'
 
 export class CampeonatoFormView extends View2 {
 
@@ -458,15 +458,15 @@ export class CampeonatoFormView extends View2 {
 			this._addArbitro()
 		})
 	}
-	
+
 	_configureCriarArbitro() {
 		this._buttonCriarArbitro.addEventListener('click', () => {
-			this._adicionarArbitro = new AtletaForm(undefined, this._criarArbitroCallBackHandler(), true, 'Criar Atleta Árbitro' )
+			this._adicionarArbitro = new AtletaForm(undefined, this._criarArbitroCallBackHandler(), true, 'Criar Atleta Árbitro')
 		})
 	}
-	
-	_criarArbitroCallBackHandler(){
-		return ({id, nome}) => {
+
+	_criarArbitroCallBackHandler() {
+		return ({ id, nome }) => {
 			this._setupArbitro({ id, nome })
 			this._campeonato.arbitros.push(new Atleta({ id }))
 			this._buttonAtualizarArbitros.dispatchEvent(new Event('click'))

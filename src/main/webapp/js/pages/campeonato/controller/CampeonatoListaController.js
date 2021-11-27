@@ -1,7 +1,7 @@
 /**
  * 		Lista Campeonato Controller
  */
-import { ListaController } from '../components/ListaController.js'
+import { ListaController } from '../../../components/ListaController.js'
 import { CampeonatoListaView } from '../view/CampeonatoListaView.js'
 
 export class CampeonatoListaController extends ListaController {
@@ -17,14 +17,14 @@ export class CampeonatoListaController extends ListaController {
 			this._view.updateList(this._lista)
 		}
 	}
-	
-	_getView(){
+
+	_getView() {
 		return this._view
 	}
-	
-	applyRole(){
+
+	applyRole() {
 		this._view.updateList(this._lista)
 		this._view.applyRole()
 	}
-	
+
 }

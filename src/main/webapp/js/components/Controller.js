@@ -3,7 +3,9 @@
  */
 export class Controller {
 
-	_getView(){}
+	_getView() {
+		return this._view
+	}
 
 	remove() {
 		this._getView().remove()

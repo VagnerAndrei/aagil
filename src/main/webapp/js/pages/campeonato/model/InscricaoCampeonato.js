@@ -2,7 +2,7 @@
  * 
  */
 import { NotaCampeonato } from './../model/NotaCampeonato.js'
-import { Atleta } from './../model/Atleta.js'
+import { Atleta } from '../../atleta/model/Atleta.js'
 
 export class InscricaoCampeonato {
 
@@ -16,7 +16,7 @@ export class InscricaoCampeonato {
 
 	getTotalVolta(volta) {
 		let total = 0
-		this.notas?.forEach(nota => total += (nota.volta == volta) ? nota.nota : 0)	
+		this.notas?.forEach(nota => total += (nota.volta == volta) ? nota.nota : 0)
 		return new Number(total).toFixed(1)
 	}
 
@@ -25,7 +25,7 @@ export class InscricaoCampeonato {
 		this.notas?.forEach(nota => total += nota.nota)
 		return new Number(total).toFixed(1)
 	}
-	
+
 	//pattern = "dd/MM/yyyy HH:mm:ss"
 	_getDataFromString(data) {
 		const day = data.slice(0, 2)

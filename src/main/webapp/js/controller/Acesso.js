@@ -26,8 +26,8 @@ export class Acesso extends View {
 
 		document.querySelector('form').addEventListener('submit', event => this.acessar(event));
 	}
-	
-	template(){
+
+	template() {
 		return `
 			<div>
 				<h1>Acesso</h1>
@@ -78,7 +78,7 @@ export class Acesso extends View {
 						if (response.status == 202) {
 							loginHandler(value, 'authEvent')
 						}
-						else{
+						else {
 							messages.find(message => message.htmlFor == (value.campo ? value.campo : "Email")).textContent = value.mensagem
 						}
 					})

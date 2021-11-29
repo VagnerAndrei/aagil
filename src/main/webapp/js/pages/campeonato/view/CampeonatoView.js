@@ -8,7 +8,7 @@ import { CategoriaCampeonato } from '../model/CategoriaCampeonato.js'
 import { NotaCampeonato } from './../model/NotaCampeonato.js'
 import { isAdmin, isUser, ROLES } from '../../../sessao.js'
 import { registrar, perfil } from '../../../navegacao.js'
-import { SelecionarAtletaModalController } from '../../../controller/SelecionarAtletaModalController.js'
+import { SelecionarAtletaController } from '../../../pages/atleta/controller/SelecionarAtletaController.js'
 import { AlbumViewer } from '../../../controller/AlbumViewer.js'
 
 export class CampeonatoView extends View2 {
@@ -332,13 +332,19 @@ export class CampeonatoView extends View2 {
 		this._applyRole(isAdmin())
 		this._setRank()
 
+		this._limparMidiasDivulgacao()
 		this._campeonato.midiasDivulgacao.forEach(midia => {
 			this._addMidiaDivulgacao(`api/fotos/${midia.id}/thumb`)
 		})
 
+		this._limparFotosCampeoanto()
 		this._campeonato.fotos.forEach(foto => {
 			this._addFotoCampeonato(`api/fotos/${foto.id}/thumb`)
 		})
+	}
+	
+	_limparMidiasDivulgacao(){
+		this._ulMidiasDivulgacao.innerHTML = ''
 	}
 
 	_addMidiaDivulgacao(src) {
@@ -351,6 +357,10 @@ export class CampeonatoView extends View2 {
 				Array.prototype.indexOf.call(this._ulMidiasDivulgacao.childNodes, event.currentTarget)
 			)
 		})
+	}
+	
+	_limparFotosCampeoanto(){
+		this._ulFotosCampeonato.innerHTML = ''
 	}
 
 	_addFotoCampeonato(src) {
@@ -411,7 +421,7 @@ export class CampeonatoView extends View2 {
 						this._inscreverSeFn(categoria.id)
 			})
 			document.querySelector(`#button-inscrever-atleta-${categoria.id}`).addEventListener('click', () => {
-				this._selecionarAtletaModal = new SelecionarAtletaModalController({
+				this._selecionarAtletaModal = new SelecionarAtletaController({
 					titulo: 'Inscrever Atleta', callBackHandlerFn: this._inscreverAtleta(categoria)
 				})
 			})

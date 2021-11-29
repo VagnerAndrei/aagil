@@ -25,7 +25,7 @@ export class View2 {
 	}
 	
 	_addRoledElement({id, className, role='ADMIN'}){
-		this._roledElements.push({id, className, role, idUsuario})
+		this._roledElements.push({id, className, role})
 	}
 
 	_applyRole(isAdmin) {

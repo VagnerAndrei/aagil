@@ -103,8 +103,11 @@ public class AtletaRest {
 		try {
 			var atleta = servicoAtleta.consultar(idAtleta);
 
-			if (atleta.isPresent())
-				return Response.status(Status.FOUND).entity(parseModel(atleta.get(), false)).build();
+			if (atleta.isPresent()) {
+				var atletaModel = parseModel(atleta.get(), false);
+				
+				return Response.status(Status.FOUND).entity(atletaModel).build();
+			}
 
 			return Response.status(Status.NOT_FOUND).build();
 		} catch (Exception e) {
@@ -112,7 +115,7 @@ public class AtletaRest {
 			return Response.serverError().entity(new ErroModel(NegocioExcecao.OCORREU_UM_ERRO_NO_SERVIDOR)).build();
 		}
 	}
-
+	
 	/**
 	 * Realiza a exclusão da foto do atleta, incluindo thumbnail e original
 	 *

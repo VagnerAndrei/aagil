@@ -24,13 +24,11 @@ export class View2 {
 		window.scroll(0, y)
 	}
 	
-	_addRoledElement({id, className, role='ADMIN', idUser}){
-		console.log('add', id, className)
+	_addRoledElement({id, className, role='ADMIN'}){
 		this._roledElements.push({id, className, role, idUsuario})
 	}
 
 	_applyRole(isAdmin) {
-		console.log('apply', isAdmin, this._roledElements)
 		this._roledElements.forEach(element => document.getElementById(element.id).className = isAdmin ? element.className : 'display-none')
 	}
 

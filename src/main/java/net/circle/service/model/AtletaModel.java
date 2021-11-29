@@ -27,6 +27,7 @@ public class AtletaModel extends AbstractModel{
 
 	private LocalidadeModel localidade;
 	private String categoria;
+	
 	private IDModel foto;
 	
 	private UsuarioModel usuario;
@@ -117,20 +118,20 @@ public class AtletaModel extends AbstractModel{
 		this.categoria = categoria;
 	}
 
-	public IDModel getFoto() {
-		return foto;
-	}
-
-	public void setFoto(IDModel foto) {
-		this.foto = foto;
-	}
-
 	public UsuarioModel getUsuario() {
 		return usuario;
 	}
 
 	public void setUsuario(UsuarioModel usuario) {
 		this.usuario = usuario;
+	}
+
+	public IDModel getFoto() {
+		return foto;
+	}
+
+	public void setFoto(IDModel foto2) {
+		this.foto = foto2;
 	}
 	
 }

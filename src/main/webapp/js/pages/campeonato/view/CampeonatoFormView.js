@@ -7,7 +7,7 @@ import { CategoriaCampeonato } from '../model/CategoriaCampeonato.js'
 import { PremiacaoCampeonato } from '../model/PremiacaoCampeonato.js'
 import { Campeonato } from './../model/Campeonato.js'
 import { Atleta } from '../../atleta/model/Atleta.js'
-import { AtletaForm } from '../../../controller/AtletaForm.js'
+import { AtletaFormController } from '../../atleta/controller/AtletaFormController.js'
 
 export class CampeonatoFormView extends View2 {
 
@@ -461,7 +461,7 @@ export class CampeonatoFormView extends View2 {
 
 	_configureCriarArbitro() {
 		this._buttonCriarArbitro.addEventListener('click', () => {
-			this._adicionarArbitro = new AtletaForm(undefined, this._criarArbitroCallBackHandler(), true, 'Criar Atleta Árbitro')
+			this._adicionarArbitro = new AtletaFormController({atleta : undefined, callbackHandler: this._criarArbitroCallBackHandler(), isAdminForm : true, titulo : 'Criar Atleta Árbitro'})
 		})
 	}
 

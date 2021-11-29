@@ -530,6 +530,10 @@ main p {
 	opacity: 100%;
 	cursor: pointer;
 }
+
+#img-atualizar-atleta{
+	align-self:  center;
+}
 /* PISTAS */
 
 .form-item button{

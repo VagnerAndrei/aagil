@@ -1,0 +1,1 @@
+ALTER TABLE atleta ALTER COLUMN usuario_email DROP NOT NULL

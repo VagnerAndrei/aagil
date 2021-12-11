@@ -2,7 +2,6 @@ import { atletaLogado, isLogged } from './sessao.js';
 import { Home } from './controller/Home.js';
 import { Postagem } from './controller/Postagem.js';
 import { Sobre } from './controller/Sobre.js';
-import { Atletas } from './controller/Atletas.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
 import { Manobras } from './controller/Manobras.js';
@@ -13,6 +12,7 @@ import { CampeonatoListaController } from './pages/campeonato/controller/Campeon
 import { CampeonatoFormController } from './pages/campeonato/controller/CampeonatoFormController.js'
 import { CampeonatoController } from './pages/campeonato/controller/CampeonatoController.js'
 import { AtletaController } from './pages/atleta/controller/AtletaController.js'
+import { AtletaListaController } from './pages/atleta/controller/AtletaListaController.js';
 
 const instances = { current: undefined, atletas: undefined, pistas: undefined }
 
@@ -131,7 +131,7 @@ async function perfil(event, idAtleta) {
 	//		instances.atleta.display(true)
 	//	}
 	//	instances.current = instances.atleta
-	instances.current = new AtletaController({idAtleta : idAtual })
+	instances.current = new AtletaController({ idAtleta: idAtual })
 	changeState({ view: views.atleta, event: event instanceof Event ? event.type : event, id: idAtual })
 }
 
@@ -140,7 +140,7 @@ function atletas(clickEvent) {
 	//	if (!instances.atletas) instances.atletas = new Atletas()
 	//	else instances.atletas.display(true)
 	//	instances.current = instances.atletas
-	instances.current = new Atletas()
+	instances.current = new AtletaListaController({})
 	if (clickEvent) changeState({ view: views.atletas })
 }
 

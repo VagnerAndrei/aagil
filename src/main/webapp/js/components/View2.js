@@ -69,7 +69,7 @@ export class View2 {
 	_update({ html , status = 200 }) {
 		const div = document.createElement('div')
 		div.id = this._viewName
-		div.innerHTML = !html ? this.template() : html
+		div.innerHTML = !html ? this._template() : html
 		div.classList.add('container-view')
 		this._main.innerHTML = div.outerHTML
 		if (status && status == 200) {

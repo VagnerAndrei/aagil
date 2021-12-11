@@ -33,13 +33,15 @@ export class CampeonatoListaView extends ListaView {
 	}
 
 
-	_liTemplate(model = new Campeonato()) {
-		return `
+	_liTemplateObject(model = new Campeonato()) {
+		const li = document.createElement('li')
+		li.innerHTML = `
 			<a id="a-campeonato-${model.id}">${model.titulo}</a>
 			<img id="img-editar-campeonato-${model.id}"
 				src="assets/img/icon-editar.png" class="botao-editar ${isAdmin() ? '' : 'display-none'}"
 				title="Editar informações">
 		`
+		return li
 	}
 
 	_adicionarClickEvent(model) {

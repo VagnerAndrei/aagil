@@ -14,7 +14,7 @@ export class CampeonatoListaController extends ListaController {
 	_init() {
 		return async () => {
 			await super._atualizarLista()
-			this._view.updateList(this._lista)
+			this._view.updateListTemplate(this._lista)
 		}
 	}
 
@@ -23,7 +23,7 @@ export class CampeonatoListaController extends ListaController {
 	}
 
 	applyRole() {
-		this._view.updateList(this._lista)
+		this._view.updateListTemplate(this._lista)
 		this._view.applyRole()
 	}
 

@@ -6,7 +6,7 @@ import { Controller } from '../../../components/Controller.js'
 import { CampeonatoFormView } from '../view/CampeonatoFormView.js'
 import { FotosUpload } from '../../../controller/FotosUpload.js'
 import { get } from '../../../fetch.js'
-import { Pista } from '../../../model/Pista.js'
+import { Pista } from './../../pistas/model/Pista.js'
 import { Atleta } from '../../atleta/model/Atleta.js'
 import { campeonato, pagina_nao_encontrada } from '../../../navegacao.js'
 

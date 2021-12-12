@@ -1,11 +1,10 @@
 import { atletaLogado, isLogged } from './sessao.js';
 import { HomeController } from './pages/home/controller/HomeController.js';
 import { Sobre } from './controller/Sobre.js';
-import { Registro } from './controller/Registro.js'
-import { Acesso } from './controller/Acesso.js'
+import { AcessoController } from './pages/acesso/controller/AcessoController.js'
 import { Manobras } from './controller/Manobras.js';
-import { Pistas } from './controller/Pistas.js';
-import { PistaRegistro } from './controller/PistaRegistro.js';
+import { PistaListaController } from './pages/pistas/controller/PistaListaController.js';
+import { PistaFormController } from './pages/pistas/controller/PistaFormController.js';
 import { View } from './components/View.js';
 import { CampeonatoListaController } from './pages/campeonato/controller/CampeonatoListaController.js'
 import { CampeonatoFormController } from './pages/campeonato/controller/CampeonatoFormController.js'
@@ -13,6 +12,7 @@ import { CampeonatoController } from './pages/campeonato/controller/CampeonatoCo
 import { AtletaController } from './pages/atleta/controller/AtletaController.js'
 import { AtletaListaController } from './pages/atleta/controller/AtletaListaController.js';
 import { PostagemController } from './pages/postagem/controller/PostagemController.js';
+import { RegistroController } from './pages/acesso/controller/RegistroController.js';
 
 const instances = { current: undefined, atletas: undefined, pistas: undefined }
 
@@ -105,7 +105,7 @@ function postagem(e) {
 
 function pistas(e) {
 	current_verify()
-	if (!instances.pistas) instances.pistas = new Pistas()
+	if (!instances.pistas) instances.pistas = new PistaListaController()
 	else {
 		instances.pistas.display(true)
 		instances.pistas.applyRole()
@@ -116,7 +116,7 @@ function pistas(e) {
 
 function pistaRegistro(e) {
 	current_verify()
-	instances.current = new PistaRegistro()
+	instances.current = new PistaFormController()
 	if (e) changeState({ view: views.pista_registro })
 }
 
@@ -173,13 +173,13 @@ function sobre(clickEvent) {
 
 async function acessar(clickEvent) {
 	current_verify()
-	instances.current = new Acesso()
+	instances.current = new AcessoController()
 	if (clickEvent) changeState({ view: views.acesso })
 }
 
 async function registrar(clickEvent) {
 	current_verify()
-	instances.current = new Registro()
+	instances.current = new RegistroController()
 	if (clickEvent) changeState({ view: views.registro })
 }
 
@@ -231,7 +231,7 @@ function changeState({ view, event, id }) {
 }
 
 function applyRole(role) {
-	if (instances.current?.constructor == Acesso || instances.current?.constructor == Registro)
+	if (instances.current?.constructor == AcessoController || instances.current?.constructor == RegistroController)
 		perfil('authEvent')
 	try {
 		Object.keys(instances).map(key => {

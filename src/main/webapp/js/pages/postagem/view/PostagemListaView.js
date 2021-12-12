@@ -47,37 +47,35 @@ export class PostagemListaView extends ListaView {
 		li.className = 'li-postagem'
 		li.innerHTML =
 			`
-             <li class="li-postagem">
-                 <label>${postagem.data}</label>
-                 <h1>${postagem.titulo}</h1>
-                 ${postagem.midia ?
-				`<iframe src="
-                 ${postagem.midia.tipo == 'Youtube' ?
-					`https://www.youtube.com/embed/${postagem.midia.codigo}` :
-					`https://player.vimeo.com/video/${postagem.midia.codigo}`
-				}" 
-                 allowfullscreen></iframe>` : ''}
-                 
-                 ${postagem.fotos ? `
-                 <div class="album-postagens">
-                     <div class="container-img-postagem">
-                         <img class="img-postagem" id="img-postagem-${postagem.id}" src="api/fotos/${postagem.fotos[0].id}">
-                     </div>
-                 
-                 <ul id="ul-thumbnail-postagem" class="album-postagens-thumbnails ${postagem.fotos.length > 1 ? '' : 'display-none'}">
-                 
-                     ${postagem.fotos.map(foto => `
-                         <li>
-                             <img postagemID="${postagem.id}" fotoID="${foto.id}" id="img-postagem-thumbnail-${postagem.id}" src="api/fotos/${foto.id}/thumb">
-                         </li>`)}
-                     
-                 </ul>
-                 
+             <label>${postagem.data}</label>
+             <h1>${postagem.titulo}</h1>
+             ${postagem.midia ?
+			`<iframe src="
+             ${postagem.midia.tipo == 'Youtube' ?
+				`https://www.youtube.com/embed/${postagem.midia.codigo}` :
+				`https://player.vimeo.com/video/${postagem.midia.codigo}`
+			}" 
+             allowfullscreen></iframe>` : ''}
+             
+             ${postagem.fotos ? `
+             <div class="album-postagens">
+                 <div class="container-img-postagem">
+                     <img class="img-postagem" id="img-postagem-${postagem.id}" src="api/fotos/${postagem.fotos[0].id}">
                  </div>
-                 ` : ''}
-                  
-                 <div>${postagem.conteudo}</div>
-             </li>
+             
+             <ul id="ul-thumbnail-postagem" class="album-postagens-thumbnails ${postagem.fotos.length > 1 ? '' : 'display-none'}">
+             
+                 ${postagem.fotos.map(foto => `
+                     <li>
+                         <img postagemID="${postagem.id}" fotoID="${foto.id}" id="img-postagem-thumbnail-${postagem.id}" src="api/fotos/${foto.id}/thumb">
+                     </li>`)}
+                 
+             </ul>
+             
+             </div>
+             ` : ''}
+              
+             <div>${postagem.conteudo}</div>
              `
 		return li;
 	}

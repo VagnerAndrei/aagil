@@ -1,15 +1,16 @@
 <main>
 	<form id="form-pista">
 		<h2>Registro de Pista</h2>
-			<div class="form-item">
-				<label>Título:</label>
-				<input type="text" id="input-titulo" style="width: 50%" maxlength="100" required>
-			</div>
+		<div class="form-item">
+			<label>Título:</label>
+			<input type="text" id="input-titulo" style="width: 50%" maxlength="100" required>
+		</div>
 		<div>
 			<h3>Endereço:</h3>
 			<div class="form-item">
 				<label>CEP:</label>
-				<input type="text" maxlength="9" id="input-cep" style="width: 85px" pattern="^[0-9]{5}[-]?[0-9]{3}$" required>
+				<input type="text" maxlength="9" id="input-cep" style="width: 85px" pattern="^[0-9]{5}[-]?[0-9]{3}$"
+					required>
 				<label class="mensagem-erro" id="label-erro-cep" style="width: 200px"></label>
 			</div>
 
@@ -30,55 +31,35 @@
 
 			<div class="form-item">
 				<label>Logradouro:</label>
-				 <input type="text" id="input-logradouro" style="width: 80%" disabled required>
+				<input type="text" id="input-logradouro" style="width: 80%" disabled required>
 			</div>
 
 			<div class="form-item">
-				<label>Complemento:</label> 
+				<label>Complemento:</label>
 				<input type="text" id="input-complemento" style="width: 50%" disabled required>
 			</div>
 
 			<div class="form-item">
 				<label>Perímetro:</label>
-				 <input type="text" id="input-perimetro" style="width: 50%" maxlength="100" required>
+				<input type="text" id="input-perimetro" style="width: 50%" maxlength="100" required>
 			</div>
 
 			<div class="form-item">
 				<label>Referência(s):</label>
-				 <input type="text" id="input-referencia" style="width: 50%" maxlength="100" required>
+				<input type="text" id="input-referencia" style="width: 50%" maxlength="100" required>
 			</div>
 
 		</div>
-		
-		
-		<br/>
-		<br/>
-			<div>
-				<div class="form-item">
-					<label>Fotos:</label>
-					<input type="file" id="input-fotos" accept="image/jpg, image/jpeg, image/png, image/bmp" multiple style="display:none">
-					<button id="button-selecionar-fotos" type="button" class="botao-selecionar-fotos">Selecionar...</button>
-					<span id="span-limite-fotos"></span>
-				</div>
-				<ul id="ul-fotos">
-				</ul>
-			</div>
-			<div>
-				<div class="form-item">
-					<label>Tags: #</label>
-					<input type="text" id="input-tag">
-					<button id="button-adicionar-tag" type="button" class="botao-adicionar-tag" title="Adicionar">+</button>
-					<label class="mensagem-erro" id="label-erro-tag"></label>
-				</div>
-				<ul id="ul-tags"></ul>
-			</div>
-			<div class="form-item">
-					<label>Observações:</label>
-					 <textarea id="textarea-observacoes" rows="7" cols="50"
-					style="resize: none" maxlength="255"></textarea>
-			</div>
+
+		<div id="div-fotos"></div>
+		<div id="div-tags"></div>
+
+		<div class="form-item">
+			<label>Observações:</label>
+			<textarea id="textarea-observacoes" rows="7" cols="50" style="resize: none" maxlength="255"></textarea>
+		</div>
 		<label id="label-erro" class="mensagem-erro"></label>
 		<button id="button-enviar" type="button" class="botao-form-pista">Enviar</button>
 	</form>
-	
+
 </main>

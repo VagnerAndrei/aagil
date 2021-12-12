@@ -23,7 +23,7 @@ export class View2 {
 		window.scroll(0, y)
 	}
 
-	_addRoledElement({ id, className, role = 'ADMIN' }) {
+	_addRoledElement({ id, className = '', role = 'ADMIN' }) {
 		this._roledElements.push({ id, className, role })
 	}
 

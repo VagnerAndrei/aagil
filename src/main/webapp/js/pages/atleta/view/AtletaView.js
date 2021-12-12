@@ -8,7 +8,6 @@ export class AtletaView extends View2 {
 
 	constructor({ onViewCreatedFn }) {
 		super({ titulo: 'Atleta', onViewCreatedFn })
-		console.log('constructor atleta view')
 		this._atleta = {}
 	}
 
@@ -34,7 +33,6 @@ export class AtletaView extends View2 {
 
 		this._configureAtualizarFoto()
 		this._configureAtualizarAtleta()
-		console.log('init atleta view')
 	}
 
 	_configureAtualizarFoto() {

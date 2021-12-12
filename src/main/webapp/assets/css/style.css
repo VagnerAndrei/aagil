@@ -1184,3 +1184,15 @@ main p {
 	max-height: 85vh;
 	align-self: center;
 }
+
+
+.link{
+	color: var(--blue-300);
+	text-decoration: underline;
+	
+}
+
+.link:hover {
+	cursor: pointer;
+	color: var(--blue-200);
+}

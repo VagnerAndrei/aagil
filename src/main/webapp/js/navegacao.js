@@ -1,6 +1,5 @@
 import { atletaLogado, isLogged } from './sessao.js';
 import { Home } from './controller/Home.js';
-import { Postagem } from './controller/Postagem.js';
 import { Sobre } from './controller/Sobre.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
@@ -13,6 +12,7 @@ import { CampeonatoFormController } from './pages/campeonato/controller/Campeona
 import { CampeonatoController } from './pages/campeonato/controller/CampeonatoController.js'
 import { AtletaController } from './pages/atleta/controller/AtletaController.js'
 import { AtletaListaController } from './pages/atleta/controller/AtletaListaController.js';
+import { PostagemController } from './pages/postagem/controller/PostagemController.js';
 
 const instances = { current: undefined, atletas: undefined, pistas: undefined }
 
@@ -99,7 +99,7 @@ function manobras(e) {
 
 function postagem(e) {
 	current_verify()
-	instances.current = new Postagem()
+	instances.current = new PostagemController()
 	if (e) changeState({ view: views.postagem })
 }
 

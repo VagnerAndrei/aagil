@@ -43,7 +43,7 @@
 	
 }
 
-html {
+html, #ul-av-thumbnails {
   scroll-behavior: smooth;
 }
 
@@ -665,7 +665,7 @@ main p {
 	margin: 5px auto 0 5px;
 }
 
-#form-pista ul li, #form-postagem ul li, .pista-campeonato{
+#form-pista ul li, .pista-campeonato{
 	padding: 10px;
 	border-radius: 10px;
 	background-color: var(--yellow-300);
@@ -723,10 +723,27 @@ main p {
 	
 }
 
+#ul-uploads-fotos-postagem{
+	max-width: 700px;
+	width: 70vw;
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+#ul-uploads-fotos-postagem li{
+	margin: 5px;
+}
+
 /* POSTAGEM */
 
 #form-postagem{
 	width: 100vh;
+}
+
+#form-postagem .lista-upload{
+	margin-left: 40px;
 }
 
 .form-item{
@@ -735,7 +752,7 @@ main p {
 }
 
 #form-postagem .form-item label{
-	width: 50px
+	width: 70px
 }
 
 #form-postagem .form-item label:not(:first-child){

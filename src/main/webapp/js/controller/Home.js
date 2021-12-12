@@ -3,8 +3,8 @@
  */
 import { View } from '../components/View.js'
 import { postagem } from '../navegacao.js'
+import { PostagemListaController } from '../pages/postagem/controller/PostagemListaController.js'
 import { isAdmin } from '../sessao.js'
-import { Postagens } from '../controller/Postagens.js'
 
 export class Home extends View {
 
@@ -16,7 +16,7 @@ export class Home extends View {
 		this._buttonPostar = document.getElementById('button-registrar-postagem')
 		this._buttonPostar.addEventListener('click', postagem)
 
-		const postagens = new Postagens('section-postagens')
+		const postagens = new PostagemListaController({ element: 'section-postagens' })
 		this.applyRole()
 	}
 

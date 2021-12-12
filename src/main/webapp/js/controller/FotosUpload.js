@@ -39,7 +39,7 @@ export class FotosUpload extends Modal {
 		this._labelSuccess.textContent = msg
 	}
 
-	template() {
+	_template() {
 		return `
 				<form class="pista-upload">
 					<progress id="progress" value="0" max="100"></progress>

@@ -5,7 +5,7 @@ import { get } from '../fetch.js'
 
 export class View2 {
 
-	constructor({ titulo, onViewCreatedFn }) {
+	constructor({ titulo, onViewCreatedFn = () => { } }) {
 		this._titulo = titulo
 		this._onViewCreatedFn = onViewCreatedFn
 		this._viewName = `view-${this._titulo.toLowerCase().trim()}`
@@ -14,18 +14,17 @@ export class View2 {
 		document.getElementsByTagName('title')[0].textContent = this._titulo;
 		this._update()
 	}
-	
-	_focusSroll(component){
-		console.log(component, 'focus')
+
+	_focusSroll(component) {
 		component.focus({ preventScroll: false })
 	}
-	
-	_scroll(y){
+
+	_scroll(y) {
 		window.scroll(0, y)
 	}
-	
-	_addRoledElement({id, className, role='ADMIN'}){
-		this._roledElements.push({id, className, role})
+
+	_addRoledElement({ id, className, role = 'ADMIN' }) {
+		this._roledElements.push({ id, className, role })
 	}
 
 	_applyRole(isAdmin) {
@@ -66,7 +65,7 @@ export class View2 {
 
 	_init() { }
 
-	_update({ html , status = 200 }) {
+	_update({ html, status = 200 }) {
 		const div = document.createElement('div')
 		div.id = this._viewName
 		div.innerHTML = !html ? this._template() : html

@@ -1,5 +1,5 @@
 import { atletaLogado, isLogged } from './sessao.js';
-import { Home } from './controller/Home.js';
+import { HomeController } from './pages/home/controller/HomeController.js';
 import { Sobre } from './controller/Sobre.js';
 import { Registro } from './controller/Registro.js'
 import { Acesso } from './controller/Acesso.js'
@@ -87,7 +87,7 @@ function pagina_nao_encontrada() {
 
 function home(event) {
 	current_verify()
-	instances.current = new Home()
+	instances.current = new HomeController()
 	if (event) changeState({ view: views.home, event })
 }
 

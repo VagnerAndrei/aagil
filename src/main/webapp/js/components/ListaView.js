@@ -27,7 +27,7 @@ export class ListaView extends View2 {
 	}
 
 	_update(template) {
-		super._update(template ? (typeof template == "string" ? { html : template } : template) : { html: super._template(), status: 203 })
+		super._update(template ? (typeof template == "string" ? { html: template } : template) : { html: super._template(), status: 203 })
 	}
 
 	_adicionarClickEvent() {

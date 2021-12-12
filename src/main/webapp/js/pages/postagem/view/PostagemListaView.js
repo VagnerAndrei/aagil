@@ -6,56 +6,56 @@ import { Postagem } from '../model/Postagem.js'
 
 export class PostagemListaView extends ListaView {
 
-    constructor({ element, onViewCreatedFn }) {
-        super({ titulo: 'AAGIL', onViewCreatedFn })
-        this._element = document.getElementById(element)
-        this._idLista = `ul-lista-${this._viewName}`
-        this._atualizarListaFn = {}
-    }
+	constructor({ element }) {
+		super({ titulo: 'AAGIL' })
+		this._idLista = `ul-lista-${this._viewName}`
+		this._atualizarListaFn = {}
+		this._element = element
+		this._init()
+	}
 
-    configureAtualizarLista(command) {
-        this._atualizarListaFn = command
-    }
+	_update() {
+	}
 
-    _init() {
-        const ul = document.createElement('ul')
-        ul.id = this._idLista
-        this._element.appendChild(ul)
+	_init() {
+		const ul = document.createElement('ul')
+		ul.id = this._idLista
+		this._element = document.getElementById(this._element)
+		this._element.appendChild(ul)
 
-        super._init()
+		super._init()
+	}
 
-        this._template()
-    }
+	configureAtualizarLista(command) {
+		this._atualizarListaFn = command
+		this._atualizarListaFn()
+	}
 
-    async _template() {
-        await this._atualizarListaFn()
-    }
+	updateListTemplate(lista) {
+		super.updateListTemplate(lista)
+		this._update()
+	}
 
-    updateListTemplate(lista) {
-        super.updateListTemplate(lista)
-        this._update()
-    }
+	_adicionarClickEvent(postagem) {
+		document.querySelectorAll(`#img-postagem-thumbnail-${postagem.id}`).forEach(img =>
+			img.addEventListener('click', event => this._thumbnailClickHandler(event)))
+	}
 
-    _adicionarClickEvent(item) {
-        document.querySelectorAll(`#img-postagem-thumbnail-${postagem.id}`).forEach(img =>
-            img.addEventListener('click', event => this._thumbnailClickHandler(event)))
-    }
-
-    _liTemplateObject(item) {
-        const postagem = new Postagem(item)
-        const li = document.createElement('li')
-        li.className = 'li-postagem'
-        li.innerHTML =
-            `
+	_liTemplateObject(item) {
+		const postagem = new Postagem(item)
+		const li = document.createElement('li')
+		li.className = 'li-postagem'
+		li.innerHTML =
+			`
              <li class="li-postagem">
                  <label>${postagem.data}</label>
                  <h1>${postagem.titulo}</h1>
                  ${postagem.midia ?
-                `<iframe src="
+				`<iframe src="
                  ${postagem.midia.tipo == 'Youtube' ?
-                    `https://www.youtube.com/embed/${postagem.midia.codigo}` :
-                    `https://player.vimeo.com/video/${postagem.midia.codigo}`
-                }" 
+					`https://www.youtube.com/embed/${postagem.midia.codigo}` :
+					`https://player.vimeo.com/video/${postagem.midia.codigo}`
+				}" 
                  allowfullscreen></iframe>` : ''}
                  
                  ${postagem.fotos ? `
@@ -79,18 +79,16 @@ export class PostagemListaView extends ListaView {
                  <div>${postagem.conteudo}</div>
              </li>
              `
-        return li;
-    }
+		return li;
+	}
 
-    _thumbnailClickHandler(event) {
-        const idPostagem = event.target.getAttribute('postagemID')
-        const idFoto = event.target.getAttribute('fotoID')
-        const img = document.getElementById(`img-postagem-${idPostagem}`)
-        img.src = `api/fotos/${idFoto}`
-    }
+	_thumbnailClickHandler(event) {
+		const idPostagem = event.target.getAttribute('postagemID')
+		const idFoto = event.target.getAttribute('fotoID')
+		const img = document.getElementById(`img-postagem-${idPostagem}`)
+		img.src = `api/fotos/${idFoto}`
+	}
 
-    _update() {
-        this._element?.appendChild(this._ulLista)
-    }
+
 
 }

@@ -22,7 +22,7 @@
     <groupId>net</groupId>
     
     <artifactId>aagil</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.8.0-RELEASE</version>
     
     <packaging>war</packaging>
     <name>AAGIL</name>

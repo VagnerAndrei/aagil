@@ -1,4 +1,4 @@
-import { Controller } from "../../../components/Controller.js";
+import { Controller } from "../../../components/custom/Controller.js";
 import { get } from "../../../fetch.js";
 import { pagina_nao_encontrada } from "../../../navegacao.js";
 import { AtletaView } from "../view/AtletaView.js";

@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { Controller } from './../../../components/Controller.js'
+import { Controller } from '../../../components/custom/Controller.js'
 import { HomeView } from './../view/HomeView.js'
 
 export class HomeController extends Controller {

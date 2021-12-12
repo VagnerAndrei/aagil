@@ -27,7 +27,6 @@ export class SelecionarAtletaController {
 					json.forEach(json => this._listaAtletas.push(new Atleta(json)))
 					break
 				case 500:
-					console.log(response)
 					break
 			}
 

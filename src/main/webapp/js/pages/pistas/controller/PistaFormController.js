@@ -4,8 +4,8 @@
 import { get } from './../../../fetch.js'
 import { pistas } from './../../../navegacao.js'
 import { PistaFormView } from './../view/PistaFormView.js'
-import { FotosUpload } from './../../../controller/FotosUpload.js'
-import { Controller } from './../../../components/Controller.js'
+import { FotosUpload } from './../../../components/FotosUpload.js'
+import { Controller } from './../../../components/custom/Controller.js'
 
 export class PistaFormController extends Controller {
 
@@ -14,13 +14,13 @@ export class PistaFormController extends Controller {
 		this._view = new PistaFormView({ onViewCreatedFn: this._init() })
 	}
 
-	init() {
+	_init() {
 		return () => {
 			this._view.configureConsultarCEP(this._consultarCEP())
 			this._view.configureEnviarFormulario(this._enviarFormulario())
 		}
 	}
-	
+
 	_consultarCEP() {
 		return async (cep) => {
 			const result = await get(`https://viacep.com.br/ws/${cep}/json`)

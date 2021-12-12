@@ -1,15 +1,15 @@
 /**
  * 
  */
-import { ListaPaginadaView } from './../../../components/ListaPaginadaView.js'
+import { ListaPaginadaView } from './../../../components/custom/ListaPaginadaView.js'
 import { pistaRegistro } from './../../../navegacao.js'
 import { isAdmin } from './../../../sessao.js'
-import { AlbumViewer } from './../../../controller/AlbumViewer.js'
+import { AlbumViewer } from './../../../components/AlbumViewer.js'
 
 export class PistaListaView extends ListaPaginadaView {
 
     constructor({ onViewCreatedFn }) {
-        super({ titulo: 'Atletas', selectedIndexPagination = 0, onViewCreatedFn })
+        super({ titulo: 'Pistas', selectedIndexPagination : 0 , onViewCreatedFn })
     }
 
     _init() {

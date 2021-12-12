@@ -1,9 +1,9 @@
 /**
  * 
  */
-import { View2 } from './../components/View2.js'
+import { View } from './../custom/View.js'
 
-export class ListaView extends View2 {
+export class ListaView extends View {
 
 	constructor({ titulo, idLista, onViewCreatedFn }) {
 		super({ titulo, onViewCreatedFn })

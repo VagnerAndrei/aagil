@@ -1,9 +1,9 @@
 /**
  * 
  */
-import { get } from '../fetch.js'
+import { get } from './../../fetch.js'
 
-export class View2 {
+export class View {
 
 	constructor({ titulo, onViewCreatedFn = () => { } }) {
 		this._titulo = titulo

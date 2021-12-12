@@ -1,4 +1,4 @@
-import { Modal } from '../../../components/Modal.js'
+import { Modal } from '../../../components/custom/Modal.js'
 
 
 export class AtletaFormView extends Modal {
@@ -118,7 +118,6 @@ export class AtletaFormView extends Modal {
     configureCarregarUFsFn(command) {
         this._carregarUFsFn = command
 		this._carregarUFsFn()
-		console.log('carregarufs')
     }
 
     configureCarregarLocalidades(command) {

@@ -31,7 +31,6 @@ export class CategoriaCampeonato {
 
 
 	getRankAtleta() {
-		//		console.log('CATEGORIA')
 		let rank = []
 		this.inscricoes.forEach(inscricao => rank.push({ idInscricao: inscricao.id, totalVolta1: inscricao.getTotalVolta(1), total: inscricao.getTotalGeral() }))
 		rank = rank.sort(function (a, b) {
@@ -56,7 +55,6 @@ export class CategoriaCampeonato {
 						const totalEmpatadosGeral = this._getNumeroEmpatadosTotal(rank, i)
 						const totalEmpatadosVolta = this._getNumeroEmpatadosTotalVolta1(rank, i, totalEmpatadosGeral)
 
-						//					console.log('emp i:', i, 'empT: ', totalEmpatadosGeral, ' EmpV:', totalEmpatadosVolta, ' pos:', posicao)
 
 						if (totalEmpatadosVolta > 0) {
 							for (let j = 0; j < totalEmpatadosVolta; j++) {
@@ -73,7 +71,6 @@ export class CategoriaCampeonato {
 					}
 				posicao++
 			}
-		//		console.log(rank)
 		return rank
 	}
 

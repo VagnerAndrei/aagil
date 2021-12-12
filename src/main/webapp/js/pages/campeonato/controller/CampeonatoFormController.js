@@ -2,9 +2,9 @@
  * 
  */
 
-import { Controller } from '../../../components/Controller.js'
+import { Controller } from '../../../components/custom/Controller.js'
 import { CampeonatoFormView } from '../view/CampeonatoFormView.js'
-import { FotosUpload } from '../../../controller/FotosUpload.js'
+import { FotosUpload } from '../../../components/FotosUpload.js'
 import { get } from '../../../fetch.js'
 import { Pista } from './../../pistas/model/Pista.js'
 import { Atleta } from '../../atleta/model/Atleta.js'

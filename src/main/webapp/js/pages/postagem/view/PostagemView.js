@@ -1,9 +1,9 @@
 import { TagsFormItem } from '../../../components/TagsFormItem.js'
 import { UploadFormItem } from '../../../components/UploadFormItem.js'
-import { View2 } from '../../../components/View2.js'
+import { View } from '../../../components/custom/View.js'
 import { atletaLogado } from '../../../sessao.js'
 
-export class PostagemView extends View2 {
+export class PostagemView extends View {
 
     constructor({ onViewCreatedFn }) {
         super({ titulo: 'Postagem', onViewCreatedFn })
@@ -129,7 +129,6 @@ export class PostagemView extends View2 {
     }
 
     _inputMidiaURLChangeHandler(event) {
-        console.log('a')
         const youtubeRegex = /^((http)?(s)?\:\/\/)?((www|m)\.)?(youtube\.com|youtu\.be)(\/([\w\-]+\?v=|embed\/|v\/)?)(?<id>[\w\-]+)(\S)*$/
         const vimeoRegex = /^((http)?(s)?\:\/\/)?((www)\.)?(vimeo\.com)(\/)(?<id>[\d\-]+)*$/
         let videoType

@@ -1,13 +1,13 @@
 /**
  * 
  */
-import { View2 } from '../../../components/View2.js'
+import { View } from '../../../components/custom/View.js'
 import { acessar } from '../../../navegacao.js'
 
-export class RegistroView extends View2 {
+export class RegistroView extends View {
 
-    constructor() {
-        super({ titulo: 'Registro' })
+    constructor({onViewCreatedFn}) {
+        super({ titulo: 'Registro', onViewCreatedFn })
 
         this._registrarFn = {}
     }
@@ -34,11 +34,11 @@ export class RegistroView extends View2 {
         this._configureLinkAcesso()
     }
 
-    _update() {
-        super._update({ html: this._template() })
+    async _update() {
+        super._update({ html: await this._template() })
     }
 
-    _template() {
+    async _template() {
         return `
 		<div>
 			<h1>Registre-se</h1>

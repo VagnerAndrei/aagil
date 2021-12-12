@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { Modal } from '../../../components/Modal.js'
+import { Modal } from '../../../components/custom/Modal.js'
 import { Atleta } from '../model/Atleta.js'
 
 export class AtletaFotoUploadView extends Modal {
@@ -23,9 +23,7 @@ export class AtletaFotoUploadView extends Modal {
 		this._labelProgress = document.querySelector('#label-progress');
 		this._inputFoto = document.querySelector('#input-foto');
 
-			console.log(this._atleta)
 		if (this._atleta.foto) {
-			console.log(this._atleta.foto)
 			this.setVisibleBotaoRemoverFoto(true)
 		}
 		this._configureInputFotoChange()

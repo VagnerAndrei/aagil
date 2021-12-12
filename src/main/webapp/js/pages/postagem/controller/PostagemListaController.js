@@ -1,4 +1,4 @@
-import { ListaController } from './../../../components/ListaController.js'
+import { ListaController } from './../../../components/custom/ListaController.js'
 import { PostagemListaView } from './../view/PostagemListaView.js'
 
 export class PostagemListaController extends ListaController {

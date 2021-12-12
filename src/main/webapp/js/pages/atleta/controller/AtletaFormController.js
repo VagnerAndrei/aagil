@@ -1,4 +1,4 @@
-import { Controller } from "../../../components/Controller.js";
+import { Controller } from "../../../components/custom/Controller.js";
 import { get, post, put } from "../../../fetch.js";
 import { AtletaFormView } from "../view/AtletaFormView.js";
 
@@ -44,7 +44,6 @@ export class AtletaFormController extends Controller {
 
 	_enviarFormulario() {
 		return async (atleta) => {
-			console.log(atleta)
 			const response = this._isAdminForm ? await post('api/atletas', atleta) : await put('api/atletas', atleta)
 
 			switch (response.status) {

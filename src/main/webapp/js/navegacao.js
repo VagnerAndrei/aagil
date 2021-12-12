@@ -1,11 +1,9 @@
 import { atletaLogado, isLogged } from './sessao.js';
 import { HomeController } from './pages/home/controller/HomeController.js';
-import { Sobre } from './controller/Sobre.js';
+import { SobreView } from './pages/sobre/view/SobreView.js';
 import { AcessoController } from './pages/acesso/controller/AcessoController.js'
-import { Manobras } from './controller/Manobras.js';
 import { PistaListaController } from './pages/pistas/controller/PistaListaController.js';
 import { PistaFormController } from './pages/pistas/controller/PistaFormController.js';
-import { View } from './components/View.js';
 import { CampeonatoListaController } from './pages/campeonato/controller/CampeonatoListaController.js'
 import { CampeonatoFormController } from './pages/campeonato/controller/CampeonatoFormController.js'
 import { CampeonatoController } from './pages/campeonato/controller/CampeonatoController.js'
@@ -13,6 +11,8 @@ import { AtletaController } from './pages/atleta/controller/AtletaController.js'
 import { AtletaListaController } from './pages/atleta/controller/AtletaListaController.js';
 import { PostagemController } from './pages/postagem/controller/PostagemController.js';
 import { RegistroController } from './pages/acesso/controller/RegistroController.js';
+import { ManobrasController } from './pages/manobras/controller/ManobrasController.js';
+import { View } from './components/custom/View.js';
 
 const instances = { current: undefined, atletas: undefined, pistas: undefined }
 
@@ -93,7 +93,7 @@ function home(event) {
 
 function manobras(e) {
 	current_verify()
-	instances.current = new Manobras()
+	instances.current = new ManobrasController()
 	if (e) changeState({ view: views.manobras })
 }
 
@@ -167,7 +167,7 @@ function campeonatoRegistro({ event, idCampeonato }) {
 
 function sobre(clickEvent) {
 	current_verify()
-	instances.current = new Sobre()
+	instances.current = new SobreView()
 	if (clickEvent) changeState({ view: views.sobre })
 }
 
@@ -237,7 +237,6 @@ function applyRole(role) {
 		Object.keys(instances).map(key => {
 			if (key === 'current' || instances[key] && instances[key] !== instances['current']) {
 				instances[key]?.applyRole(role)
-				console.log('aplicou', key)
 			}
 
 		})

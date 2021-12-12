@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { Controller } from '../../../components/Controller.js'
+import { Controller } from '../../../components/custom/Controller.js'
 import { deletar } from '../../../fetch.js'
 import { AtletaFotoUploadView } from '../view/AtletaFotoUploadView.js'
 
@@ -35,7 +35,6 @@ export class AtletaFotoUploadController extends Controller {
 			this._xhr.upload.addEventListener('loadstart', () => this._view.enviando(true));
 
 			this._xhr.upload.addEventListener('abort', () => {
-				console.log('abort')
 				this._xhr = null;
 			});
 
@@ -68,7 +67,6 @@ export class AtletaFotoUploadController extends Controller {
 			}
 
 			this._xhr.onerror = (e) => {
-				console.log(e)
 				this._view.setErroLabel('Ocorreu um erro no envio da imagem')
 			}
 

@@ -1,12 +1,12 @@
 /**
  * 
  */
-import { View2 } from './../../../components/View2.js'
+import { View } from './../../../components/custom/View.js'
 import { isAdmin } from './../../../sessao.js'
 import { postagem } from './../../../navegacao.js'
 import { PostagemListaController } from './../../postagem/controller/PostagemListaController.js'
 
-export class HomeView extends View2 {
+export class HomeView extends View {
 
     constructor() {
         super({ titulo: 'Página Inicial'})

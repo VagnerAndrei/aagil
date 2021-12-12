@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { Controller } from '../../../components/Controller.js'
+import { Controller } from '../../../components/custom/Controller.js'
 import { post } from '../../../fetch.js'
 import { loginHandler } from '../../../sessao.js'
 import { AcessoView } from './../view/AcessoView.js'
@@ -10,14 +10,16 @@ export class AcessoController extends Controller {
 
 	constructor() {
 		super()
-		this._view = new AcessoView()
-		this._init()
+		this._view = new AcessoView({ onViewCreatedFn: this._init() })
 	}
 
 	_init() {
-		this._view.configureAcessar(this._acessar())
-		if (localStorage.getItem('email') != null)
-			this._view.setUsuarioLocalStorage({ email: localStorage.getItem('email'), senha: localStorage.getItem('senha') })
+		return () => {
+			this._view.configureAcessar(this._acessar())
+			
+			if (localStorage.getItem('email') != null)
+				this._view.setUsuarioLocalStorage({ email: localStorage.getItem('email'), senha: localStorage.getItem('senha') })
+		}
 	}
 
 	_acessar() {
@@ -30,7 +32,7 @@ export class AcessoController extends Controller {
 				loginHandler(responseJSON, 'authEvent')
 			else
 				this._view.setErroAcesso(responseJSON)
-				
+
 			if (manterDados) {
 				localStorage.setItem('email', json.email)
 				localStorage.setItem('senha', json.senha)

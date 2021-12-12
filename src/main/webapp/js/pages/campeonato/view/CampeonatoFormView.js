@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { View2 } from '../../../components/View2.js'
+import { View } from '../../../components/custom/View.js'
 import { UploadFormItem } from '../../../components/UploadFormItem.js'
 import { CategoriaCampeonato } from '../model/CategoriaCampeonato.js'
 import { PremiacaoCampeonato } from '../model/PremiacaoCampeonato.js'
@@ -9,7 +9,7 @@ import { Campeonato } from './../model/Campeonato.js'
 import { Atleta } from '../../atleta/model/Atleta.js'
 import { AtletaFormController } from '../../atleta/controller/AtletaFormController.js'
 
-export class CampeonatoFormView extends View2 {
+export class CampeonatoFormView extends View {
 
 	constructor({ onViewCreatedFn, isEdicaoMode }) {
 		super({ titulo: `${isEdicaoMode ? 'Editar' : 'Criar'} Campeonato`, onViewCreatedFn })

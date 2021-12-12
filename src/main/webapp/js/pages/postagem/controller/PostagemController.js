@@ -1,6 +1,6 @@
-import { FotosUpload } from './../../../controller/FotosUpload.js'
+import { FotosUpload } from './../../../components/FotosUpload.js'
 import { home } from './../../../navegacao.js'
-import { Controller } from '../../../components/Controller.js'
+import { Controller } from '../../../components/custom/Controller.js'
 import { PostagemView } from '../view/PostagemView.js'
 
 export class PostagemController extends Controller {

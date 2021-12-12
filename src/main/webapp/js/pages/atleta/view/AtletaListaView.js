@@ -1,4 +1,4 @@
-import { ListaPaginadaView } from '../../../components/ListaPaginadaView.js'
+import { ListaPaginadaView } from '../../../components/custom/ListaPaginadaView.js'
 import { perfil } from './../../../navegacao.js'
 import { getIdade } from '.././../../util.js'
 

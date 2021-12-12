@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { Modal } from './../../../components/Modal.js'
+import { Modal } from './../../../components/custom/Modal.js'
 import { AtletaFormController } from './../controller/AtletaFormController.js'
 
 export class SelecionarAtletaView extends Modal {

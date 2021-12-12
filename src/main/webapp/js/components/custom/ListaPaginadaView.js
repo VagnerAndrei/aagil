@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { ListaView } from './../components/ListaView.js'
+import { ListaView } from './ListaView.js'
 
 export class ListaPaginadaView extends ListaView {
 
@@ -40,8 +40,6 @@ export class ListaPaginadaView extends ListaView {
 
 	async _update() {
 		super._update(await this._template())
-
-		await this._atualizarListaFn(this._indice, this._tamanhoDaPagina)
 	}
 
 	// RETORNA O TEMPLATE DA LISTA TODA
@@ -92,6 +90,7 @@ export class ListaPaginadaView extends ListaView {
 
 	configureAtualizarLista(command) {
 		this._atualizarListaFn = command
+		this._atualizarListaFn(this._indice, this._tamanhoDaPagina)
 	}
 
 	updateListTemplate({ lista, totalResults }) {

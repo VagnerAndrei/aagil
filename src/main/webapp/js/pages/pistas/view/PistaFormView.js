@@ -2,11 +2,11 @@
  * 
  */
 import { atletaLogado } from './../../../sessao.js'
-import { View2 } from '../../../components/View2.js'
+import { View } from '../../../components/custom/View.js'
 import { TagsFormItem } from '../../../components/TagsFormItem.js'
 import { UploadFormItem } from '../../../components/UploadFormItem.js'
 
-export class PistaFormView extends View2 {
+export class PistaFormView extends View {
 
     constructor({ onViewCreatedFn }) {
         super({ titulo: 'Registro de pista', onViewCreatedFn })
@@ -16,7 +16,7 @@ export class PistaFormView extends View2 {
     }
 
     async _update() {
-        super.update(await this._template())
+        super._update(await this._template())
     }
 
     async _template() {

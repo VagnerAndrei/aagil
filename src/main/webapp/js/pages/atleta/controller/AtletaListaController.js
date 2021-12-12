@@ -1,11 +1,10 @@
 /**
  * 
  */
-import { ListaController } from '../../../components/ListaController.js'
-import { get } from '../../../fetch.js'
+import { ListaPaginadaController } from '../../../components/custom/ListaPaginadaController.js'
 import { AtletaListaView } from '../view/AtletaListaView.js'
 
-export class AtletaListaController extends ListaController {
+export class AtletaListaController extends ListaPaginadaController {
 
 	constructor({ selectedIndexPagination = 0 }) {
 		super({ url: 'api/atletas' })
@@ -20,18 +19,8 @@ export class AtletaListaController extends ListaController {
 
 	_atualizarLista() {
 		return async (indice, tamanhoDaPagina) => {
-			const responseAtletas = await get(`${this._url}/${indice}/${tamanhoDaPagina}`)
-			switch (responseAtletas.status) {
-				case 200:
-					const json = await responseAtletas.json()
-					const lista = json.pagina
-					this._lista = lista
-					const totalResults = json.total
-					this._view.updateListTemplate({ lista, totalResults })
-					break
-				case 500:
-					break
-			}
+			await super._atualizarLista(indice, tamanhoDaPagina)
+			this._view.updateListTemplate({ lista : this.lista, totalResults : this.totalResults })
 		}
 	}
 }

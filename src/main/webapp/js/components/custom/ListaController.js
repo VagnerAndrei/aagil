@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { get } from './../fetch.js'
+import { get } from './../../fetch.js'
 import { Controller } from './Controller.js'
 
 export class ListaController extends Controller {
@@ -23,9 +23,11 @@ export class ListaController extends Controller {
 				break
 		}
 	}
+	
+	
 
 	get lista() {
 		return this._lista
 	}
-
+	
 }

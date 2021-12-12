@@ -1,10 +1,10 @@
-import { View2 } from '../../../components/View2.js';
+import { View } from '../../../components/custom/View.js';
 import { AtletaFormController } from '../controller/AtletaFormController.js'
 import { AtletaFotoUploadController } from '../controller/AtletaFotoUploadController.js';
 import { getIdUser, isLogged } from '../../../sessao.js';
 import { getIdade } from '../../../util.js';
 
-export class AtletaView extends View2 {
+export class AtletaView extends View {
 
 	constructor({ onViewCreatedFn }) {
 		super({ titulo: 'Atleta', onViewCreatedFn })

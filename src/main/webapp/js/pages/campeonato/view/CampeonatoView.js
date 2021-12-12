@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { View2 } from '../../../components/View2.js'
+import { View } from '../../../components/custom/View.js'
 import { Campeonato } from '../model/Campeonato.js'
 import { Endereco } from '../../../model/Endereco.js'
 import { CategoriaCampeonato } from '../model/CategoriaCampeonato.js'
@@ -9,9 +9,9 @@ import { NotaCampeonato } from './../model/NotaCampeonato.js'
 import { isAdmin, isUser, ROLES } from '../../../sessao.js'
 import { registrar, perfil } from '../../../navegacao.js'
 import { SelecionarAtletaController } from '../../../pages/atleta/controller/SelecionarAtletaController.js'
-import { AlbumViewer } from '../../../controller/AlbumViewer.js'
+import { AlbumViewer } from '../../../components/AlbumViewer.js'
 
-export class CampeonatoView extends View2 {
+export class CampeonatoView extends View {
 
 
 	constructor({ onViewCreatedFn }) {
@@ -474,7 +474,6 @@ export class CampeonatoView extends View2 {
 						})
 
 						input.addEventListener('change', (event) => {
-							console.log(event.target.value)
 							if (!event.target.value || event.target.value < 0 || event.target.value > 10)
 								input.value = this._oldValue
 							else {

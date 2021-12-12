@@ -1,21 +1,24 @@
 /**
  * 
  */
-import { View } from '../components/View.js'
+import { View } from './../../../components/custom/View.js'
 
-export class Sobre extends View {
+export class SobreView extends View {
 
 	constructor() {
-		super('Sobre')
+		super({titulo : 'Sobre' })
+	}
+	
+	_init(){
+		this._scroll(350)
 	}
 
-	async update() {
-		const { html } = await this.template()
-		super.update(html)
+	async _update() {
+		super._update(await this._template())
 	}
 
-	async template() {
-		return this.getHTML('pages/public/sobre.html')
+	async _template() {
+		return this._getHTML('pages/public/sobre.html')
 		//		`
 		//		<div class="sobre">
 		//			<h1>Sobre</h1>

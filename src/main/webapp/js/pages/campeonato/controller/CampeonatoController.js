@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { Controller } from './../../../components/Controller.js'
+import { Controller } from './../../../components/custom/Controller.js'
 import { CampeonatoView } from './../view/CampeonatoView.js'
 import { get, post } from './../../../fetch.js'
 import { Campeonato } from './../model/Campeonato.js'
@@ -61,7 +61,6 @@ export class CampeonatoController extends Controller {
 			case 404:
 			case 500:
 				pagina_nao_encontrada()
-				console.log(response)
 				break
 		}
 	}
@@ -85,7 +84,6 @@ export class CampeonatoController extends Controller {
 					this._updateCampeonato()()
 					break
 				case 403:
-					console.log(response)
 					break
 				case 500:
 					const json = await response.json()

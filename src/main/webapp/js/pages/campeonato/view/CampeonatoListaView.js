@@ -1,7 +1,7 @@
 /**
  * 		Lista de Campeonatos
  */
-import { ListaView } from '../../../components/ListaView.js'
+import { ListaView } from '../../../components/custom/ListaView.js'
 import { Campeonato } from '../model/Campeonato.js'
 import { campeonato, campeonatoRegistro } from '../../../navegacao.js'
 import { isAdmin } from '../../../sessao.js'

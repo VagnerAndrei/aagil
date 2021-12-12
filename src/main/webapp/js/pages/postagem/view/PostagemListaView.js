@@ -1,7 +1,7 @@
 /**
  * 
  */
-import { ListaView } from '../../../components/ListaView.js'
+import { ListaView } from '../../../components/custom/ListaView.js'
 import { Postagem } from '../model/Postagem.js'
 
 export class PostagemListaView extends ListaView {

@@ -82,7 +82,7 @@ function verificaURL(event) {
 
 function pagina_nao_encontrada() {
 	current_verify()
-	instances.current = new View('Página não encontrada')
+	instances.current = new View({titulo : 'Página não encontrada'})
 }
 
 function home(event) {

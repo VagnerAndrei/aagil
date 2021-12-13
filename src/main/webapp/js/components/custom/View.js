@@ -12,7 +12,7 @@ export class View {
 		this._main = document.getElementsByTagName('main')[0]
 		this._roledElements = []
 		document.getElementsByTagName('title')[0].textContent = this._titulo;
-		this._update()
+		this._update({})
 	}
 
 	_focusSroll(component) {

@@ -19,4 +19,8 @@ export class PostagemListaController extends ListaController {
 			this._view.updateListTemplate(this._lista)
 		}
 	}
+	
+	applyRole(){
+		this._view.applyRole()
+	}
 }

@@ -9,8 +9,10 @@ import javax.inject.Named;
 
 import net.circle.business.interfaces.IPostagemBusiness;
 import net.circle.domain.dao.AtletaDAO;
+import net.circle.domain.dao.FotoDAO;
 import net.circle.domain.dao.PostagemDAO;
 import net.circle.domain.dao.TagDAO;
+import net.circle.domain.entity.Foto;
 import net.circle.domain.entity.Postagem;
 import net.circle.domain.entity.Tag;
 
@@ -24,6 +26,9 @@ public class PostagemBusiness implements IPostagemBusiness {
 	private TagDAO tagDAO;
 
 	@Inject
+	private FotoDAO fotoDAO;
+
+	@Inject
 	private AtletaDAO atletaDAO;
 
 	@Override
@@ -33,15 +38,24 @@ public class PostagemBusiness implements IPostagemBusiness {
 	}
 
 	@Override
-	public Postagem salvar(Postagem postagem) throws Exception {
-		postagem.setAtleta(atletaDAO.findById(postagem.getAtleta().getId()).get());
-		for (Tag tag : postagem.getTags()) {
+	public Postagem salvar(Postagem model) throws Exception {
+		var entity = model.getId() != null ? dao.findById(model.getId()).get() : model;
+		entity.setAtleta(atletaDAO.findById(model.getAtleta().getId()).get());
+
+		entity.setTags(model.getTags());
+		for (Tag tag : entity.getTags()) {
 			var tagEntity = tagDAO.findByKey("nome", tag.getNome());
 			if (tagEntity != null)
 				tag.setId(tagEntity.getId());
 		}
-		postagem.setData(LocalDateTime.now());
-		return dao.merge(postagem);
+
+		entity.setFotos(model.getFotos());
+		for (Foto foto : entity.getFotos())
+			if (foto.getId() != null)
+				entity.getFotos().set(entity.getFotos().indexOf(foto), fotoDAO.findById(foto.getId()).get());
+
+		model.setData(LocalDateTime.now());
+		return dao.merge(model);
 	}
 
 	@Override
@@ -51,8 +65,7 @@ public class PostagemBusiness implements IPostagemBusiness {
 
 	@Override
 	public Optional<Postagem> consultar(Integer id) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.findById(id);
 	}
 
 }

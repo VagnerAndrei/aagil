@@ -604,16 +604,22 @@ main p {
 }
 
 .lista-pistas {
-	display: block;
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 10px;
 	list-style: none;
 }
 
 .lista-pistas li{
-	cursor: pointer;
-	margin: 5px 0 5px -40px;
+	margin: 5px 0 5px;
 }
 
-.lista-pistas label{
+.lista-pistas li .div-cabecalho-li-pista{
+	display: flex;
+	justify-content: space-between;
+}
+
+.lista-pistas [id^="img-pista-"]{
 	cursor: pointer;
 }
 
@@ -827,12 +833,13 @@ main p {
 
 .li-postagem h1{
 	font-size: 35px;
-	margin: 15px 0 20px ;
+	margin-top: -10px;
 }
 
 .li-postagem label{
 	float: right;
 	margin-top: -15px;
+	margin-right: 20px;
 	font-size: 12px;
 	font-style: italic;
 }
@@ -842,6 +849,12 @@ main p {
 	width: 100%;
 	height: 420px;
 	margin: auto;
+}
+
+.img-editar-postagem{
+	float: right;
+	left: 0;
+	margin-top: -15px;
 }
 
 

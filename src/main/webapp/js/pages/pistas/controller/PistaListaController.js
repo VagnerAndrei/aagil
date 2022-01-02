@@ -26,6 +26,7 @@ export class PistaListaController extends ListaPaginadaController {
 
 
 	applyRole() {
+		this._view.applyRole()
 	}
 
 }

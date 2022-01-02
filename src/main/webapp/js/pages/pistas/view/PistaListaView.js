@@ -29,12 +29,15 @@ export class PistaListaView extends ListaPaginadaView {
     }
 
     applyRole() {
+		document.querySelectorAll("#div-editar-pista").forEach(img => {
+			isAdmin() ? img.classList.remove('display-none') : img.classList.add('display-none')
+		})
         this._applyRole(isAdmin())
     }
 
 
     _adicionarClickEvent(pista) {
-        document.querySelector(`#li-pista-${pista.id}`).addEventListener('click', () => this._albumViewer(pista))
+        document.querySelector(`#img-pista-${pista.id}`).addEventListener('click', () => this._albumViewer(pista))
     }
 
     _albumViewer(pista) {
@@ -46,10 +49,17 @@ export class PistaListaView extends ListaPaginadaView {
         const li = document.createElement('li')
         li.id = `li-pista-${pista.id}`
         li.className = 'li-pista'
-        li.innerHTML = `<strong>${pista.titulo}</strong>
+        li.innerHTML = `<div class="div-cabecalho-li-pista">
+								<strong>${pista.titulo}</strong>
+								<div id="div-editar-pista" class="${isAdmin() ? '' : 'display-none'}">
+									<img id="img-editar-pista-${pista.id}"
+										src="assets/img/icon-editar.png" class="botao-editar"
+										title="Editar informações">
+								</div>
+						</div>
                         <div class="flex-row">
                             <div>
-                                <img src="${pista.fotos ? `api/fotos/${pista.fotos[0].id}/thumb` : 'assets/img/no-image.png'}" onerror="this.src='assets/img/no-image.png'">
+                                <img id="img-pista-${pista.id}" src="${pista.fotos ? `api/fotos/${pista.fotos[0].id}/thumb` : 'assets/img/no-image.png'}" onerror="this.src='assets/img/no-image.png'">
                             </div>
                             <div class="informacoes-pista">
                             <label>${pista.endereco.logradouro} ${pista.endereco.complemento}</label>

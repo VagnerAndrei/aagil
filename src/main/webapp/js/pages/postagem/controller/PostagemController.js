@@ -1,18 +1,38 @@
 import { FotosUpload } from './../../../components/FotosUpload.js'
-import { home } from './../../../navegacao.js'
+import { home, pagina_nao_encontrada } from './../../../navegacao.js'
 import { Controller } from '../../../components/custom/Controller.js'
 import { PostagemView } from '../view/PostagemView.js'
+import { get } from './../../../fetch.js'
 
 export class PostagemController extends Controller {
 
-	constructor() {
+	constructor({ idPostagem }) {
 		super()
-		this._view = new PostagemView({ onViewCreatedFn: this._init() })
+		this._view = new PostagemView({ onViewCreatedFn: this._init(), isEdicaoMode: idPostagem != undefined })
+		this._idPostagem = idPostagem
 	}
 
 	_init() {
 		return () => {
 			this._view.configureEnviarFormulario(this._enviar())
+			if (this._idPostagem)
+				this._consultarPostagem()
+		}
+	}
+
+	async _consultarPostagem() {
+		const response = await get(`api/postagens/${this._idPostagem}`)
+
+		switch (response.status) {
+			case 404:
+				pagina_nao_encontrada()
+				break;
+			case 302:
+				const postagem = await response.json()
+				this._view.setPostagem(postagem)
+				break
+			case 505:
+				console.log("erro no servidor")
 		}
 	}
 
@@ -57,16 +77,16 @@ export class PostagemController extends Controller {
 				let percent = e.lengthComputable ? (e.loaded / e.total) * 100 : '0';
 				this._modalUpload?.setPercent(percent)
 			})
+		}
 
-			this._xhr.onreadystatechange = () => {
-				if (this._xhr.readyState === 4)
-					this._xhrResponse(upload)
-			}
+		this._xhr.onreadystatechange = () => {
+			if (this._xhr.readyState === 4)
+				this._xhrResponse(upload)
+		}
 
-			this._xhr.onerror = () => {
-				this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
-				this._modalUpload.fecharModal()
-			}
+		this._xhr.onerror = () => {
+			this._labelErro.textContent = 'Ocorreu um erro no servidor, contate um administrador.'
+			this._modalUpload.fecharModal()
 		}
 	}
 

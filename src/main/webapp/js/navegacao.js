@@ -57,7 +57,7 @@ function verificaURL(event) {
 			if (atletaLogado) perfil('authEvent', atletaLogado.id)
 			else acessar()
 			break
-		case views.postagem: postagem()
+		case views.postagem: postagem({ event, idPostagem: id })
 			break
 		case views.manobras: manobras()
 			break;
@@ -73,7 +73,7 @@ function verificaURL(event) {
 			if (id && !isNaN(id) && id > 0) campeonato({ event, idCampeonato: id })
 			else pagina_nao_encontrada();
 			break
-		case views.campeonato_registro: campeonatoRegistro({})
+		case views.campeonato_registro: campeonatoRegistro({ idCampeonato: id })
 			break
 		default: pagina_nao_encontrada();
 			break;
@@ -82,7 +82,7 @@ function verificaURL(event) {
 
 function pagina_nao_encontrada() {
 	current_verify()
-	instances.current = new View({titulo : 'Página não encontrada'})
+	instances.current = new View({ titulo: 'Página não encontrada' })
 }
 
 function home(event) {
@@ -97,20 +97,15 @@ function manobras(e) {
 	if (e) changeState({ view: views.manobras })
 }
 
-function postagem(e) {
+function postagem({ event, idPostagem }) {
 	current_verify()
-	instances.current = new PostagemController()
-	if (e) changeState({ view: views.postagem })
+	instances.current = new PostagemController({ idPostagem })
+	if (event) changeState({ view: views.postagem, id: idPostagem })
 }
 
 function pistas(e) {
 	current_verify()
-	if (!instances.pistas) instances.pistas = new PistaListaController()
-	else {
-		instances.pistas.display(true)
-		instances.pistas.applyRole()
-	}
-	instances.current = instances.pistas
+	instances.current = new PistaListaController()
 	if (e) changeState({ view: views.pistas })
 }
 
@@ -162,7 +157,7 @@ function campeonato({ event, idCampeonato }) {
 function campeonatoRegistro({ event, idCampeonato }) {
 	current_verify()
 	instances.current = new CampeonatoFormController({ idCampeonato })
-	if (event) changeState({ view: views.campeonato_registro })
+	if (event) changeState({ view: views.campeonato_registro, id: idCampeonato, event })
 }
 
 function sobre(clickEvent) {
@@ -218,6 +213,13 @@ function changeState({ view, event, id }) {
 					if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)
 						window.history.pushState(view, view, `?p=${view}&id=${id}`)
 			}
+			break
+		case views.campeonato_registro:
+		case views.postagem:
+			if (id)
+				window.history.pushState(view, view, `?p=${view}&id=${id}`)
+			else
+				window.history.pushState(view, view, `?p=${view}`)
 			break
 		case views.campeonato:
 			if (new URLSearchParams(new URL(window.location.href).search).get('p') != view)

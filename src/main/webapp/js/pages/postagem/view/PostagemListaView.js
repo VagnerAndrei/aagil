@@ -3,6 +3,8 @@
  */
 import { ListaView } from '../../../components/custom/ListaView.js'
 import { Postagem } from '../model/Postagem.js'
+import { isAdmin } from './../../../sessao.js'
+import { postagem } from './../../../navegacao.js'
 
 export class PostagemListaView extends ListaView {
 
@@ -37,8 +39,9 @@ export class PostagemListaView extends ListaView {
 	}
 
 	_adicionarClickEvent(postagem) {
-		document.querySelectorAll(`#img-postagem-thumbnail-${postagem.id}`).forEach(img =>
-			img.addEventListener('click', event => this._thumbnailClickHandler(event)))
+		//		document.querySelectorAll(`#img-postagem-thumbnail-${postagem.id}`).forEach(img =>
+		//			img.addEventListener('click', event => this._thumbnailClickHandler(event)))
+		document.querySelector(`#img-editar-postagem-${postagem.id}`).addEventListener('click', () => this._editarClickHandler(postagem.id))
 	}
 
 	_liTemplateObject(item) {
@@ -47,14 +50,17 @@ export class PostagemListaView extends ListaView {
 		li.className = 'li-postagem'
 		li.innerHTML =
 			`
+			<img id="img-editar-postagem-${postagem.id}"
+				src="assets/img/icon-editar.png" class="img-editar-postagem botao-editar ${isAdmin() ? '' : 'display-none'}"
+				title="Editar informações">
              <label>${postagem.data}</label>
              <h1>${postagem.titulo}</h1>
              ${postagem.midia ?
-			`<iframe src="
+				`<iframe src="
              ${postagem.midia.tipo == 'Youtube' ?
-				`https://www.youtube.com/embed/${postagem.midia.codigo}` :
-				`https://player.vimeo.com/video/${postagem.midia.codigo}`
-			}" 
+					`https://www.youtube.com/embed/${postagem.midia.codigo}` :
+					`https://player.vimeo.com/video/${postagem.midia.codigo}`
+				}" 
              allowfullscreen></iframe>` : ''}
              
              ${postagem.fotos ? `
@@ -63,14 +69,6 @@ export class PostagemListaView extends ListaView {
                      <img class="img-postagem" id="img-postagem-${postagem.id}" src="api/fotos/${postagem.fotos[0].id}">
                  </div>
              
-             <ul id="ul-thumbnail-postagem" class="album-postagens-thumbnails ${postagem.fotos.length > 1 ? '' : 'display-none'}">
-             
-                 ${postagem.fotos.map(foto => `
-                     <li>
-                         <img postagemID="${postagem.id}" fotoID="${foto.id}" id="img-postagem-thumbnail-${postagem.id}" src="api/fotos/${foto.id}/thumb">
-                     </li>`)}
-                 
-             </ul>
              
              </div>
              ` : ''}
@@ -78,6 +76,10 @@ export class PostagemListaView extends ListaView {
              <div>${postagem.conteudo}</div>
              `
 		return li;
+	}
+	
+	_editarClickHandler(idPostagem){
+		postagem({event : 'editarPostagemEvent' , idPostagem })
 	}
 
 	_thumbnailClickHandler(event) {
@@ -87,6 +89,12 @@ export class PostagemListaView extends ListaView {
 		img.src = `api/fotos/${idFoto}`
 	}
 
+	applyRole() {
+		document.querySelectorAll("[id^='img-editar-postagem']").forEach(img => {
+			isAdmin() ? img.classList.remove('display-none') : img.classList.add('display-none')
+		})
+
+	}
 
 
 }

@@ -1,7 +1,5 @@
 package net.circle.service.api;
 
-import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -9,7 +7,6 @@ import java.util.stream.Collectors;
 import javax.annotation.security.RolesAllowed;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.sql.rowset.serial.SerialBlob;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,11 +25,10 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import net.circle.business.exception.enums.CampeonatoExcecao;
 import net.circle.business.exception.enums.NegocioExcecao;
-import net.circle.business.exception.enums.PistaExcecao;
 import net.circle.business.interfaces.IAtletaBusiness;
 import net.circle.business.interfaces.IPostagemBusiness;
-import net.circle.business.util.ImagemUtil;
 import net.circle.domain.entity.Atleta;
 import net.circle.domain.entity.Foto;
 import net.circle.domain.entity.Midia;
@@ -44,6 +40,7 @@ import net.circle.service.model.IDModel;
 import net.circle.service.model.MidiaModel;
 import net.circle.service.model.PostagemModel;
 import net.circle.service.util.InputPartUtil;
+import net.circle.service.util.exception.FormatoInvalidoException;
 
 @Path("/postagens")
 @Produces(MediaType.APPLICATION_JSON)
@@ -61,6 +58,32 @@ public class PostagemRest {
 	@GET
 	public List<PostagemModel> consultarPostagens() {
 		return parseModel(postagemBusiness.consultarLista());
+	}
+
+	/**
+	 * Realiza a obtenção de um atleta
+	 *
+	 * @param idAtleta
+	 * 
+	 * @returns Response: <br/>
+	 *          Status.FOUND(302, "Found"),<br/>
+	 *          Status.NOT_FOUND(404, "Not Found"),<br/>
+	 *          Status.INTERNAL_SERVER_ERROR(500, "Internal Server Error")
+	 */
+	@GET
+	@Path("/{idPostagem}")
+	public Response consultarPostagem(@PathParam("idPostagem") Integer idPostagem) {
+		try {
+			var model = parseModel(
+					postagemBusiness.consultar(idPostagem).orElseThrow(() -> new Exception("Postagem não encontrada")));
+
+			return Response.status(Status.FOUND).entity(model).build();
+		} catch (Exception e) {
+			if (e.getMessage().equals("Postagem não encontrada"))
+				return Response.status(Status.NOT_FOUND).build();
+			e.printStackTrace();
+			return Response.serverError().build();
+		}
 	}
 
 	@POST
@@ -85,25 +108,14 @@ public class PostagemRest {
 			var postagem = parseModel(model);
 
 			if (fotos != null)
-				for (InputPart inputPart : fotos) {
-					String fileName = InputPartUtil.getFileName(inputPart.getHeaders());
-
-					var extensao = fileName.toUpperCase().substring(fileName.lastIndexOf(".") + 1);
-
-					if (!Arrays.asList(fotoFormatos).contains(extensao))
-						return Response.status(Status.BAD_REQUEST).entity(new ErroModel(PistaExcecao.FORMATO_INVALIDO))
-								.build();
-
-					// convert the uploaded file to inputstream
-					InputStream inputStream = inputPart.getBody(InputStream.class, null);
-					var foto = new Foto();
-					foto.setOriginal(new SerialBlob(inputStream.readAllBytes()));
-					foto.setExtensao(extensao);
-					foto.setArquivo(new SerialBlob(
-							ImagemUtil.getTratamentoJPG(foto.getOriginal().getBinaryStream().readAllBytes())));
-					foto.setThumbnail(new SerialBlob(
-							ImagemUtil.getThumbnailFromJPG(foto.getArquivo().getBinaryStream().readAllBytes())));
-					postagem.getFotos().add(foto);
+				try {
+					postagem.getFotos().addAll(InputPartUtil.getListFotoEntity(fotos));
+				} catch (FormatoInvalidoException e) {
+					e.printStackTrace();
+					return Response.status(Status.BAD_REQUEST)
+							.entity(new ErroModel(CampeonatoExcecao.FORMATO_FOTO_INVALIDO)).build();
+				} catch (Exception e) {
+					throw e;
 				}
 			postagem = postagemBusiness.salvar(postagem);
 			return Response.accepted().build();
@@ -159,6 +171,5 @@ public class PostagemRest {
 		postagem.getAtleta().setId(model.getAtleta().getId());
 		return postagem;
 	}
-
 
 }
